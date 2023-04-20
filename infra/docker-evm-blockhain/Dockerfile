@@ -6,8 +6,7 @@ RUN apk add --no-cache curl jq
 # Set the working directory
 WORKDIR /root
 
-# Copy the genesis file
-COPY genesis.json /root/genesis.json
+# Copy the password file
 COPY root-password.txt /root/root-password.txt
 
 # Copy the startup script

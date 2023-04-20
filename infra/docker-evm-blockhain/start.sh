@@ -7,7 +7,7 @@ LOG_FILE="debug.log"
 > $LOG_FILE
 
 # Set network ID, block time, and ports
-NETWORK_ID=14578
+NETWORK_ID=10000
 BLOCK_TIME=2
 
 BOOTNODE_PORT=30301
