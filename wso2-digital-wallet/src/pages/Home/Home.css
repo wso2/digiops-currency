@@ -1,0 +1,125 @@
+/* 
+// Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+//
+// This software is the property of WSO2 LLC. and its suppliers, if any.
+// Dissemination of any information or reproduction of any material contained
+// herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+// You may not alter or remove any copyright or other notice from copies of this content.
+*/
+
+.wallet-balance-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* flex: 1; */
+    /* color: red !important; */
+  }
+  
+  .wallet-balance-details > span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .total-balance-tag {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 16.41px;
+  }
+  .total-balance-value {
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 44.53px;
+  }
+  .total-balance-wallet-address {
+      background-color: #ee7b2f5d;
+      color: #EE7B2F;
+      font-size: 11px !important;
+      font-weight: 700;
+      line-height: 12.89px;
+      padding: 8px;
+      border-radius: 12px;
+      cursor: pointer;
+  }
+  .total-balance-icons {
+      padding: 15px;
+      background: #EE7B2F;
+      border-radius: 50%;
+      color: #ffff;
+      cursor: pointer;
+  }
+.total-balance-action {
+    font-size: 14px !important;
+    font-weight: 500;
+    line-height: 19.6px;
+    margin-top: 5px;
+}
+.recent-activities-widget {
+    
+    /* background: red;
+    flex: 0; */
+    /* height: 100% !important;  */
+}
+/* .home-container {
+    display: flex;
+  flex-direction: column;
+  height: 100vh;
+} */
+.recent-activities-widget-inner {
+    padding: 25px;
+}
+.red-text {
+    color: #ff4647;
+}
+
+.green-text {
+  color: #008000;
+}
+
+.recent-activity-topic {
+    font-size: 16px;
+    font-weight: 600;
+}
+.recent-activity-time {
+    font-size: 10px;
+    text-align: left;
+}
+.recent-activity-value {
+    font-size: 16px;
+    font-weight: 600;
+}
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+  }
+  
+  .status-dot-connected {
+    background-color: green;
+  }
+  
+  .status-dot-not-connected {
+    background-color: red;
+  }
+  .status-tag {
+    border: none !important;
+    cursor: pointer;
+    margin-top: -30px !important;
+  }
+
+  /* .main-layout{
+    max-height: 1000px;
+  } */
+
+  .ant-layout-footer{
+    padding-bottom: 30px !important;
+    margin-bottom: 0px !important;
+  }
+
+  .recent-activity-container{
+    height: 50vh;
+    overflow: auto;
+    padding-bottom: 10vh;
+  }
