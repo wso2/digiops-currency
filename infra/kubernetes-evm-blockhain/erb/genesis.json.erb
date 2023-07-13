@@ -1,0 +1,26 @@
+{
+  "config": {
+    "chainId": <%= @config["geth"]["network"]["id"] %>,
+    "homesteadBlock": 1,
+    "eip150Block": 2,
+    "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "eip155Block": 3,
+    "eip158Block": 3,
+    "byzantiumBlock": 4,
+    "clique": {
+      "period": <%= @config["geth"]["network"]["period"] %>,
+      "epoch": <%= @config["geth"]["network"]["epoch"] %>
+    }
+  },
+  "nonce": "<%= @config["geth"]["network"]["nonce"] %>",
+  "timestamp": "<%= @config["geth"]["network"]["timestamp"] %>",
+  "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000c11ba4c7c24f70e7a581c7daa92eac108099acec4c92786b90d848eaa3f4ef46918af724a309ae794e7afbdc9413eeb582b3f1be49d652fa714484da0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "gasLimit": "<%= @config["geth"]["network"]["gasLimit"] %>",
+  "difficulty" : "<%= @config["geth"]["difficulty"] %>",
+  "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "coinbase": "0x0000000000000000000000000000000000000000",
+  "alloc": {},
+  "number": "0x0",
+  "gasUsed": "0x0",
+  "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+}

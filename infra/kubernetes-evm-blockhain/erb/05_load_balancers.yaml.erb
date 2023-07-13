@@ -1,0 +1,26 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default
+  name: miner-svc
+  labels:
+    app: minerlb
+    tier: backend
+    name: miner-svc
+spec:
+  selector:
+    app: miner
+    tier: backend
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: miner-jsonrpc
+      protocol: TCP
+      port: 8545
+      targetPort: 8545
+    - name: miner-wsrpc
+      protocol: TCP
+      port: 8546
+      targetPort: 8546
+---
