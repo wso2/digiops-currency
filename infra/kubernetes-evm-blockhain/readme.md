@@ -18,7 +18,19 @@ The architecture consists of several key components, including:
 
 5. Persistent Volume: Ensures data persistence by storing blockchain data.
 
-Monitor App: This separate pod within the Kubernetes cluster monitors and provides health status and other operational metrics of the blockchain network.
+Here is a diagram illustrating the architecture of the deployment:
+
+![Architecture Diagram](./images/poa-k8-cluster.png)
+
+This diagram shows the deployed pods, their connections to services and storage, and how they interact within the Kubernetes cluster.
+
+**Monitor App:** This separate pod within the Kubernetes cluster monitors and provides health status and other operational metrics of the blockchain network.
+
+Here is a diagram illustrating the monitor application:
+
+![Monitor Application Diagram](./images/monitor-application-diagram.png)
+
+This diagram shows how the monitor application fits into the overall architecture, how it interacts with other components in the system, and the flow of monitoring data.
 
 ## Nodes
 
