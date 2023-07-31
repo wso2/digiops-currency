@@ -3,9 +3,6 @@ FROM ethereum/client-go:alltools-latest
 # Install required packages
 RUN apk add --no-cache curl jq
 
-# Copy the password file
-COPY /configs/root-password.txt /app/root-password.txt
-
 # Copy the startup script
 COPY start.sh /app/start.sh
 
