@@ -86,7 +86,7 @@ BOOTNODE_ENODE="enode://$(bootnode --nodekeyhex "$(cat /debug/bootnode/boot.key)
 
 # Start node1
 geth --datadir /debug/node1 \
-  --syncmode "light" \
+  --syncmode "full" \
   --port $NODE1_PORT \
   --http \
   --http.addr "0.0.0.0" \
