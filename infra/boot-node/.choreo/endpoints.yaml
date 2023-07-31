@@ -28,8 +28,3 @@ endpoints:
     networkVisibility: Public
     # +optional Context (base path) of the API that is exposed via this endpoint.
     # This is mandatory if the endpoint type is set to REST or GraphQL.
-
-  - name: poa_node2
-    port: 8041
-    type: REST
-    networkVisibility: Public
