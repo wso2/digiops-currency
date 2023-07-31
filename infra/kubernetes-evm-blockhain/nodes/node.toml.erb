@@ -1,0 +1,69 @@
+[Eth]
+NetworkId = <%= @config["geth"]["network"]["id"] %>
+SyncMode = "full"
+LightPeers = 100
+DatabaseCache = 768
+EnablePreimageRecording = false
+
+[Eth.Ethash]
+CacheDir = "ethash"
+CachesInMem = 2
+CachesOnDisk = 3
+DatasetDir = "/root/.ethash"
+DatasetsInMem = 1
+DatasetsOnDisk = 2
+PowMode = 0
+
+[Eth.TxPool]
+Locals = []
+NoLocals = false
+Journal = "transactions.rlp"
+Rejournal = 3600000000000
+PriceLimit = 1
+PriceBump = 10
+AccountSlots = 16
+GlobalSlots = 4096
+AccountQueue = 64
+GlobalQueue = 1024
+Lifetime = 10800000000000
+
+[Eth.GPO]
+Blocks = 20
+Percentile = 60
+
+[Shh]
+MaxMessageSize = 1048576
+MinimumAcceptedPOW = 2e-01
+
+[Node]
+UserIdent = "<%= @Node_UserIdent %>"
+DataDir = "<%= @Node_DataDir %>"
+IPCPath = "<%= @Node_DataDir %>/geth.ipc"
+HTTPHost = "0.0.0.0"
+HTTPPort = <%= @Node_HTTPPort %>
+HTTPCors = ["*"]
+HTTPVirtualHosts = ["*"]
+HTTPModules = ["db", "eth", "net", "web3", "personal", "miner", "admin", "clique"]
+WSHost = "0.0.0.0"
+WSPort = <%= @Node_WSPort %>
+WSOrigins = ["*"]
+WSModules = ["net", "web3", "eth", "shh"]
+
+[Node.P2P]
+MaxPeers = 25
+NoDiscovery = false
+<%- unless @config["geth"]["network"]["public"] -%>
+BootstrapNodes = []
+BootstrapNodesV5 = []
+<% end -%>
+StaticNodes = []
+TrustedNodes = []
+ListenAddr = ":<%= @NodeP2P_DiscoveryAddr %>"
+EnableMsgEvents = false
+
+<%- if @Dashboard_Port || @Dashboard_Refresh -%>
+[Dashboard]
+Host = "0.0.0.0"
+Port = <%= @Dashboard_Port %>
+Refresh = <%= @Dashboard_Refresh %>
+<% end -%>

@@ -1,0 +1,199 @@
+<%
+def set_node_template_vars(values)
+  @Eth_Etherbase         = values["geth"]["Eth_Etherbase"]
+  @Eth_Password          = values["geth"]["Eth_Password"]
+  @Node_UserIdent        = values["geth"]["Node_UserIdent"]
+  @Node_DataDir          = values["geth"]["Node_DataDir"]
+  @Node_HTTPPort         = values["geth"]["Node_HTTPPort"]
+  @Node_WSPort           = values["geth"]["Node_WSPort"]
+  @NodeP2P_ListenAddr    = values["geth"]["NodeP2P_ListenAddr"]
+  @NodeP2P_DiscoveryAddr = values["geth"]["NodeP2P_DiscoveryAddr"]
+  @Dashboard_Port        = values["geth"]["Dashboard_Port"]
+  @Dashboard_Refresh     = values["geth"]["Dashboard_Refresh"]
+  @replicas              = values["k8s"]["replicas"]
+  @External_RPC_IP       = values["k8s"]["External_RPC_IP"]
+  @Nodekeyhex            = values["k8s"]["nodekeyhex"]
+  @Verbosity             = values["k8s"]["verbosity"]
+  return
+end
+-%>
+<%- @bootnodes.each do |bootnode| -%>
+<%= set_node_template_vars(bootnode.values.first) -%>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keystore-config-<%= @Node_UserIdent %>
+  namespace: default
+  labels:
+    app: bootnode
+    name: keystore-config-<%= @Node_UserIdent %>
+data:
+  <%= @config["keystore"]["items"]["#{@Eth_Etherbase}"] %>: |-
+<%- File.readlines("keystore/#{@config["keystore"]["items"]["#{@Eth_Etherbase}"]}").each do |line| -%>
+    <%= line -%>
+<% end -%>
+<% end -%>
+
+<%- @bootnodes.each do |bootnode| -%>
+<%= set_node_template_vars(bootnode.values.first) -%>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gethconfig-<%= @Node_UserIdent %>
+  namespace: default
+  labels:
+    app: bootnode
+    name: gethconfig-<%= @Node_UserIdent %>
+data:
+  gethconfig: |-
+<%- File.readlines("#{@Node_UserIdent}.toml").each do |line| -%>
+    <%= line -%>
+<% end -%>
+<% end %>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default
+  name: geth-bootnode-svc
+  labels:
+    app: bootnode
+    tier: backend
+    name: geth-bootnode-svc
+spec:
+  selector:
+    app: bootnode
+    tier: backend
+    name: bootnode
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: geth-bootnode-ipc-discovery
+      protocol: UDP
+      port: <%= @NodeP2P_DiscoveryAddr %>
+      targetPort: <%= @NodeP2P_DiscoveryAddr %>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: geth-boot-node-setup-pod
+  labels:
+    app: bootnode
+    name: bootnode-setup-pod
+spec:
+  selector:
+    matchLabels:
+      app: bootnode
+      name: bootnode-setup-pod
+  template:
+    metadata:
+      labels:
+        app: bootnode
+        name: bootnode-setup-pod
+    spec:
+      containers:
+      - name: geth-boot-node-setup-container
+        image: ijsfd/geth-node:alltools-v1.9.0
+        imagePullPolicy: IfNotPresent
+        command: [ "sh" ]
+        args:
+        - "-cx"
+        - "cd <%= @Node_DataDir %>;
+           echo \"<%= @Nodekeyhex %>\" > nodekeyhex;
+           cat nodekeyhex;
+           echo \"enode://$(/usr/local/bin/bootnode -nodekey nodekeyhex -writeaddress)@$GETH_BOOTNODE_SVC_SERVICE_HOST:<%= @NodeP2P_DiscoveryAddr %>\" > enode.address;
+           set +x;
+           while true; do :; done;"
+        volumeMounts:
+        - name: geth-boot-node-persistent-storage
+          mountPath: <%= @Node_DataDir %>
+      volumes:
+      - name: geth-boot-node-persistent-storage
+        hostPath:
+          path: /var/lib/docker/geth-storage/bootnode
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: default
+  name: geth-bootnode
+  labels:
+    app: bootnode
+    tier: backend
+    name: geth-bootnode
+spec:
+  selector:
+    matchLabels:
+      app: bootnode
+  replicas: <%= @replicas %>
+  serviceName: geth-<%= @Node_UserIdent %>
+  template:
+    metadata:
+      name: geth-<%= @Node_UserIdent %>
+      labels:
+        app: bootnode
+        tier: backend
+        name: <%= @Node_UserIdent %>
+    spec:
+      containers:
+      - name: geth-bootnode-container
+        image: ijsfd/geth-node:alltools-v1.9.0
+        imagePullPolicy: IfNotPresent
+        command: [ "sh" ]
+        args:
+        - "-cx"
+        - "cd <%= @Node_DataDir %>;
+          /usr/local/bin/geth --datadir <%= @Node_DataDir %> init /etc/geth/genesis/genesis-geth.json;
+          touch <%= @Node_DataDir %>/genesis_created;
+          echo <%= @Eth_Password %> > <%= @Node_DataDir %>/password.txt;
+          mkdir -p /etc/geth/<%= @Node_UserIdent %>;
+          cp /etc/gethconfigmap/<%= @Node_UserIdent %>/gethconfig.toml /etc/geth/<%= @Node_UserIdent %>;
+          /usr/local/bin/geth \
+          --verbosity <%= @config["geth"]["network"]["verbosity"] %>  \
+          --nodekey <%= @Node_DataDir %>/nodekeyhex \
+<%- if @Eth_Etherbase && @Eth_Password -%>
+          --unlock <%= @Eth_Etherbase %> --allow-insecure-unlock --password <%= @Node_DataDir %>/password.txt --gasprice '<%= @config['geth']['network']['gasPrice'] %>' --targetgaslimit '<%= @config['geth']['network']['gasLimit'] %>' \
+<% end -%>
+          --config /etc/geth/<%= @Node_UserIdent %>/gethconfig.toml;"
+        volumeMounts:
+        - name: <%= @Node_UserIdent %>-persistent-storage
+          mountPath: <%= @Node_DataDir %>/storage
+        - name: <%= @Node_UserIdent %>-config-persistent-storage
+          mountPath: /etc/gethconfigmap/<%= @Node_UserIdent %>
+        - name: keystore-config-persistent-storage
+          mountPath: <%= @Node_DataDir %>/keystore/<%= @config["keystore"]["items"]["#{@Eth_Etherbase}"] %>
+          subPath: <%= @config["keystore"]["items"]["#{@Eth_Etherbase}"] %>
+        - name: geth-boot-node-persistent-storage
+          mountPath: <%= @Node_DataDir %>
+        - name: genesis-config-persistent-storage
+          mountPath: /etc/geth/genesis/genesis-geth.json
+          subPath: genesis-geth.json
+      volumes:
+      - name: keystore-config-persistent-storage
+        configMap:
+          name: keystore-config-<%= @Node_UserIdent %>
+          items:
+          - key: <%= @config["keystore"]["items"]["#{@Eth_Etherbase}"] %>
+            path: <%= @config["keystore"]["items"]["#{@Eth_Etherbase}"] %>
+      - name: geth-boot-node-persistent-storage
+        hostPath:
+          path: /var/lib/docker/geth-storage/bootnode
+      - name: genesis-config-persistent-storage
+        configMap:
+          name: genesis-config
+          items:
+          - key: genesis-geth.json
+            path: genesis-geth.json
+      - name: <%= @Node_UserIdent %>-persistent-storage
+        persistentVolumeClaim:
+          claimName: volume-<%= @Node_UserIdent %>
+      - name: <%= @Node_UserIdent %>-config-persistent-storage
+        configMap:
+          name: gethconfig-<%= @Node_UserIdent %>
+          items:
+          - key: gethconfig
+            path: gethconfig.toml
+---
