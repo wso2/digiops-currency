@@ -22,7 +22,7 @@ endpoints:
     port: 8040
     # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
     # Allowed values: REST, GraphQL, GRPC
-    type: GRPC
+    type: REST
     # +optional Network level visibility of this endpoint. Defaults to Project
     # Accepted values: Project|Organization|Public.
     networkVisibility: Public
@@ -31,5 +31,5 @@ endpoints:
 
   - name: poa_node2
     port: 8041
-    type: GRPC
+    type: REST
     networkVisibility: Public
