@@ -61,13 +61,13 @@ cat << EOF > /debug/genesis.json
 EOF
 
 # Generate node1 account
-NODE1_PASSWORD=$(cat /debug/root-password.txt)
+NODE1_PASSWORD=$(cat /configs/root-password.txt)
 echo $NODE1_PASSWORD > /debug/node1/password.txt
 geth account new --datadir /debug/node1 --password /debug/node1/password.txt >> $LOG_FILE 2>&1
 NODE1_ADDRESS=$(geth --datadir /debug/node1 account list | head -1 | awk -F'[{}]' '{print $2}')
 
 # Generate node2 account
-NODE2_PASSWORD=$(cat /debug/root-password.txt)
+NODE2_PASSWORD=$(cat /configs/root-password.txt)
 echo $NODE2_PASSWORD > /debug/node2/password.txt
 geth account new --datadir /debug/node2 --password /debug/node2/password.txt >> $LOG_FILE 2>&1
 NODE2_ADDRESS=$(geth --datadir /debug/node2 account list | head -1 | awk -F'[{}]' '{print $2}')
