@@ -1,0 +1,75 @@
+/* 
+// Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+//
+// This software is the property of WSO2 LLC. and its suppliers, if any.
+// Dissemination of any information or reproduction of any material contained
+// herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+// You may not alter or remove any copyright or other notice from copies of this content.
+*/
+
+.wallet-create-top-margin {
+    margin-top: 40% !important;
+    padding: 20px;
+}
+.wallet-create-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.wallet-create-topic {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 50px;
+    letter-spacing: 0.20000000298023224px;
+    text-align: center;
+}
+.create-wallet-content {
+    max-height: 80vh;
+    overflow-y: scroll !important;
+}
+.wallet-create-restore-wallet {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 21px;
+    letter-spacing: 0em;
+    text-align: center;
+    color: #EE7B2F;
+    cursor: pointer;
+}
+.wallet-copy-topic {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 19px;
+    letter-spacing: 0em;
+    text-align: center;
+}
+.copy-button {
+    color: #ffff !important;
+    background-color: #EE7B2F !important;
+    border: #EE7B2F !important;
+}
+.copy-button:hover {
+    color: #ffff !important;
+    background-color: #EE7B2F !important;
+    border: #EE7B2F !important;
+}
+.ant-input-group-addon {
+    background-color: #EE7B2F !important;
+}
+.copy-to-clipboard-button {
+    background: rgba(238, 123, 47, 0.2);
+    color: #EE7B2F !important;
+    font-weight: 700;
+}
+.copy-to-clipboard-button:hover, .copy-to-clipboard-button:focus {
+    border: none !important;
+}
+.create-wallet-button {
+    margin-top: 20% !important;
+}
+
+.footer-wrapper-buttons-section {
+    position: fixed;
+    bottom: 50px;
+}

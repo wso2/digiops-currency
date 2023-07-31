@@ -1,0 +1,71 @@
+/* 
+// Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+//
+// This software is the property of WSO2 LLC. and its suppliers, if any.
+// Dissemination of any information or reproduction of any material contained
+// herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+// You may not alter or remove any copyright or other notice from copies of this content.
+*/
+
+.send-header {
+    font-size: 18px;
+    font-weight: 600;
+}
+.send-coin-name {
+    font-size: 18px;
+    font-weight: 500;
+}
+.send-coin-balance {
+    font-size: 13px;
+    font-weight: 500;
+}
+.send-coin-info {
+    display: flex;
+    align-items: center;
+    border: 1px black solid;
+    padding: 5px;
+    border-radius: 8px;
+  }
+  
+  .send-coin-details {
+    margin-left: 8px; /* Adjust the spacing between the image and text */
+  }
+  .asset-column {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  
+  .asset-content {
+    text-align: center;
+    margin-left: 10px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .send-coin-input-card {
+    border: 1px black solid;
+    padding: 5px;
+    border-radius: 8px;
+  }
+  
+  .send-button-section {
+    margin-top: 10px;
+  }
+  .send-coin-input {
+    border: none;
+    padding: 5px;
+    border-radius: 8px;
+    background-color: #f3f5f6;
+  }
+  .send-coin-input .ant-input {
+    background-color: #f3f5f6 !important;
+  }
+  .send-coin-input .ant-input-affix-wrapper {
+    border: none !important;
+  }
+  .sending-wso2 {
+    padding: 3px;
+    border: 1px rgba(0, 0, 0, 0.332) solid;
+    border-radius: 5px;
+    font-size: 12px;
+  }

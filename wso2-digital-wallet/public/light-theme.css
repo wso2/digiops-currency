@@ -1,0 +1,55 @@
+.main-background {
+    background: #717171 !important;
+}
+.ant-layout {
+    background-color: #f3f5f6;
+    color: #232A31;
+}
+.main-layout {
+    background: #f3f5f6;
+}
+
+.total-balance-tag {
+    color: #9395A4;
+}
+.total-balance-value {
+    color: #232A31;
+}
+.total-balance-action {
+    color: #232A31;
+}
+.scan-icon {
+    color: #232A31;
+}
+.footer-icons {
+    color: #EE7B2F;
+    cursor: pointer;
+}
+.footer-names {
+    margin-top: 5px;
+    color: #232A31;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 12px;
+    letter-spacing: 0.20000000298023224px;
+    text-align: center;
+
+}
+.status-tag {
+    color: #232A31;
+}
+.ant-layout-footer {
+    background-color: #f3f5f6;
+}
+.recent-activity-topic {
+    color: #232A31;
+}
+.recent-activity-time {
+    color: #9395A4;
+}
+.sending-details {
+    background-color: rgb(227, 227, 226);
+    padding: 15px;
+    align-items: flex-start;
+    border-radius: 5px;
+  }
