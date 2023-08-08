@@ -7,7 +7,7 @@ RUN apk add --no-cache curl jq
 COPY root-password.txt /app/root-password.txt
 
 # Copy the startup script
-COPY start.sh /app/start.sh
+#COPY start.sh /app/start.sh
 
 # Create a user with a known UID/GID within range 10000-20000.
 # This is required by Choreo to run the container as a non-root user.

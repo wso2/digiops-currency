@@ -4,7 +4,7 @@ FROM ethereum/client-go:alltools-latest
 RUN apk add --no-cache curl jq
 
 # Copy the password file
-COPY root-password.txt /app/root-password.txt
+#COPY root-password.txt /app/root-password.txt
 
 # Copy the startup script
 COPY start.sh /app/start.sh
