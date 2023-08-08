@@ -4,7 +4,7 @@ FROM ethereum/client-go:alltools-latest
 RUN apk add --no-cache curl jq
 
 # Copy the password file
-COPY /configs/root-password.txt /app/root-password.txt
+COPY root-password.txt /app/root-password.txt
 
 # Copy the startup script
 COPY start.sh /app/start.sh
@@ -16,6 +16,8 @@ RUN adduser \
     --gecos "" \
     --uid 10014 \
     "choreo"
+
+# RUN chown -R choreo:choreo /app
 
 # Use the above created unprivileged user
 USER 10014

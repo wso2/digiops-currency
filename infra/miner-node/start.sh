@@ -94,6 +94,7 @@ geth --datadir /debug/node1 \
   --port $NODE1_PORT \
   --http \
   --http.addr "0.0.0.0" \
+  --http.vhosts=* \
   --http.port $NODE1_HTTP_PORT \
   --authrpc.port $NODE1_AUTH_PORT \
   --http.api "personal,eth,net,web3,txpool,miner,admin" \
@@ -108,21 +109,22 @@ geth --datadir /debug/node1 \
 NODE1_PID=$!
 
 # Start node2
-geth --datadir /debug/node2 \
-  --syncmode "full" \
-  --port $NODE2_PORT \
-  --http \
-  --http.addr "0.0.0.0" \
-  --http.port $NODE2_HTTP_PORT \
-  --authrpc.port $NODE2_AUTH_PORT \
-  --http.api "personal,eth,net,web3,txpool,miner,admin" \
-  --bootnodes "$BOOTNODE_ENODE" \
-  --http.corsdomain "*" \
-  --networkid $NETWORK_ID \
-  --unlock "$NODE2_ADDRESS" \
-  --password /debug/node2/password.txt \
-  --allow-insecure-unlock &
-NODE2_PID=$!
+# geth --datadir /debug/node2 \
+#   --syncmode "full" \
+#   --port $NODE2_PORT \
+#   --http \
+#   --http.addr "0.0.0.0" \
+#   --http.vhosts=* \
+#   --http.port $NODE2_HTTP_PORT \
+#   --authrpc.port $NODE2_AUTH_PORT \
+#   --http.api "personal,eth,net,web3,txpool,miner,admin" \
+#   --bootnodes "$BOOTNODE_ENODE" \
+#   --http.corsdomain "*" \
+#   --networkid $NETWORK_ID \
+#   --unlock "$NODE2_ADDRESS" \
+#   --password /debug/node2/password.txt \
+#   --allow-insecure-unlock &
+# NODE2_PID=$!
 
 # Keep the script running
 tail -f /dev/null
