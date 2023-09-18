@@ -31,7 +31,7 @@ export const getRPCProvider = async () => {
   };
 
   const provider = new ethers.providers.StaticJsonRpcProvider(
-    connection,
+    { url: RPC_ENDPOINT },
     CHAIN_ID
   );
   return provider;
@@ -70,6 +70,8 @@ export const getWalletBalanceByWalletAddress = async (walletAddress) => {
     JSON.parse(CONTRACT_ABI),
     provider
   );
+
+  console.log("NIPPA contract", await contract.decimals());
   const balance = await contract.balanceOf(walletAddress);
 
   //check contract decimals

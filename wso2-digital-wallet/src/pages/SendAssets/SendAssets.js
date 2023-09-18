@@ -6,7 +6,7 @@
 // You may not alter or remove any copyright or other notice from copies of this content.
 
 import React, { useEffect, useState } from "react";
-import { Input, Button, Avatar } from "antd";
+import { Input, Button, Avatar, message, Spin } from "antd";
 import { SearchOutlined, ScanOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "./SendAssets.css";
@@ -16,13 +16,18 @@ import Wso2MainImg from "../../assets/images/wso2_main.png";
 import {
   ERROR_FETCHING_LOCAL_TX_DETAILS,
   ERROR_RESETTING_TX_VALUES,
-  ERROR_SAVING_TX_DETAILS
+  ERROR_SAVING_TX_DETAILS,
+  ERROR_RETRIEVE_WALLET_ADDRESS
 } from "../../constants/strings";
 import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
-import { STORAGE_KEYS } from "../../constants/configs";
+import { STORAGE_KEYS, DEFAULT_WALLET_ADDRESS } from "../../constants/configs";
+import { getWalletBalanceByWalletAddress } from "../../services/blockchain.service";
 
 function SendAssets() {
   const navigate = useNavigate();
+
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [sendWalletAddress, setSendWalletAddress] = useState("");
   const [sendAmount, setSendAmount] = useState(0);
   const [isValidWalletAddress, setIsValidWalletAddress] = useState(false);
@@ -32,6 +37,47 @@ function SendAssets() {
 
   const [storedSendWalletAddress, setStoredSendWalletAddress] = useState("");
   const [storedSendAmount, setStoredSendAmount] = useState("");
+
+  const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
+  const [tokenBalance, setTokenBalance] = useState(0);
+  const [walletAddress, setWalletAddress] = useState(DEFAULT_WALLET_ADDRESS);
+
+  const fetchWalletAddress = async () => {
+    try {
+      const walletAddressResponse = await getLocalDataAsync(
+        STORAGE_KEYS.WALLET_ADDRESS
+      );
+      setWalletAddress(walletAddressResponse);
+    } catch (error) {
+      console.log(`${ERROR_RETRIEVE_WALLET_ADDRESS} - ${error}`);
+      messageApi.error(ERROR_RETRIEVE_WALLET_ADDRESS);
+    }
+  };
+
+  const fetchCurrentTokenBalance = async () => {
+    try {
+      setIsTokenBalanceLoading(true);
+      const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
+      setTokenBalance(tokenBalance);
+      setIsTokenBalanceLoading(false);
+    } catch (error) {
+      console.log("error while fetching token balance", error);
+      setIsTokenBalanceLoading(false);
+      setTokenBalance(0);
+    }
+  };
+
+  useEffect(() => {
+    fetchWalletAddress();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (walletAddress !== DEFAULT_WALLET_ADDRESS && walletAddress) {
+      fetchCurrentTokenBalance();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [walletAddress]);
 
   const handleSendCancel = () => {
     navigate("/");
@@ -116,6 +162,7 @@ function SendAssets() {
 
   return (
     <div className="mx-3">
+      {contextHolder}
       <div className="mt-4 d-flex justify-content-between">
         <span className="send-header">Send to</span>
         <Button type="link" onClick={handleSendCancel}>
@@ -151,7 +198,15 @@ function SendAssets() {
                 <Avatar size={40} src={Wso2MainImg} />
                 <div className="send-coin-details d-flex flex-column">
                   <span className="send-coin-name">WSO2</span>
-                  <span className="send-coin-balance">Balance: 0 WSO2</span>
+                  <span className="send-coin-balance">
+                    Balance:{" "}
+                    {isTokenBalanceLoading ? (
+                      <Spin size="small" />
+                    ) : (
+                      tokenBalance
+                    )}{" "}
+                    WSO2
+                  </span>
                 </div>
               </div>
             </Col>
