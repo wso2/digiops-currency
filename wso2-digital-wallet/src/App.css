@@ -1,0 +1,147 @@
+/* 
+// Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+//
+// This software is the property of WSO2 LLC. and its suppliers, if any.
+// Dissemination of any information or reproduction of any material contained
+// herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+// You may not alter or remove any copyright or other notice from copies of this content.
+*/
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.primary-button {
+  background: #EE7B2F !important;
+  color: #ffff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 21px;
+  letter-spacing: 0em;
+  text-align: center;
+  height: 50px !important;
+  border-radius: 9px;
+}
+.primary-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: #f3a058;
+}
+.primary-button:hover {
+  background: #EE7B2F;
+  color: #ffffff !important;
+  border: 1px solid #f3a058 !important;
+}
+.default-button {
+  border: 1px solid #f3a058 !important;
+  color: rgb(0, 0, 0);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 21px;
+  letter-spacing: 0em;
+  text-align: center;
+  height: 50px !important;
+  border-radius: 9px;
+}
+.default-button:hover {
+  color: #050505 !important;
+  border: 2px solid #f3a058 !important;
+}
+.layout-content {
+  height: fit-content !important;
+}
+
+@media (min-width: 768px) {
+  .main-background {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.footer-bar {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+.ant-input-affix-wrapper {
+  border: #EE7B2F 1px solid;
+}
+.ant-input-group-addon {
+  border: #EE7B2F 1px solid !important;
+}
+/* Set the color of the scrollbar track and thumb */
+::-webkit-scrollbar {
+  width: 2px;
+  background-color: #EE7B2F;
+}
+
+/* Set the border radius of the scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  border-radius: 50px;
+}
+.main-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+.layout-content {
+  flex-grow: 1;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
+
+@media (max-width: 768px) {
+  .footer-wrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+}
+
+/* .footer-bar {
+  width: 100%;
+} */
