@@ -1,0 +1,21 @@
+# Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+
+# This software is the property of WSO2 LLC. and its suppliers, if any.
+# Dissemination of any information or reproduction of any material contained
+# herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+# You may not alter or remove any copyright or other notice from copies of this content.
+
+version: 0.1
+
+# +required List of endpoints to create
+endpoints:
+  - name: miner-node-1
+    port: 8040
+    # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
+    # Allowed values: REST, GraphQL, GRPC
+    type: REST
+    # +optional Network level visibility of this endpoint. Defaults to Project
+    # Accepted values: Project|Organization|Public.
+    networkVisibility: Public
+    # +optional Context (base path) of the API that is exposed via this endpoint.
+    # This is mandatory if the endpoint type is set to REST or GraphQL.

@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "WSO2 Coin Wallet",
+  "name": "Wallet app for the WSO2 Coin",
   "icons": [
     {
       "src": "favicon.ico",
