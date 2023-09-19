@@ -31,11 +31,12 @@ To access the WSO2 Wallet:
 Setting up a new wallet is a straightforward process:
 
 1. On the welcome screen, tap the `Create a new wallet` button.
-   > ![Create Wallet](/docs/images/1-create-a-new-wallet.png) > ![Create Wallet](/docs/images/2-wallet-create-success.png)
+   > ![Create Wallet](images/1-create-a-new-wallet.png)
+   > ![Create Wallet](images/2-wallet-create-success.png)
 1. You will be presented with an intermediate screen showcasing your wallet address, private key, and passphrase.
 1. It's essential to keep your private key and passphrase secure. Tap on the copy icons next to each to copy them.
 1. Save both your private key and passphrase in a secure location. **Remember**: Losing these details means you lose access to your tokens.
-   > ![Create Wallet](/docs/images/3-recover-phrase.png)
+   > ![Create Wallet](images/3-recover-phrase.png)
 
 ---
 
@@ -47,7 +48,7 @@ After creating a wallet, you'll be directed to the main screen. Here's what to e
 2. **Connectivity Status**: Below the balance, the wallet connectivity status with the blockchain is displayed.
 3. **Transaction History**: At the bottom of the screen, you'll find a list of your most recent transactions.
 
-> ![Main Screen](/docs/images/4-wallet-home-screen.png)
+> ![Main Screen](images/4-wallet-home-screen.png)
 
 ---
 
@@ -61,7 +62,10 @@ Follow these steps to transfer WSO2 coins to another wallet:
 4. Review the details and tap the `Confirm` button.
 5. Wait for a confirmation message indicating the transaction was successful.
 6. You can seed the recent transaction in the transaction history ib the main screen.
-   > ![Transfer Coins](/docs/images/5-send-token-wallet-address.png) > ![Transfer Coins](/docs/images/6-review-entered-details.png) > ![Transfer Coins](/docs/images/7-send-confirm-and-wait.png) > ![Transfer Coins](/docs/images/8-review-your-tx-home-page.png)
+   > ![Transfer Coins](images/5-send-token-wallet-address.png)
+   > ![Transfer Coins](images/6-review-entered-details.png)
+   > ![Transfer Coins](images/7-send-confirm-and-wait.png)
+   > ![Transfer Coins](images/8-review-your-tx-home-page.png)
 
 ---
 
@@ -73,7 +77,7 @@ To view your wallet details and log out:
 2. Here, you can view your private key and wallet address. Remember never to share your private key with anyone.
 3. To log out from the WSO2 Wallet app, tap the `Logout` button.
 
-> ![Profile](/docs/images/9-profile-page.png)
+> ![Profile](images/9-profile-page.png)
 
 ---
 
@@ -88,7 +92,10 @@ If you ever lose access to your WSO2 Wallet, don't panic. The Wallet Recovery Ph
    If everything looks accurate, tap `Continue`.
 5. You will be navigated to the main screen, showcasing your funds.
 
-> ![RecoverWallet](/docs/images/1-create-a-new-wallet.png) > ![RecoverWallet](/docs/images/11-enter-recovery-phrase.png) > ![RecoverWallet](/docs/images/12-continue-recovery-wallet.png) > ![RecoverWallet](/docs/images/4-wallet-home-screen.png)
+> ![RecoverWallet](images/1-create-a-new-wallet.png)
+> ![RecoverWallet](images/11-enter-recovery-phrase.png)
+> ![RecoverWallet](images/12-continue-recovery-wallet.png)
+> ![RecoverWallet](images/4-wallet-home-screen.png)
 
 **Remember, your 12-word passphrase is crucial for wallet recovery, so keep it safe and confidential.**
 
@@ -104,8 +111,8 @@ Keeping track of your transactions is made easy with the Transaction History fea
   - Amount of WSO2 coins transacted
   - Timestamp of the transaction
 
-> ![TransactionHistory](/docs/images/10-tx-history-page.png)
->
+> ![TransactionHistory](images/10-tx-history-page.png)
+
 > **Stay informed of your recent activity and always be aware of your incoming and outgoing transactions.**
 
 Thank you for choosing WSO2 Wallet. If you encounter any issues or have further questions, please contact our support team.

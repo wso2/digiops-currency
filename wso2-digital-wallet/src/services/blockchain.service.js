@@ -21,15 +21,16 @@ import { DateTime } from "luxon";
 import { getLocalDataAsync } from "../helpers/storage";
 
 export const getRPCProvider = async () => {
-  //get the API key form the local storage
-  const apiKey = await getAccessToken();
+  /** we will need this authentication header if we are using a private RPC endpoint with authentication
+   * get the API key form the local storage
+   * const apiKey = await getAccessToken();
   const connection = {
     url: RPC_ENDPOINT,
     headers: {
       Authorization: `Bearer ${apiKey}`
     }
   };
-
+  */
   const provider = new ethers.providers.StaticJsonRpcProvider(
     { url: RPC_ENDPOINT },
     CHAIN_ID
