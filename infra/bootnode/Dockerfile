@@ -4,12 +4,12 @@ FROM ethereum/client-go:alltools-latest
 RUN apk add --no-cache curl jq
 
 # Copy the startup script
-COPY bootnode.sh /envs/bootnode.sh
+#COPY bootnode.sh /envs/bootnode.sh
 
 # Copy the startup script
-COPY debug.log /envs/debug.log
+#COPY debug.log /envs/debug.log
 
-RUN chmod -R a+w /envs/debug.log
+#RUN chmod -R a+w /envs/debug.log
 
 # Copy the bootkey
 #COPY boot.key /envs/boot.key
