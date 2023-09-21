@@ -56,7 +56,7 @@ function Home() {
 
   const [isAccountCopied, setIsAccountCopied] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(0);
-  const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(0);
+  const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
 
   useEffect(() => {
     fetchWalletAddress();
