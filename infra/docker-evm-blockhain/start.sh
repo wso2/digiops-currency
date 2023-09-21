@@ -99,6 +99,7 @@ geth --datadir /debug/node1 \
   --http.api "personal,eth,net,web3,txpool,miner,admin" \
   --bootnodes "$BOOTNODE_ENODE" \
   --http.corsdomain "*" \
+  --http.vhosts=* \
   --networkid $NETWORK_ID \
   --unlock "$NODE1_ADDRESS" \
   --password /debug/node1/password.txt \
@@ -112,6 +113,7 @@ geth --datadir /debug/node2 \
   --syncmode "full" \
   --port $NODE2_PORT \
   --http \
+  --http.vhosts=* \
   --http.addr "0.0.0.0" \
   --http.port $NODE2_HTTP_PORT \
   --authrpc.port $NODE2_AUTH_PORT \
