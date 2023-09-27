@@ -1,3 +1,4 @@
+//SPDX-License-Identifier: MIT
 // Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
 //
 // This software is the property of WSO2 LLC. and its suppliers, if any.
@@ -15,7 +16,7 @@ contract WSO2 is IERC20, Ownable {
     string constant _symbol = "WSO2";
     uint8 constant _decimals = 9;
 
-    uint256 _totalSupply = 1 * 10 ** 15 * (10 ** _decimals);
+    uint256 _totalSupply;
 
     mapping(address => uint256) _balances;
     mapping(address => mapping(address => uint256)) _allowances;
@@ -23,9 +24,9 @@ contract WSO2 is IERC20, Ownable {
 
     event AddAuthorizedWallet(address holder, bool status);
 
-    constructor() {
+    constructor(uint256 _supply) {
         isAuthorized[msg.sender] = true;
-
+        _totalSupply = _supply * 10 ** _decimals;
         _balances[msg.sender] = _totalSupply;
         emit Transfer(address(0), msg.sender, _totalSupply);
     }
