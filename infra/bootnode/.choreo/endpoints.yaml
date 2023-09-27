@@ -10,7 +10,7 @@ version: 0.1
 # +required List of endpoints to create
 endpoints:
   - name: bootnode
-    port: 30310
+    port: 30309
     # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
     # Allowed values: REST, GraphQL, GRPC
     type: REST
