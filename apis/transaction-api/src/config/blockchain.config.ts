@@ -6,10 +6,9 @@
 // You may not alter or remove any copyright or other notice from copies of this content.
 
 export const blockchainConfigs = {
-  rpcUrl:
-    'https://apis-dev.wso2.com/zvvu/node2-experiment/miner-node-1-cb9/1.0.0/',
+  rpcUrl: process.env.RPC_URL,
   chainID: 10000,
-  contractAddress: '0x99968e9Ed0276684C931F04a3A744BBfC1a3E005',
+  contractAddress: process.env.MAIN_CONTRACT_ADDRESS,
   contractAbi: [
     {
       inputs: [{ internalType: 'uint256', name: '_supply', type: 'uint256' }],
