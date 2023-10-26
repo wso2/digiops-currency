@@ -10,7 +10,7 @@ version: 0.1
 # +required List of endpoints to create
 endpoints:
   - name: miner-node-2
-    port: 8041
+    port: 8040
     # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
     # Allowed values: REST, GraphQL, GRPC
     type: REST
