@@ -1,5 +1,12 @@
+// Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
+//
+// This software is the property of WSO2 LLC. and its suppliers, if any.
+// Dissemination of any information or reproduction of any material contained
+// herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+// You may not alter or remove any copyright or other notice from copies of this content.
+
 import { Avatar, Button } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./CreateWallet.css";
 import Wso2MainImg from "../../assets/images/wso2_main.png";
 import { ethers } from "ethers";
@@ -16,13 +23,7 @@ import {
   ERROR_CREATING_WALLET
 } from "../../constants/strings";
 import { STORAGE_KEYS } from "../../constants/configs";
-import { saveLocalDataAsync } from "../../helpers/storage";
-// Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
-//
-// This software is the property of WSO2 LLC. and its suppliers, if any.
-// Dissemination of any information or reproduction of any material contained
-// herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
-// You may not alter or remove any copyright or other notice from copies of this content.
+import { saveLocalDataAsync, getLocalDataAsync } from "../../helpers/storage";
 
 import { showAlertBox } from "../../helpers/alerts";
 
@@ -32,6 +33,17 @@ function CreateWallet() {
   const [walletPhrase, setWalletPhrase] = useState("");
 
   const navigate = useNavigate();
+
+  const getCurrentWalletIFExists = async () => {
+    const walletAddress = await getLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS);
+    if (walletAddress) {
+      navigate("/");
+    }
+  };
+
+  useEffect(() => {
+    getCurrentWalletIFExists();
+  }, []);
 
   const handleRestoreWallet = () => {
     navigate("/recover-wallet");
