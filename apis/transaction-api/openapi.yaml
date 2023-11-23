@@ -78,7 +78,7 @@ paths:
         - Transactional
       requestBody:
         required: true
-        description: Recipient wallet address and amount are required for token transfer
+        description: Recipient wallet address and amount are required for token transfer.
         content:
           application/json:
             schema:
@@ -137,10 +137,7 @@ components:
           description: WSO2 Token balance
         tokenBalanceUnFormatted:
           type: string
-          description: |-
-            This value represents the balance of WSO2 tokens in Solidity's format. Solidity doesn't support floating-point numbers, 
-            so values are represented by multiplying with 10 raised to the power of the decimal precision defined in our smart contract 
-            Example: 1.5 WSO2 tokens will be represented as 1500000000000000000.
+          description: Solidity's format representation of the WSO2 token balance.
         decimals:
           type: number
           description: The token's decimal precision defined in our smart contract.
@@ -155,14 +152,12 @@ components:
       properties:
         message:
           type: string
-          description: A message indicating the result of the API request, e.g., "success" or "error".
+          description: A message indicating the result of the API request.
         httpCode:
           type: number
           description: HTTP status code of the response.
         payload:
-          description: WSO2 token balance of the master wallet and its details.
-          allOf:
-            - $ref: '#/components/schemas/MasterWalletBalanceDto'
+          $ref: '#/components/schemas/MasterWalletBalanceDto'
       required:
         - message
         - httpCode
@@ -171,36 +166,35 @@ components:
     WalletBalanceByAddressDto:
       type: object
       properties:
+        walletAddress:
+          type: string
+          description: The wallet address.
         balance:
           type: string
-          description: WSO2 Token balance for the given wallet address
+          description: WSO2 Token balance.
         tokenBalanceUnFormatted:
           type: string
-          description: |-
-            This value represents the balance of WSO2 tokens in Solidity's format. Solidity doesn't support floating-point numbers, 
-            so values are represented by multiplying with 10 raised to the power of the decimal precision defined in our smart contract 
-            Example: 1.5 WSO2 tokens will be represented as 1500000000000000000.
+          description: Solidity's format representation of the WSO2 token balance.
         decimals:
           type: number
-          description: The token's decimal precision defined in our smart contract.
+          description: The token's decimal precision.
       required:
+        - walletAddress
         - balance
         - tokenBalanceUnFormatted
-        - decimalsa
+        - decimals
 
     WalletBalanceByAddressResponseDto:
       type: object
       properties:
         message:
           type: string
-          description: A message indicating the result of the API request, e.g., "success" or "error".
+          description: A message indicating the result of the API request.
         httpCode:
           type: number
           description: HTTP status code of the response.
         payload:
-          description: WSO2 token balance of the given wallet.
-          allOf:
-            - $ref: '#/components/schemas/WalletBalanceByAddressDto'
+          $ref: '#/components/schemas/WalletBalanceByAddressDto'
       required:
         - message
         - httpCode
@@ -208,38 +202,38 @@ components:
 
     TransferTokenDto:
       type: object
-      properties: {}
-
-    TokenTransferDto:
-      type: object
       properties:
-        txHash:
+        recipientWalletAddress:
           type: string
-          description: This represents the transaction hash, which is a unique identifier for a particular transaction on the blockchain. It can be used to track or verify the status and details of a transaction. Typically, a transaction hash looks like a long string of numbers and letters, beginning with "0x
-        status:
-          type: number
-          description: This is an indicator of the transaction's outcome. Typically in wso2 blockchain contexts \n - 1 means the transaction was successful - 0 would mean the transaction failed
-        committedBlockNumber:
-          type: number
-          description: Refers to the block number in the blockchain where the transaction has been added or committed
+          description: The wallet address of the recipient.
+        amount:
+          type: integer
+          description: The amount of tokens to transfer.
       required:
-        - txHash
-        - status
-        - committedBlockNumber
+        - recipientWalletAddress
+        - amount
 
     TokenTransferResponseDto:
       type: object
       properties:
         message:
           type: string
-          description: A message indicating the result of the API request, e.g., "success" or "error".
+          description: A message indicating the result of the API request.
         httpCode:
           type: number
           description: HTTP status code of the response.
         payload:
-          description: Details of the token transfer transaction.
-          allOf:
-            - $ref: '#/components/schemas/TokenTransferDto'
+          type: object
+          properties:
+            transactionHash:
+              type: string
+              description: The hash of the token transfer transaction.
+            blockNumber:
+              type: string
+              description: The block number in which the transaction was included.
+            cumulativeGasUsed:
+              type: string
+              description: The total amount of gas used when the transaction was included in a block.
       required:
         - message
         - httpCode
