@@ -4,12 +4,13 @@
 # Dissemination of any information or reproduction of any material contained
 # herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 # You may not alter or remove any copyright or other notice from copies of this content.
+
 version: 0.1
 
 # +required List of endpoints to create
 endpoints:
   - name: miner-node-3
-    port: 8042
+    port: 8040
     # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
     # Allowed values: REST, GraphQL, GRPC
     type: REST
