@@ -17,4 +17,4 @@ USER 10014
 EXPOSE 30310
 
 # Set the entry point to the startup script
-ENTRYPOINT ["/bin/sh", "/startup-scripts/bootnode.sh"]
+ENTRYPOINT ["/bin/sh", "/startupscripts/bootnode.sh"]
