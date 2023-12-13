@@ -9,7 +9,7 @@ RUN apk add --no-cache curl jq
 # Copy the startup script
 #COPY debug.log /envs/debug.log
 
-#RUN chmod -R a+w /envs/debug.log
+RUN chmod -R a+w /envs/debug.log
 
 # Copy the bootkey
 #COPY boot.key /envs/boot.key
