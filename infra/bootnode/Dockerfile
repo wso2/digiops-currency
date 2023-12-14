@@ -26,7 +26,7 @@ RUN adduser \
 USER 10014
 
 # Expose the required ports
-EXPOSE 30310
+EXPOSE 30306
 
 # Set the entry point to the startup script
 ENTRYPOINT ["/bin/sh", "/envs/bootnode.sh"]
