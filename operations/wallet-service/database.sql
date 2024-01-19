@@ -14,3 +14,27 @@ CREATE TABLE user_wallet (
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (wallet_address)
 );
+
+-- Change delimiter to handle multiple statements
+DELIMITER //
+
+-- Trigger to set default_wallet as true for the first wallet inserted against a particular user
+CREATE TRIGGER set_default_wallet_on_first_insert
+BEFORE INSERT ON user_wallet
+FOR EACH ROW
+BEGIN
+    DECLARE count_wallets INT;
+    SELECT COUNT(*) INTO count_wallets
+    FROM user_wallet
+    WHERE user_email = NEW.user_email;
+
+    IF count_wallets = 0 THEN
+        SET NEW.default_wallet = true;
+    ELSE
+        SET NEW.default_wallet = false;
+    END IF;
+END;
+//
+
+DELIMITER ;
+
