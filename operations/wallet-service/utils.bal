@@ -12,7 +12,7 @@ import ballerina/jwt;
 # + return - Return JWT info or error
 public isolated function jwtDecoder(string jwt) returns JwtPayload|error {
     [jwt:Header, jwt:Payload] [_, payload] = check jwt:decode(jwt);
-    return check payload.cloneWithType();
+    return payload.cloneWithType();
 }
 
 # Check if string is empty or not.
