@@ -8,6 +8,6 @@
 import ballerinax/mysql;
 import ballerinax/mysql.driver as _;
 
-configurable Database connectorStoreDatabase = ?;
+configurable Database walletDatabase = ?;
 
-final mysql:Client dbClient = check new (...connectorStoreDatabase);
+final mysql:Client dbClient = check new (...walletDatabase);

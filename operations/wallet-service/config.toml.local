@@ -1,4 +1,4 @@
-[wallet_service.database.connectorStoreDatabase]
+[wallet_service.database.walletDatabase]
 host = ""
 user = ""
 password = ""
