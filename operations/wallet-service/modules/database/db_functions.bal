@@ -15,13 +15,11 @@ import ballerina/sql;
 # + return - True if wallet exists, false if not exists, error if error occurred
 public isolated function isUserWalletExists(string walletAddress) returns boolean|sql:Error {
     types:UserWallet|sql:Error walletResponse = dbClient->queryRow(getUserWalletQuery(walletAddress));
-    if walletResponse is sql:NoRowsError {
-        return false;
-    } else if walletResponse is sql:Error {
+    if walletResponse is sql:Error && walletResponse !is sql:NoRowsError {
         log:printError("Error while checking user wallet", walletResponse, info = walletResponse.toString());
         return walletResponse;
     }
-    return true;
+    return walletResponse is types:UserWallet;
 }
 
 # Insert a user wallet.
