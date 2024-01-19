@@ -4,7 +4,6 @@
 // Dissemination of any information or reproduction of any material contained
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
-
 import ballerina/jwt;
 
 # Decoding JSON Web Token
@@ -21,4 +20,4 @@ public isolated function jwtDecoder(string jwt) returns JwtPayload|error {
 # + val - String parameter
 # + return - If empty return TRUE, else return FALSE
 public isolated function isEmptyVal(string? val) returns boolean =>
-    val is () || val === "";
+    val is () || val.trim().length() == 0;
