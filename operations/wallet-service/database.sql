@@ -11,5 +11,6 @@ CREATE TABLE user_wallet (
     wallet_address VARCHAR(255) NOT NULL,
     user_email VARCHAR(255) NOT NULL,
     default_wallet BOOLEAN DEFAULT false,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (wallet_address)
 );
