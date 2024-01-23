@@ -5,6 +5,8 @@
 -- You may not alter or remove any copyright or other notice from copies of this content.
 CREATE DATABASE wso2_wallet;
 
+USE wso2_wallet;
+
 DROP TABLE IF EXISTS user_wallet;
 
 CREATE TABLE user_wallet (
