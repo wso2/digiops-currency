@@ -15,9 +15,7 @@ CREATE TABLE user_wallet (
     PRIMARY KEY (wallet_address)
 );
 
--- Change delimiter to handle multiple statements
 DELIMITER //
-
 -- Trigger to set default_wallet as true for the first wallet inserted against a particular user
 CREATE TRIGGER set_default_wallet_on_first_insert
 BEFORE INSERT ON user_wallet
@@ -35,5 +33,5 @@ BEGIN
     END IF;
 END;
 //
-
 DELIMITER ;
+
