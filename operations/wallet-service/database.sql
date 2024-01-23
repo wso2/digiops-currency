@@ -5,6 +5,8 @@
 -- You may not alter or remove any copyright or other notice from copies of this content.
 CREATE DATABASE wso2_wallet;
 
+USE wso2_wallet;
+
 DROP TABLE IF EXISTS user_wallet;
 
 CREATE TABLE user_wallet (
@@ -15,9 +17,7 @@ CREATE TABLE user_wallet (
     PRIMARY KEY (wallet_address)
 );
 
--- Change delimiter to handle multiple statements
 DELIMITER //
-
 -- Trigger to set default_wallet as true for the first wallet inserted against a particular user
 CREATE TRIGGER set_default_wallet_on_first_insert
 BEFORE INSERT ON user_wallet
@@ -35,5 +35,5 @@ BEGIN
     END IF;
 END;
 //
-
 DELIMITER ;
+
