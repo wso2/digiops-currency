@@ -108,7 +108,7 @@ function Home() {
       setTokenBalance(tokenBalance);
       setIsTokenBalanceLoading(false);
     } catch (error) {
-      console.log("error while fetching token balance", error);
+      console.debug("DEBUG: error while fetching token balance", error);
       setIsTokenBalanceLoading(false);
       setTokenBalance(0);
     }
@@ -120,7 +120,7 @@ function Home() {
       setTokenBalance(tokenBalance);
     } catch (error) {
       setTokenBalance(0);
-      console.log("error while fetching token balance", error);
+      console.debug("DEBUG: error while fetching token balance", error);
     }
   };
 
