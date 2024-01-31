@@ -5,7 +5,7 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import { Input, Button, Tag } from 'antd';
+import { Input, Button } from 'antd';
 import React, { useState } from 'react';
 import { Col, Row } from 'reactstrap';
 import { ethers } from 'ethers';
@@ -21,7 +21,8 @@ import {
   WALLET_PRIVATE_KEY,
   OK,
   ERROR,
-  RECOVER_WALLET_ERROR
+  RECOVER_WALLET_ERROR,
+  SHOW_WALLET_ADDRESS
 } from '../../constants/strings'
 import { PASS_PHRASE_LENGTH, STORAGE_KEYS } from '../../constants/configs';
 import { saveLocalDataAsync } from '../../helpers/storage';
@@ -113,9 +114,9 @@ export default function RecoverWallet() {
       <div className='mt-5 d-flex justify-content-center'>
         <h3>{RECOVER_YOUR_WALLET}</h3>
       </div>
-      <Tag className="total-balance-wallet-address mt-2">
+      <div className="text-sm">
         {PASTE_PHRASE_HERE}
-      </Tag>
+      </div>
 
       <div className='recover-wallet-content container'>
         <Row className='mt-3'>{renderInputs()}</Row>
@@ -131,7 +132,7 @@ export default function RecoverWallet() {
                 {walletAddress && (
                   <div>
                     <div className='mt-3'>
-                      <WalletAddressCopy address={walletAddress} topic={WALLET_ADDRESS} />
+                      <WalletAddressCopy address={walletAddress} topic={WALLET_ADDRESS} buttonText={SHOW_WALLET_ADDRESS} />
                     </div>
                   </div>
                 )}

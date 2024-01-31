@@ -43,6 +43,7 @@ function CreateWallet() {
 
   useEffect(() => {
     getCurrentWalletIFExists();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleRestoreWallet = () => {
