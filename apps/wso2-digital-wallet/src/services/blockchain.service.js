@@ -19,20 +19,20 @@ import {
 import qs from "qs";
 import { DateTime } from "luxon";
 import { getLocalDataAsync } from "../helpers/storage";
+import { getTokenAsync } from "../helpers/auth";
 
 export const getRPCProvider = async () => {
   /** we will need this authentication header if we are using a private RPC endpoint with authentication
    * get the API key form the local storage
    * const apiKey = await getAccessToken();
-  const connection = {
-    url: RPC_ENDPOINT,
-    headers: {
-      Authorization: `Bearer ${apiKey}`
-    }
+   */
+  const accessToken = await getTokenAsync();
+  const headers = {
+    Authorization: `Bearer ${accessToken}`
   };
-  */
+
   const provider = new ethers.providers.StaticJsonRpcProvider(
-    { url: RPC_ENDPOINT },
+    { url: RPC_ENDPOINT, headers: headers },
     CHAIN_ID
   );
   return provider;
@@ -43,17 +43,14 @@ export const getCurrentBlockNumber = async (retryCount = 0) => {
   try {
     const provider = await getRPCProvider();
     const blockNumber = await provider.getBlockNumber();
-    console.log("current block number: ", blockNumber);
     return blockNumber;
   } catch (error) {
-    console.log("API error ", error);
     const statusMatch = error.message.match(/status=(\d+)/);
     const statusCode = statusMatch ? statusMatch[1] : null;
 
     if (retryCount < maxRetryCount) {
       return getCurrentBlockNumber(retryCount + 1);
     }
-
     if (statusMatch) {
       console.log("Status code:", statusCode);
     } else {
@@ -71,8 +68,6 @@ export const getWalletBalanceByWalletAddress = async (walletAddress) => {
     JSON.parse(CONTRACT_ABI),
     provider
   );
-
-  console.log("NIPPA contract", await contract.decimals());
   const balance = await contract.balanceOf(walletAddress);
 
   //check contract decimals
@@ -118,7 +113,6 @@ export const transferToken = async (senderWalletAddress, transferAmount) => {
   const amount = ethers.utils.parseUnits(transferAmount, decimals);
   const tx = await contract.transfer(senderWalletAddress, amount, options);
   const receipt = await tx.wait();
-  console.log("Transaction receipt", receipt);
   return receipt;
 };
 

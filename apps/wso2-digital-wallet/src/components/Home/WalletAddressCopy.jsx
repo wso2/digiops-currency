@@ -13,7 +13,7 @@ import { showAlertBox } from '../../helpers/alerts';
 import { COPIED, OK } from '../../constants/strings';
 
 function WalletAddressCopy(props) {
-  const { address, topic } = props;
+  const { address, topic, buttonText = 'Show Private Key' } = props;
 
   const [walletAddressCopied, setWalletAddressCopied] = useState(false);
   const [showPrivateKey, setShowPrivateKey] = useState(false);
@@ -38,7 +38,7 @@ function WalletAddressCopy(props) {
           <span className="wallet-copy-topic mb-2">{topic}</span>
         </div>
         {!showPrivateKey ? (
-          <Button className='w-100 primary-button' onClick={() => setShowPrivateKey(true)}>Show Private Key</Button>
+          <Button className='w-100 primary-button' onClick={() => setShowPrivateKey(true)}>{buttonText}</Button>
         ) : (
           <Input
             id="inputField"

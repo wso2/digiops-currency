@@ -35,8 +35,9 @@ export const WALLET_ADDRESS_COPIED =
 // recover wallet
 export const RECOVER_WALLET = "Recover Wallet";
 export const RECOVER_WALLET_ERROR = "Error recovering wallet";
-export const PASTE_PHRASE_HERE = "Paste your Phrase here";
+export const PASTE_PHRASE_HERE = "Paste your 12 words seed phrase here";
 export const RECOVER_YOUR_WALLET = "Recover Your Wallet";
+export const SHOW_WALLET_ADDRESS = "Show Wallet Address";
 
 // Recovery Phrase
 export const RECOVERY_PHRASE = "Recovery Phrase";

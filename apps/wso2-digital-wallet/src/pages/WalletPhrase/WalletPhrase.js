@@ -19,7 +19,8 @@ import {
   WALLET_ADDRESS,
   WALLET_PRIVATE_KEY,
   ERROR_READING_WALLET_DETAILS,
-  WALLET_SECURE_TIPS
+  WALLET_SECURE_TIPS,
+  SHOW_WALLET_ADDRESS
 } from "../../constants/strings";
 import { STORAGE_KEYS } from "../../constants/configs";
 import { getLocalDataAsync } from "../../helpers/storage";
@@ -115,7 +116,11 @@ function WalletPhrase(props) {
           />
         </div>
         <div className="mt-3">
-          <WalletAddressCopy address={walletAddress} topic={WALLET_ADDRESS} />
+          <WalletAddressCopy
+            address={walletAddress}
+            topic={WALLET_ADDRESS}
+            buttonText={SHOW_WALLET_ADDRESS}
+          />
         </div>
         <div className="mt-3">
           <WalletAddressCopy
