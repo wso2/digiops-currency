@@ -103,6 +103,11 @@ npm install
 ```
 
 2. Make sure your smart contract is complete and tested.
+
+```bash
+npx hardhat compile
+```
+
 3. To deploy the contract, run:
 
 ```bash
