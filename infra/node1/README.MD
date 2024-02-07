@@ -54,6 +54,7 @@ To generate the wallet address using your CLI you will need to install geth.
 After installing Geth, you can create a new account:
 
 - Run the command: `geth --datadir node1/ account new`.
+- This will prompt for a password. Please remember the password entered to add it as the Password config during Node deployment.
 - Now you can navigate to the `node1/keystore`` directory and see the newly created account file.
 - File contents should look like this:
 
