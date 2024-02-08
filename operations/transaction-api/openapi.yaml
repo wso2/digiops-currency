@@ -1,0 +1,240 @@
+openapi: 3.0.3
+info:
+  title: WSO2 Transactional API
+  description: The wso2 transactional API documentation
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+
+paths:
+  /api/v1:
+    get:
+      operationId: AppController_getHealth
+      summary: Health check of WSO2 transactional api
+      tags:
+        - health
+      responses:
+        '200':
+          description: Get welcome message.
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Bad request or wallet address not found.
+        '500':
+          description: Server Error.
+
+  /api/v1/blockchain/master-wallet-balance:
+    get:
+      operationId: BlockchainController_getMasterWalletBalance
+      summary: Get master wallet balance
+      description: This endpoint will return master wallet balance in wso2 tokens
+      tags:
+        - Transactional
+      responses:
+        '200':
+          description: Retrieve master wallet balance.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterWalletBalanceResponseDto'
+        '400':
+          description: Bad request.
+        '500':
+          description: Server Error.
+
+  /api/v1/blockchain/get-balance/{walletAddress}:
+    get:
+      operationId: BlockchainController_getBalanceByWalletAddress
+      summary: Retrieve wso2 token balance by wallet address
+      parameters:
+        - name: walletAddress
+          required: true
+          in: path
+          description: Address of the wallet
+          schema:
+            type: string
+      tags:
+        - Transactional
+      responses:
+        '200':
+          description: Successfully retrieved balance.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletBalanceByAddressResponseDto'
+        '400':
+          description: Bad request or wallet address not found.
+        '500':
+          description: Server Error.
+
+  /api/v1/blockchain/transfer-token:
+    post:
+      operationId: BlockchainController_transferTokens
+      summary: Transfer tokens to a specified wallet address
+      tags:
+        - Transactional
+      requestBody:
+        required: true
+        description: Recipient wallet address and amount are required for token transfer.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferTokenDto'
+      responses:
+        '200':
+          description: Token successfully transferred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenTransferResponseDto'
+        '400':
+          description: Bad request or transfer failed.
+        '500':
+          description: Server Error.
+
+  /api/v1/blockchain/get-transaction-details/{txHash}:
+    get:
+      operationId: BlockchainController_getTransactionDetailsByTxHash
+      summary: Get the full transaction details of the given tx hash
+      parameters:
+        - name: txHash
+          required: true
+          in: path
+          description: Transaction hash of the transaction start with 0x
+          schema:
+            type: string
+      tags:
+        - Transactional
+      responses:
+        '200':
+          description: Successfully retrieved balance.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletBalanceByAddressResponseDto'
+        '400':
+          description: Bad request or wallet address not found.
+        '500':
+          description: Server Error.
+
+tags:
+  - name: wso2
+    description: ''
+
+components:
+  schemas:
+    MasterWalletBalanceDto:
+      type: object
+      properties:
+        masterWalletAddress:
+          type: string
+          description: The wallet address of the ws02 master wallet
+        balance:
+          type: string
+          description: WSO2 Token balance
+        tokenBalanceUnFormatted:
+          type: string
+          description: Solidity's format representation of the WSO2 token balance.
+        decimals:
+          type: number
+          description: The token's decimal precision defined in our smart contract.
+      required:
+        - masterWalletAddress
+        - balance
+        - tokenBalanceUnFormatted
+        - decimals
+
+    MasterWalletBalanceResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A message indicating the result of the API request.
+        httpCode:
+          type: number
+          description: HTTP status code of the response.
+        payload:
+          $ref: '#/components/schemas/MasterWalletBalanceDto'
+      required:
+        - message
+        - httpCode
+        - payload
+
+    WalletBalanceByAddressDto:
+      type: object
+      properties:
+        walletAddress:
+          type: string
+          description: The wallet address.
+        balance:
+          type: string
+          description: WSO2 Token balance.
+        tokenBalanceUnFormatted:
+          type: string
+          description: Solidity's format representation of the WSO2 token balance.
+        decimals:
+          type: number
+          description: The token's decimal precision.
+      required:
+        - walletAddress
+        - balance
+        - tokenBalanceUnFormatted
+        - decimals
+
+    WalletBalanceByAddressResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A message indicating the result of the API request.
+        httpCode:
+          type: number
+          description: HTTP status code of the response.
+        payload:
+          $ref: '#/components/schemas/WalletBalanceByAddressDto'
+      required:
+        - message
+        - httpCode
+        - payload
+
+    TransferTokenDto:
+      type: object
+      properties:
+        recipientWalletAddress:
+          type: string
+          description: The wallet address of the recipient.
+        amount:
+          type: integer
+          description: The amount of tokens to transfer.
+      required:
+        - recipientWalletAddress
+        - amount
+
+    TokenTransferResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A message indicating the result of the API request.
+        httpCode:
+          type: number
+          description: HTTP status code of the response.
+        payload:
+          type: object
+          properties:
+            transactionHash:
+              type: string
+              description: The hash of the token transfer transaction.
+            blockNumber:
+              type: string
+              description: The block number in which the transaction was included.
+            cumulativeGasUsed:
+              type: string
+              description: The total amount of gas used when the transaction was included in a block.
+      required:
+        - message
+        - httpCode
+        - payload

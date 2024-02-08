@@ -33,7 +33,7 @@ module.exports = {
   },
   networks: {
     wso2: {
-      url: "https://apis-dev.wso2.com/zvvu/node2-experiment/miner-node-1-cb9/1.0.0/",
+      url: process.env.RPC_URL,
       accounts:
         process.env.PRIVATE_KEY_TESTNET !== undefined
           ? [process.env.PRIVATE_KEY_TESTNET]

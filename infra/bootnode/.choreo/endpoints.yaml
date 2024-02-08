@@ -10,13 +10,13 @@ version: 0.1
 # +required List of endpoints to create
 endpoints:
   - name: bootnode
-    port: 30309
+    port: 30311
     # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
     # Allowed values: REST, GraphQL, GRPC
     type: REST
     # +optional Network level visibility of this endpoint. Defaults to Project
     # Accepted values: Project|Organization|Public.
-    networkVisibility: Public
+    networkVisibility: Project
     # +optional Context (base path) of the API that is exposed via this endpoint.
     # This is mandatory if the endpoint type is set to REST or GraphQL.
   - name: bootnode udp service
