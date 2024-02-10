@@ -4,19 +4,14 @@
 // Dissemination of any information or reproduction of any material contained
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
-
 import { ethers } from "ethers";
-import axios from "axios";
 import {
   RPC_ENDPOINT,
   CHAIN_ID,
-  TOKEN_REFRESH_URL,
-  API_KEY,
   CONTRACT_ADDRESS,
   CONTRACT_ABI,
   STORAGE_KEYS
 } from "../constants/configs";
-import qs from "qs";
 import { DateTime } from "luxon";
 import { getLocalDataAsync } from "../helpers/storage";
 import { getTokenAsync } from "../helpers/auth";
@@ -24,7 +19,6 @@ import { getTokenAsync } from "../helpers/auth";
 export const getRPCProvider = async () => {
   /** we will need this authentication header if we are using a private RPC endpoint with authentication
    * get the API key form the local storage
-   * const apiKey = await getAccessToken();
    */
   const accessToken = await getTokenAsync();
   const headers = {
@@ -76,27 +70,6 @@ export const getWalletBalanceByWalletAddress = async (walletAddress) => {
   //format the balance
   const formattedBalance = ethers.utils.formatUnits(balance, decimals);
   return formattedBalance;
-};
-
-export const getAccessToken = async () => {
-  const payload = qs.stringify({
-    grant_type: "client_credentials"
-  });
-
-  const config = {
-    method: "post",
-    maxBodyLength: Infinity,
-    url: TOKEN_REFRESH_URL,
-    headers: {
-      Authorization: `Basic ${API_KEY}`,
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    data: payload
-  };
-
-  const response = await axios(config);
-  const accessToken = response.data.access_token;
-  return accessToken;
 };
 
 export const transferToken = async (senderWalletAddress, transferAmount) => {
