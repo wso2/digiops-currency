@@ -38,11 +38,14 @@ export class BlockchainService {
 
   getMasterWalletTokenBalance = async () => {
     const provider = await this.getWeb3Provider();
+    console.log(blockchainConfigs.contractAddress);
     const contract = new ethers.Contract(
       blockchainConfigs.contractAddress,
       blockchainConfigs.contractAbi,
       provider,
     );
+    console.log("test" + contract)
+    console.log(this.configService.get('MASTER_WALLET_ADDRESS'))
     const decimals = await contract.decimals();
     const balance = await contract.balanceOf(
       this.configService.get('MASTER_WALLET_ADDRESS'),
