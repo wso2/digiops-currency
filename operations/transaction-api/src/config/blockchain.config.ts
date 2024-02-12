@@ -5,10 +5,13 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
+import dotenv from 'dotenv'; 
+dotenv.config();
+
 export const blockchainConfigs = {
-  rpcUrl: process.env.RPC_URL,
+  rpcUrl: process.env.REACT_APP_RPC_URL,
   chainID: 10000,
-  contractAddress: process.env.MAIN_CONTRACT_ADDRESS,
+  contractAddress: process.env.REACT_APP_MAIN_CONTRACT_ADDRESS,
   contractAbi: [
     {
       inputs: [{ internalType: 'uint256', name: '_supply', type: 'uint256' }],
