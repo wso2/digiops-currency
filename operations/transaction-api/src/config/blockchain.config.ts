@@ -9,9 +9,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const blockchainConfigs = {
-  rpcUrl: process.env.REACT_APP_RPC_URL,
+  rpcUrl: process.env.RPC_URL,
   chainID: 10000,
-  contractAddress: process.env.REACT_APP_MAIN_CONTRACT_ADDRESS,
+  contractAddress: process.env.MAIN_CONTRACT_ADDRESS,
   contractAbi: [
     {
       inputs: [{ internalType: 'uint256', name: '_supply', type: 'uint256' }],
