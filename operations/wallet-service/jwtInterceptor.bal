@@ -22,21 +22,21 @@ service class JwtInterceptor {
         string|error jwtAssertion = req.getHeader(X_JWT_ASSERTION);
 
         if jwtAssertion is error {
-            log:printError("Error in jwt assertion", jwtAssertion, 'info = jwtAssertion.toString());
+            log:printError("Error in jwt assertion", jwtAssertion);
             return http:UNAUTHORIZED;
         }
 
         JwtPayload|error jwtInfo = jwtDecoder(jwtAssertion);
         if jwtInfo is error {
-            log:printError("Error while decoding JWT", jwtInfo, 'info = jwtInfo.toString());
+            log:printError("Error while decoding JWT", jwtInfo);
             return http:UNAUTHORIZED;
         }
-        if isEmptyVal(jwtInfo.email) {
-            log:printWarn("Email is empty in the JWT", 'info = jwtInfo.toString());
+        JwtPayload {email, sub} = jwtInfo;
+        if isEmptyVal(email) && isEmptyVal(sub) {
+            log:printWarn("Email is empty in the JWT");
             return http:UNAUTHORIZED;
         }
-
-        ctx.set(EMAIL, jwtInfo.email);
+        ctx.set(EMAIL, sub is string ? sub : email);
         return ctx.next();
     }
 }
