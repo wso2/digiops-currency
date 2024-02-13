@@ -20,11 +20,11 @@ import {
   SUCCESS_WALLET_CREATED,
   OK,
   ERROR,
-  ERROR_CREATING_WALLET
+  ERROR_CREATING_WALLET,
 } from "../../constants/strings";
 import { STORAGE_KEYS } from "../../constants/configs";
 import { saveLocalDataAsync, getLocalDataAsync } from "../../helpers/storage";
-
+import { updateUserWalletAddress } from "../../services/wallet.service";
 import { showAlertBox } from "../../helpers/alerts";
 
 function CreateWallet() {
@@ -52,18 +52,25 @@ function CreateWallet() {
 
   const handleCreateNewWallet = async () => {
     setWalletCreateLoading(true);
-
     try {
       const wallet = ethers.Wallet.createRandom();
       if (wallet.address) {
-        await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, wallet.address);
-        await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, wallet.privateKey);
-        setTimeout(async () => {
-          await showAlertBox(SUCCESS, SUCCESS_WALLET_CREATED, OK);
-          setIsWalletCreated(true);
-          setWalletCreateLoading(false);
-        }, 5000);
-        setWalletPhrase(wallet.mnemonic.phrase);
+        updateUserWalletAddress(wallet.address)
+          .then(async () => {
+            await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, wallet.address);
+            await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, wallet.privateKey);
+            setTimeout(async () => {
+              await showAlertBox(SUCCESS, SUCCESS_WALLET_CREATED, OK);
+              setIsWalletCreated(true);
+              setWalletCreateLoading(false);
+            }, 5000);
+            setWalletPhrase(wallet.mnemonic.phrase);
+          })
+          .catch(async (error) => {
+            console.log(error);
+            await showAlertBox(ERROR, ERROR_CREATING_WALLET, OK);
+            setWalletCreateLoading(false);
+          });
       }
     } catch (error) {
       await showAlertBox(ERROR, ERROR_CREATING_WALLET, OK);
