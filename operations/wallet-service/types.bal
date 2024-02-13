@@ -7,6 +7,8 @@
 
 # JWT Record.
 public type JwtPayload record {
-    # User email.
-    string email;
+    # User email
+    string? email = ();
+    # Subject
+    string? sub = ();
 };
