@@ -14,7 +14,7 @@ const EMAIL = "email";
 service class JwtInterceptor {
     *http:RequestInterceptor;
     isolated resource function 'default [string... path](http:RequestContext ctx, http:Request req)
-    returns http:NextService|http:NotFound|http:Forbidden|error? {
+    returns http:NextService|http:Forbidden|error? {
 
         if req.method == http:OPTIONS {
             return ctx.next();
