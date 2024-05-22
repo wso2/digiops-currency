@@ -14,7 +14,7 @@ const EMAIL = "email";
 service class JwtInterceptor {
     *http:RequestInterceptor;
     isolated resource function 'default [string... path](http:RequestContext ctx, http:Request req)
-    returns http:NextService|http:NotFound|http:Unauthorized|http:Forbidden|error? {
+    returns http:NextService|http:Forbidden|error? {
 
         if req.method == http:OPTIONS {
             return ctx.next();
@@ -23,18 +23,18 @@ service class JwtInterceptor {
 
         if jwtAssertion is error {
             log:printError("Error in jwt assertion", jwtAssertion);
-            return http:UNAUTHORIZED;
+            return http:FORBIDDEN;
         }
 
         JwtPayload|error jwtInfo = jwtDecoder(jwtAssertion);
         if jwtInfo is error {
             log:printError("Error while decoding JWT", jwtInfo);
-            return http:UNAUTHORIZED;
+            return http:FORBIDDEN;
         }
         JwtPayload {email, sub} = jwtInfo;
         if isEmptyVal(email) && isEmptyVal(sub) {
             log:printWarn("Email is empty in the JWT");
-            return http:UNAUTHORIZED;
+            return http:FORBIDDEN;
         }
         ctx.set(EMAIL, sub is string ? sub : email);
         return ctx.next();
