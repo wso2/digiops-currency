@@ -1,0 +1,11 @@
+version: 0.1
+
+endpoints:
+  - name: node-2
+    port: 8545
+    type: REST
+    networkVisibility: Public
+  - name: udp-node-2
+    port: 30303
+    type: UDP
+    networkVisibility: Public

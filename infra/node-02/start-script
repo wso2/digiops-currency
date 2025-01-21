@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Extract the account address from keystore key file
+ACCOUNT=$(grep -o '"address":"[^"]*"' /data-directory/keystore/key | cut -d'"' -f4)
+ACCOUNT="0x${ACCOUNT}"
+
+# Initialize the node if it hasn't been initialized yet
+geth --datadir /data-directory init /startup-scripts/genesis.json
+
+# Start the node
+exec geth --datadir /data-directory \
+  --ipcpath "/startup-scripts/geth.ipc" \
+  --networkid 10000 \
+  --nodiscover \
+  --mine \
+  --miner.etherbase "${ACCOUNT}" \
+  --unlock "${ACCOUNT}" \
+  --password /startup-scripts/password.txt \
+  --http.vhosts=* \
+  --http \
+  --http.addr "0.0.0.0" \
+  --http.port "8545" \
+  --http.corsdomain "*" \
+  --http.api "admin,eth,web3,personal,net,miner,clique" \
+  --allow-insecure-unlock \
+  --authrpc.port "8552" \
+  --port "30303" \
+  --syncmode "full"
