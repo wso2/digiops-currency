@@ -33,7 +33,7 @@ The WSO2 Wallet Application is a React-based web application built using ReactJS
 
 ## Smart Contract Integration
 
-To fully utilize the wallet application, it should interact with ws0 token smart contract functions deployed on the WSO2 blockchain.
+To fully utilize the wallet application, it should interact with WSO2 token smart contract functions deployed on the WSO2 blockchain.
 
 1. Access the Solidity implementation of the smart contract in the GitHub repository under the "smart contract directory". The link to this repository can be found in your provided resources.
 2. Within the application, navigate to `src/constants/config.js`.
