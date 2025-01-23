@@ -1,0 +1,17 @@
+schemaVersion: 1.1
+
+endpoints:
+  - name: miner-node-01
+    displayName: WSO2 Blockchain Miner node 01
+    service:
+      port: 8545
+    type: REST
+    networkVisibilities:
+      - Public
+  - name: udp-miner-node-01
+    displayName: WSO2 Blockchain Miner node 01 UDP service
+    service:
+      port: 30303
+    type: UDP
+    networkVisibilities:
+      - Public
