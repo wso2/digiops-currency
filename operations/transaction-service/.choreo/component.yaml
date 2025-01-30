@@ -14,7 +14,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-
 schemaVersion: "1.1"
 endpoints:
     - name: wso2-token-transactional-api-d09
