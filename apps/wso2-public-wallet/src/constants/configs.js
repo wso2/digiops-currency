@@ -40,7 +40,7 @@ export const PASS_PHRASE_LENGTH = 12;
 export const DEFAULT_WALLET_ADDRESS = "0x";
 
 
-//asgardeo configurations
+// -- asgardeo configurations
 export const ASGARDEO_CONFIG = {
     SIGN_IN_URL : process.env.REACT_APP_SIGN_IN_URL,
     SIGN_OUT_URL : process.env.REACT_APP_SIGN_OUT_URL,

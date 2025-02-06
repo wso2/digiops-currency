@@ -1,9 +1,3 @@
-// Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
-//
-// This software is the property of WSO2 LLC. and its suppliers, if any.
-// Dissemination of any information or reproduction of any material contained
-// herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
-// You may not alter or remove any copyright or other notice from copies of this content.
 
 import React, { useState, useEffect } from "react";
 import { CopyOutlined, CheckOutlined } from '@ant-design/icons';
@@ -15,10 +9,11 @@ import {
     COPY_TO_CLIPBOARD,
     OK,
     PHRASE_COPIED
-} from '../../constants/strings'
-import { showAlertBox } from "../../helpers/alerts";
+} from '../../constants/strings';
+import { Alert } from "../../helpers/alerts";
 
 function WalletAddressCopy(props) {
+    const [messageApi, contextHolder] = message.useMessage();
 
     const { phrase } = props
 
@@ -26,10 +21,9 @@ function WalletAddressCopy(props) {
     const [walletPhraseWords, setWalletPhraseWords] = useState([])
 
     const handleCopyPhrase = async () => {
-        await showAlertBox(COPIED, PHRASE_COPIED, OK);
+        await messageApi.success(PHRASE_COPIED);
         setPhraseCopied(true)
     };
-
 
     useEffect(() => {
         if (phrase) {

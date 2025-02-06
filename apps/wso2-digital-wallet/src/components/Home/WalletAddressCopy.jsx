@@ -16,7 +16,7 @@ function WalletAddressCopy(props) {
   const { address, topic, buttonText = 'Show Private Key' } = props;
 
   const [walletAddressCopied, setWalletAddressCopied] = useState(false);
-  const [showPrivateKey, setShowPrivateKey] = useState(false);
+  const [showPrivateKey, setShowPrivateKey] = useState(false);  
 
   useEffect(() => {
     setShowPrivateKey(false);

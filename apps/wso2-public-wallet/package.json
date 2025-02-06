@@ -17,6 +17,7 @@
     "react-number-format": "^5.4.3",
     "react-router-dom": "^7.1.5",
     "react-scripts": "5.0.1",
+    "reactstrap": "^9.2.3",
     "web-vitals": "^4.2.4"
   },
   "scripts": {

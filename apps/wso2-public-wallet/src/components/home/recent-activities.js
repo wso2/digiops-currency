@@ -5,7 +5,8 @@ import {
     getLocalDataAsync
 } from '../../helpers/storage';
 import { getTransactionHistory } from '../../services/blockchain.service';
-import {    ERROR_READING_WALLET_DETAILS,
+import {
+    ERROR_READING_WALLET_DETAILS,
     RECENT_ACTIVITIES,
     TRANSFER,
     WSO2_TOKEN
@@ -18,8 +19,7 @@ const RecentActivities = () => {
     // --- states to store transaction history and loading status ---
     const [walletAddress, setWalletAddress] = useState('');
     const [recentTransactions, setRecentTransactions] = useState([]);
-    const [isRecentTransactionsLoading, setIsRecentTransactionsLoading] =
-        useState(false);
+    const [isRecentTransactionsLoading, setIsRecentTransactionsLoading] = useState(false);
 
     // --- fetch wallet address ---
     const fetchWalletAddress = async () => {
@@ -52,8 +52,8 @@ const RecentActivities = () => {
     };
 
     // --- fetch wallet address when page mounts ---
-    useEffect(() => {   
-        if(walletAddress){
+    useEffect(() => {
+        if (walletAddress) {
             fetchTransactionHistory();
         }
     }, [walletAddress]);
@@ -67,8 +67,8 @@ const RecentActivities = () => {
         }
     };
 
- // --- fetch wallet address when page mounts ---
-  useEffect(() => {
+    // --- fetch wallet address when page mounts ---
+    useEffect(() => {
         const interval = setInterval(() => {
             if (walletAddress) {
                 fetchRecentTransactionsDoInBackground();
@@ -81,7 +81,7 @@ const RecentActivities = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [walletAddress]);
 
-   
+
 
     return (
         <div className="recent-activities-container">

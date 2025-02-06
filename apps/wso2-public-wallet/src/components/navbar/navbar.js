@@ -14,7 +14,7 @@ import {
 import { STORAGE_KEYS } from '../../constants/configs.js';
 
 
-// -- navbar component --   
+// --- navbar component ---
 const NavBar = () => {
     const [currentBlockNumber, setCurrentBlockNumber] = useState(null);
     const { switcher, currentTheme } = useThemeSwitcher();
