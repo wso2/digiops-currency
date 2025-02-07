@@ -13,9 +13,8 @@ function LayoutView() {
     const [isShowNavBar, setIsShowNavBar] = useState(true);
 
     useEffect (() => {
-        if (location.pathname === '/create-wallet' ||
-            location.pathname === '/wallet-phrase' ||
-            location.pathname === '/recover-wallet'
+        if ( 
+            location.pathname === '/wallet-phrase' 
         ){
             setIsShowNavBar(false);
            
@@ -33,7 +32,7 @@ function LayoutView() {
                    <Pages />
                 </div>
             </Content>
-            <FooterBar />
+            {/* <FooterBar /> */}
         </Layout>
     )
 }

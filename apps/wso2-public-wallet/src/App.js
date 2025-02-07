@@ -4,7 +4,7 @@ import LayoutView from './LayoutView';
 import LoginPage from './pages/login/login';
 import { useAuthContext } from '@asgardeo/auth-react';
 
-import './App.css';
+
 
 function App() {
 

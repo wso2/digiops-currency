@@ -1,17 +1,10 @@
-// Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
-//
-// This software is the property of WSO2 LLC. and its suppliers, if any.
-// Dissemination of any information or reproduction of any material contained
-// herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
-// You may not alter or remove any copyright or other notice from copies of this content.
-
-import { Input, Button } from 'antd';
 import React, { useState } from 'react';
-import { Col, Row } from 'reactstrap';
+import { Input, Button, Row, Col, Typography, Card, Spin } from 'antd';
 import { ethers } from 'ethers';
-import WalletAddressCopy from '../../components/Home/WalletAddressCopy'
-import { useNavigate } from "react-router-dom";
-import './RecoverWallet.css'
+import { useNavigate } from 'react-router-dom';
+import WalletAddressCopy from '../../components/home/wallet-address-copy';
+import { saveLocalDataAsync } from '../../helpers/storage';
+import { showAlertBox } from '../../helpers/alerts';
 import {
     RECOVER_WALLET,
     PASTE_PHRASE_HERE,
@@ -23,138 +16,94 @@ import {
     ERROR,
     RECOVER_WALLET_ERROR,
     SHOW_WALLET_ADDRESS
-} from '../../constants/strings'
+} from '../../constants/strings';
 import { PASS_PHRASE_LENGTH, STORAGE_KEYS } from '../../constants/configs';
-import { saveLocalDataAsync } from '../../helpers/storage';
-import { showAlertBox } from '../../helpers/alerts';
+import './recover-wallet.css';
 
-export default function RecoverWallet() {
+const { Title, Text } = Typography;
 
-    // --- states to store wallet recovery details ---
+const RecoverWallet = () => {
     const [wordList, setWordList] = useState(Array(12).fill(''));
     const [walletAddress, setWalletAddress] = useState('');
     const [privateKey, setPrivateKey] = useState('');
-    const [continueRecover, setContinueRecover] = useState(false)
-    const [walletRecovered, setWalletRecovered] = useState(false)
+    const [continueRecover, setContinueRecover] = useState(false);
+    const [walletRecovered, setWalletRecovered] = useState(false);
     const [loading, setLoading] = useState(false);
-
-    // --- navigate to home page ---
     const navigate = useNavigate();
 
-    // --- handle input change ---
     const handleInputChange = (index, value) => {
-        if (value && value.trim().split(' ').length === PASS_PHRASE_LENGTH) {
-            const words = value.trim().split(' ');
-            const newWordList = [...wordList];
-            for (let i = 0; i < Math.min(words.length, 12); i++) {
-                newWordList[i] = words[i];
-                if (words.length === 12) {
-                    setContinueRecover(true)
-                } else {
-                    setContinueRecover(false)
-                }
+        const words = value.trim().split(' ');
+        const newWordList = [...wordList];
+
+        if (words.length === 12) {
+            for (let i = 0; i < 12; i++) {
+                newWordList[i] = words[i] || '';
             }
-            setWordList(newWordList);
+            setContinueRecover(true);
         } else {
-            const newWordList = [...wordList];
             newWordList[index] = value;
-            setWordList(newWordList);
+            setContinueRecover(false);
         }
+        setWordList(newWordList);
     };
 
-    // --- handle recover wallet ---
-    const handleRecover = () => {
+    const handleRecover = async () => {
         setLoading(true);
-        setTimeout(async () => {
-            try {
-                const phrase = wordList.join(' ');
-                const wallet = ethers.Wallet.fromMnemonic(phrase);
-                setWalletAddress(wallet.address);
-                setPrivateKey(wallet.privateKey);
-
-                //save wallet address and private key to local storage
-                await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, wallet.address)
-                await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, wallet.privateKey)
-
-                if (wallet.address) {
-                    setWalletRecovered(true)
-                }
-            } catch (error) {
-                setWalletRecovered(false);
-                showAlertBox(ERROR, RECOVER_WALLET_ERROR, OK);
-            } finally {
-                setLoading(false);
-            }
-        }, 2000);
-    };
-
-    // --- render input fields ---
-    const renderInputs = () => {
-        const inputs = [];
-        for (let i = 0; i < 12; i++) {
-            const formattedNumber = (i + 1 < 10) ? `${i + 1}&nbsp;` : (i + 1).toString();
-            inputs.push(
-                <Col md="6" sm="6" xs="6" key={i}>
-                    <div className="input-container mt-2">
-                        <label className="input-label" dangerouslySetInnerHTML={{ __html: formattedNumber }} />
-                        <Input
-                            value={wordList[i]}
-                            onChange={(event) => handleInputChange(i, event.target.value)}
-                        />
-                    </div>
-                </Col>
-            );
+        try {
+            const phrase = wordList.join(' ');
+            const wallet = ethers.Wallet.fromMnemonic(phrase);
+            setWalletAddress(wallet.address);
+            setPrivateKey(wallet.privateKey);
+            await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, wallet.address);
+            await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, wallet.privateKey);
+            setWalletRecovered(true);
+        } catch (error) {
+            setWalletRecovered(false);
+            showAlertBox(ERROR, RECOVER_WALLET_ERROR, OK);
         }
-        return inputs;
+        setLoading(false);
     };
-
-
-
-    // --- handle continue ---
-    const handleContinue = () => {
-        navigate("/");
-    }
 
     return (
-        <div className="mx-3">
-            <div className='mt-5 d-flex justify-content-center'>
-                <h3>{RECOVER_YOUR_WALLET}</h3>
-            </div>
-            <div className="text-sm">
-                {PASTE_PHRASE_HERE}
-            </div>
-
-            <div className='recover-wallet-content container'>
-                <Row className='mt-3'>{renderInputs()}</Row>
-
-                <div className='mb-5'>
-                    {
-                        !walletRecovered ? (
-                            <Button className={`mt-5 primary-button${!continueRecover ? ' disabled' : ''}`} block onClick={handleRecover} disabled={!continueRecover} loading={loading}>
-                                {RECOVER_WALLET}
-                            </Button>
-                        ) : (
-                            <>
-                                {walletAddress && (
-                                    <div>
-                                        <div className='mt-3'>
-                                            <WalletAddressCopy address={walletAddress} topic={WALLET_ADDRESS} buttonText={SHOW_WALLET_ADDRESS} />
-                                        </div>
-                                    </div>
-                                )}
-                                {privateKey && (
-                                    <div className='mt-3'>
-                                        <WalletAddressCopy address={privateKey} topic={WALLET_PRIVATE_KEY} />
-                                    </div>
-                                )}
-                                <Button className="primary-button mt-5" block onClick={handleContinue}>
-                                    {CONTINUE}
-                                </Button>
-                            </>
-                        )
-                    }
+        <div className="recover-wallet-container">
+            <Card className="recover-wallet-card">
+                <Title level={3} className="text-center">{RECOVER_YOUR_WALLET}</Title>
+                <Text className="description-text">{PASTE_PHRASE_HERE}</Text>
+                <Row gutter={[8, 8]} className="phrase-input-container">
+                    {wordList.map((word, index) => (
+                        <Col span={8} key={index}>
+                            <Input
+                                value={word}
+                                onChange={(event) => handleInputChange(index, event.target.value)}
+                                className="phrase-input"
+                                placeholder={`${index + 1}`}
+                            />
+                        </Col>
+                    ))}
+                </Row>
+                <div className="action-buttons">
+                    {!walletRecovered ? (
+                        <Button 
+                            type="primary" 
+                            block 
+                            disabled={!continueRecover} 
+                            onClick={handleRecover} 
+                            loading={loading}
+                            className="recover-button"
+                        >
+                            {RECOVER_WALLET}
+                        </Button>
+                    ) : (
+                        <>
+                            <WalletAddressCopy address={walletAddress} topic={WALLET_ADDRESS} buttonText={SHOW_WALLET_ADDRESS} className="wallet-info" />
+                            <WalletAddressCopy address={privateKey} topic={WALLET_PRIVATE_KEY} className="wallet-info" />
+                            <Button type="primary" block onClick={() => navigate('/')} className="continue-button">{CONTINUE}</Button>
+                        </>
+                    )}
                 </div>
-            </div>
+            </Card>
         </div>
     );
 }
+
+export default RecoverWallet;

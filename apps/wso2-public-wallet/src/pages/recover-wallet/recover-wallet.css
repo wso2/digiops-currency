@@ -1,0 +1,96 @@
+/* recover-wallet.css */
+
+.recover-wallet-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    padding: 20px;
+}
+
+.recover-wallet-card {
+    max-width: 500px;
+    width: 100%;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    text-align: center;
+}
+
+.text-center {
+    text-align: center;
+    color: #333;
+}
+
+.description-text {
+    display: block;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #666;
+}
+
+.phrase-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.phrase-input {
+    width: 100%;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #d9d9d9;
+    transition: border 0.3s ease-in-out;
+}
+
+.phrase-input:focus {
+    border-color: #1890ff;
+    box-shadow: 0 0 4px rgba(24, 144, 255, 0.5);
+}
+
+.action-buttons {
+    margin-top: 20px;
+}
+
+.recover-button {
+    background-color: #1890ff;
+    border-color: #1890ff;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.recover-button:disabled {
+    background-color: #ccc;
+    border-color: #ccc;
+}
+
+.wallet-info {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.continue-button {
+    margin-top: 15px;
+    background-color: #52c41a;
+    border-color: #52c41a;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.continue-button:hover {
+    background-color: #389e0d;
+    border-color: #389e0d;
+}

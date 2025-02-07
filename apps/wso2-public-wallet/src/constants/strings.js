@@ -1,11 +1,9 @@
-
 // nav bar strings
-
 export const WSO2_WALLET = "WSO2 Wallet";
 export const CONNECTED = "Connected";
 export const NOT_CONNECTED = "Not Connected";
 
-//home page 
+// home page 
 export const TOTAL_BALANCE = "Total Balance";
 export const SEND = "Send";
 export const REQUEST = "Request";
@@ -14,8 +12,7 @@ export const RECENT_ACTIVITIES = "Recent Activities";
 export const TRANSFER = "Transfer";
 export const WSO2_TOKEN = "WSO2";
 
-//footer
-
+// footer
 export const WALLET = "Wallet";
 export const APPS = "Apps";
 export const PROFILE = "Profile";
@@ -23,8 +20,7 @@ export const HISTORY = "History";
 export const LOGOUT = "Logout";
 
 
-//create wallet
-
+// create wallet
 export const CREATE_A_NEW_WALLET = "Create a new wallet";
 export const RESTORE_EXISTING_WALLET = "Restore existing wallet";
 export const WALLET_ADDRESS_COPIED =
@@ -47,7 +43,13 @@ export const WALLET_SECURE_TIPS = [
     "Write down and store in multiple secret places"
 ];
 
+// recover wallet
+export const RECOVER_WALLET_ERROR = "Error when recovering wallet";
+export const RECOVER_YOUR_WALLET = "Recover Your Wallet";   
+export const PASTE_PHRASE_HERE = "Paste your 12-word recovery phrase here";
+export const RECOVER_WALLET = "Recover Wallet"; 
 
+// utils
 export const OK = "Ok";
 export const ERROR = "Error";
 export const SUCCESS = "Success";

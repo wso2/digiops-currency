@@ -6,6 +6,7 @@ import HomePage from './home/home';
 import HistoryPage from './history/history';
 import CreateWallet from './create-wallet/create-wallet';
 import ProfilePage from './profile/profile';
+import RecoverWallet from './recover-wallet/recover-wallet';
 
 function Pages() {
     return (
@@ -14,6 +15,7 @@ function Pages() {
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/create-wallet" element={<CreateWallet />} />
             <Route path= "/profile" element={<ProfilePage />} />
+            <Route path="/recover-wallet" element={<RecoverWallet />} />
         </Routes>
     );
 }
