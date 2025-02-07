@@ -49,7 +49,6 @@ const WalletPhrase = (props) => {
         }
       };
 
-
       // --- fetch wallet details when page mounts ---
       useEffect(() => {
         fetchWalletDetails();
