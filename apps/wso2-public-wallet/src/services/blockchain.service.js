@@ -10,13 +10,13 @@ import { DateTime } from 'luxon';
 import { getLocalDataAsync, saveLocalDataAsync} from '../helpers/storage';
 
 
-// ----- get rpc provider ----
+// ---- get rpc provider ----
 export const getRpcProvider = async () => {
     const provider = new ethers.providers.JsonRpcProvider(RPC_ENDPOINT, CHAIN_ID);
     return provider;
 }
 
-// ----- get current block number ----
+// ---- get current block number ----
 export const getCurrentBlockNumber = async (retryCount = 0) => {
     const maxRetryCount = 5;
     try {

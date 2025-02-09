@@ -3,7 +3,7 @@ import { useAuthContext } from '@asgardeo/auth-react';
 
 const LoginPage = () => {
 
-    const { signIn, state, getAccessToken } = useAuthContext();
+    const { signIn, state, getAccessToken , getBasicUserInfo} = useAuthContext();
     const onFinish = (values) => {
         console.log('Success:', values);
     };
@@ -18,6 +18,7 @@ const LoginPage = () => {
         await signIn();
         console.log({ Authenicated: state.isAuthenticated });
         console.log({ AccessToken: getAccessToken().then((res) => console.log("Access Token: ", res)) });
+        console.log({ BasicUserInfo: getBasicUserInfo().then((res) => console.log("Basic User Info: ", res)) });
     }
 
 

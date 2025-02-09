@@ -16,7 +16,7 @@ import {
 } from "../../constants/strings";
 import { STORAGE_KEYS } from "../../constants/configs";
 import { saveLocalDataAsync, getLocalDataAsync } from "../../helpers/storage";
-import { updateUserWalletAddress } from "../../services/wallet.service";
+// import { updateUserWalletAddress } from "../../services/wallet.service";
 
 
 function CreateWallet() {
@@ -53,34 +53,58 @@ function CreateWallet() {
     };
   
     // --- handle create new wallet ---
-    const handleCreateNewWallet = async () => {
-      setWalletCreateLoading(true);
-      try {
-        const wallet = ethers.Wallet.createRandom();
-        if (wallet.address) {
-          updateUserWalletAddress(wallet.address)
-            .then(async () => {
-              await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, wallet.address);
-              await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, wallet.privateKey); 
-              setTimeout(async () => {
-                await messageApi.success(SUCCESS, SUCCESS_WALLET_CREATED);
-                setIsWalletCreated(true);
-                setWalletCreateLoading(false);
-              }, 5000);
-              setWalletPhrase(wallet.mnemonic.phrase);
-            })
-            .catch(async (error) => {
-              console.log(error);
-              await messageApi.error(ERROR_CREATING_WALLET);
+    // const handleCreateNewWallet = async () => {
+    //   setWalletCreateLoading(true);
+    //   try {
+    //     const wallet = ethers.Wallet.createRandom();
+    //     if (wallet.address) {
+    //       updateUserWalletAddress(wallet.address)
+    //         .then(async () => {
+    //           await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, wallet.address);
+    //           await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, wallet.privateKey); 
+    //           setTimeout(async () => {
+    //             await messageApi.success(SUCCESS, SUCCESS_WALLET_CREATED);
+    //             setIsWalletCreated(true);
+    //             setWalletCreateLoading(false);
+    //           }, 5000);
+    //           setWalletPhrase(wallet.mnemonic.phrase);
+    //         })
+    //         .catch(async (error) => {
+    //           console.log(error);
+    //           await messageApi.error(ERROR_CREATING_WALLET);
+    //           setWalletCreateLoading(false);
+    //         });
+    //     }
+    //   } catch (error) {
+    //     await messageApi.error(ERROR_CREATING_WALLET);
+    //     setIsWalletCreated(false);
+    //     setWalletCreateLoading(false);
+    //   }
+    // };
+
+    // --- handle create new wallet without wallet service ---
+    const handleCreateNewWalletWithoutWalletService = async () => {
+        setWalletCreateLoading(true);
+        try {
+          const wallet = ethers.Wallet.createRandom();
+          if (wallet.address) {
+            await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, wallet.address);
+            await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, wallet.privateKey);
+            setTimeout(async () => {
+              await messageApi.success(SUCCESS, SUCCESS_WALLET_CREATED);
+              setIsWalletCreated(true);
               setWalletCreateLoading(false);
-            });
+            }, 5000);
+            setWalletPhrase(wallet.mnemonic.phrase);
+          }
+        } catch (error) {
+          console.log(error);
+          await messageApi.error(ERROR_CREATING_WALLET);
+          setIsWalletCreated(false);
+          setWalletCreateLoading(false);
         }
-      } catch (error) {
-        await messageApi.error(ERROR_CREATING_WALLET);
-        setIsWalletCreated(false);
-        setWalletCreateLoading(false);
-      }
-    };
+      };
+      
   
     // --- handle go back ---
     const handleGoBack = (value) => {
@@ -100,7 +124,7 @@ function CreateWallet() {
                   block
                   className="primary-button create-wallet-button mb-4"
                   size="large"
-                  onClick={handleCreateNewWallet}
+                  onClick={handleCreateNewWalletWithoutWalletService}
                   loading={walletCreateLoading}
                 >
                   {CREATE_A_NEW_WALLET}

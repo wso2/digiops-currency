@@ -25,6 +25,7 @@ import {
 } from "../../constants/strings";
 import { DEFAULT_WALLET_ADDRESS, STORAGE_KEYS } from "../../constants/configs";
 import "./home.css";
+import { useAuthContext } from '@asgardeo/auth-react';
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -34,6 +35,23 @@ const HomePage = () => {
     const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
 
+    // additonal code begins here
+
+    const { isAuthenticated, getBasicUserInfo, getIDToken } = useAuthContext();
+
+
+    useEffect(() => {
+        getBasicUserInfo().then((response) => {
+            console.log(response);
+        });
+
+        getIDToken().then((response) => {
+            console.log(response);
+        }
+        );
+    }, []);
+
+    // additonal code ends here
 
 
     // --- fetch wallet address ---
