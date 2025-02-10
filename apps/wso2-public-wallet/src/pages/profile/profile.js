@@ -17,16 +17,23 @@ import { useNavigate } from "react-router-dom";
 import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
 import { STORAGE_KEYS } from "../../constants/configs";
 import { showAlertBox } from "../../helpers/alerts";
+import { useAuthContext } from '@asgardeo/auth-react';
 
 const { Title, Text } = Typography;
 
 function Profile() {
+
+  // --- get the navigate function from useNavigate hook ---
   const navigate = useNavigate();
 
+  const { signOut } = useAuthContext();
+
+  // --- set the initial state for account copied status ---
   const [isAccountCopied, setIsAccountCopied] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [walletPrivateKey, setWalletPrivateKey] = useState("");
 
+  // --- fetch the wallet details from local storage ---
   useEffect(() => {
     const fetchWalletDetails = async () => {
       try {
@@ -41,6 +48,7 @@ function Profile() {
     fetchWalletDetails();
   }, []);
 
+  // --- generate avatar based on the wallet address ---
   const generateAvatar = (seed) => {
     const options = { size: 80 };
     const hash = SHA256(seed).toString();
@@ -48,18 +56,24 @@ function Profile() {
     return "data:image/png;base64," + data;
   };
 
+  // --- generate avatar url ---
   const avatarUrl = generateAvatar(walletAddress || "avatar1");
 
+  // --- handle copy account ---
   const handleCopyAccount = async () => {
     await showAlertBox(COPY_TO_CLIPBOARD, WALLET_ADDRESS_COPIED, OK);
     setIsAccountCopied(true);
     setTimeout(() => setIsAccountCopied(false), 2000);
   };
 
+  // --- handle logout ---
   const handleLogout = async () => {
     try {
       await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, "");
       await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, "");
+      console.log("Logged out successfully");
+      await signOut();
+      console.log("Logged out successfully from asgardeo ---->>>>");
       navigate("/create-wallet");
     } catch (error) {
       console.error("Error when logging out: ", error);

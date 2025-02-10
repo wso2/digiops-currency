@@ -17,18 +17,24 @@ import './navbar.css';
 const { Header } = Layout;
 
 const NavBar = () => {
+    // --- get the current location ---
     const location = useLocation();
+
+    // --- states to store the current block number ---
     const [currentBlockNumber, setCurrentBlockNumber] = useState(null);
     const { switcher, currentTheme } = useThemeSwitcher();
     
+    // --- fetch the current block number ---
     useEffect(() => {
         const fetchBlockNumber = async () => {
             const blockNumber = await getCurrentBlockNumber();
+            console.log("Current block number: ", blockNumber);
             setCurrentBlockNumber(blockNumber);
         };
         fetchBlockNumber();
     }, []);
 
+    // --- toggle the theme function ---
     const toggleTheme = async () => {
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
         switcher({ theme: newTheme });
