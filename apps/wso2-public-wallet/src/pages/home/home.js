@@ -1,4 +1,6 @@
-import { Tag, Button, Spin, message } from "antd";
+import { message } from "antd";
+import { ClipLoader } from "react-spinners";
+import { FaWallet, FaCopy, FaCheck, FaPaperPlane, FaDownload } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import {
     DownloadOutlined,
@@ -40,7 +42,13 @@ const HomePage = () => {
 
     const { isAuthenticated, getBasicUserInfo, getIDToken } = useAuthContext();
 
-
+    const [copied, setCopied] = useState(false);
+    
+    const handleCopy = () => {
+        handledCopyAccount();
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
     useEffect(() => {
         getBasicUserInfo().then((response) => {
             console.log(response);
@@ -123,32 +131,34 @@ const HomePage = () => {
     };
 
     return (
-        walletAddress === null ? (
-            <NoWallet />
-        ) : (
-            <div className="home-container">
-                {contextHolder}
-                <h1 className="title">Wallet Overview</h1>
-                <div className="wallet-details">
-                    <Tag icon={<WalletOutlined />} color="blue">{walletAddress}</Tag>
-                    <CopyToClipboard text={walletAddress} onCopy={handledCopyAccount}>
-                        <Button icon={isAccountCopied ? <CheckOutlined /> : <CopyOutlined />} />
-                    </CopyToClipboard>
-                </div>
-                <div className="balance-section">
-                    <h2>{TOTAL_BALANCE}</h2>
-                    {isTokenBalanceLoading ? (
-                        <Spin indicator={<LoadingOutlined />} />
-                    ) : (
-                        <NumericFormat value={tokenBalance} displayType={'text'} thousandSeparator={true} />
-                    )}
-                </div>
-                <div className="actions">
-                    <Button type="primary" icon={<SendOutlined />} onClick={() => navigate("/send")}>{SEND}</Button>
-                    <Button icon={<DownloadOutlined />} onClick={() => navigate("/request")}>{REQUEST}</Button>
+        <div className="wallet-container">
+            <h1 className="title">Wallet Overview</h1>
+            <div className="wallet-details">
+                <div className="wallet-address">
+                    <FaWallet className="icon" />
+                    <span>{walletAddress}</span>
+                    <button className="copy-btn" onClick={handleCopy}>
+                        {copied ? <FaCheck className="copied" /> : <FaCopy />}
+                    </button>
                 </div>
             </div>
-        )
+            <div className="balance-section">
+                <h2>Balance</h2>
+                {isTokenBalanceLoading ? (
+                    <ClipLoader size={20} color="#EE7B2F" />
+                ) : (
+                    <NumericFormat value={tokenBalance} displayType={'text'} thousandSeparator={true} />
+                )}
+            </div>
+            <div className="actions">
+                <button className="action-btn send" onClick={() => navigate("/send")}>
+                    <FaPaperPlane /> Send
+                </button>
+                <button className="action-btn request" onClick={() => navigate("/request")}>
+                    <FaDownload /> Request
+                </button>
+            </div>
+        </div>
     );
     
 };

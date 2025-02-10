@@ -17,9 +17,11 @@
     "react-css-theme-switcher": "^0.3.0",
     "react-dom": "^18.3.1",
     "react-feather": "^2.0.10",
+    "react-icons": "^5.4.0",
     "react-number-format": "^5.4.3",
     "react-router-dom": "^7.1.5",
     "react-scripts": "5.0.1",
+    "react-spinners": "^0.15.0",
     "reactstrap": "^9.2.3",
     "web-vitals": "^4.2.4"
   },
