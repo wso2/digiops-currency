@@ -12,7 +12,9 @@ import { getLocalDataAsync, saveLocalDataAsync} from '../helpers/storage';
 
 // ---- get rpc provider ----
 export const getRpcProvider = async () => {
+    console.log("getRpcProvider ---- > " ,  RPC_ENDPOINT, CHAIN_ID);
     const provider = new ethers.providers.JsonRpcProvider(RPC_ENDPOINT, CHAIN_ID);
+    console.log("provider ---- > " , provider);
     return provider;
 }
 
@@ -21,7 +23,9 @@ export const getCurrentBlockNumber = async (retryCount = 0) => {
     const maxRetryCount = 5;
     try {
         const provider = getRpcProvider();
-        const blockNumber = await provider.getBlockNumber();
+        
+        const blockNumber = (await provider).getBlockNumber();
+        console.log("blockNumber ---- > " , blockNumber);
         return blockNumber;
     } catch (error) {
         if (retryCount < maxRetryCount) {

@@ -4,7 +4,7 @@
 
 import { SIGN_OUT_SUCCESS_PARAM } from "@asgardeo/auth-react";
 
-export const RPC_ENDPOINT = process.env.REACT_APP_RPC_URL;
+export const RPC_ENDPOINT = process.env.REACT_APP_RPC_ENDPOINT;
 
 //  --- contract address ---
 
