@@ -42,7 +42,7 @@ const HistoryPage = () => {
   }, []);
 
   return (
-    (walletAddress) ? <NoWallet /> :
+    (!walletAddress) ? <NoWallet /> :
       <div>
         <RecentActivities />
       </div>

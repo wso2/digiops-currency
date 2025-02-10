@@ -85,7 +85,7 @@ function Profile() {
 
   return (
 
-    (walletAddress === null) ? <NoWallet /> :
+    (!walletAddress) ? <NoWallet /> :
     <div className="profile-container">
       <Card className="profile-card" bordered={false}>
         <div className="avatar-container">
