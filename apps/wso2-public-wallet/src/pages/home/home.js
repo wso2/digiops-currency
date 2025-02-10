@@ -23,13 +23,14 @@ import {
     OK,
     COPIED
 } from "../../constants/strings";
-import { DEFAULT_WALLET_ADDRESS, STORAGE_KEYS } from "../../constants/configs";
+import { STORAGE_KEYS } from "../../constants/configs";
 import "./home.css";
 import { useAuthContext } from '@asgardeo/auth-react';
+import NoWallet from "../no-wallet/no-wallet";
 
 const HomePage = () => {
     const navigate = useNavigate();
-    const [walletAddress, setWalletAddress] = useState(DEFAULT_WALLET_ADDRESS);
+    const [walletAddress, setWalletAddress] = useState(null);
     const [isAccountCopied, setIsAccountCopied] = useState(false);
     const [tokenBalance, setTokenBalance] = useState(0);
     const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
@@ -60,7 +61,14 @@ const HomePage = () => {
             const walletAddressResponse = await getLocalDataAsync(
                 STORAGE_KEYS.WALLET_ADDRESS
             );
+            if (walletAddressResponse) {
             setWalletAddress(walletAddressResponse);
+            }
+            
+            console.log("this is wallet address response --- > " , walletAddressResponse);
+            console.log("this is wallet address availability --- > " , walletAddress==null);
+
+            console.log("this is wallet address --- > " , walletAddress);
         } catch (error) {
             messageApi.error(ERROR_RETRIEVE_WALLET_ADDRESS);
         }
@@ -87,7 +95,7 @@ const HomePage = () => {
 
     // --- fetch token balance when wallet address changes ---
     useEffect(() => {
-        if (walletAddress !== DEFAULT_WALLET_ADDRESS && walletAddress) {
+        if (walletAddress) {
             fetchCurrentTokenBalance();
         }
     }, [walletAddress]);
@@ -95,7 +103,7 @@ const HomePage = () => {
     // --- fetch token balance in every 5 seconds ---  
     useEffect(() => {
         const interval = setInterval(() => {
-            if (walletAddress !== DEFAULT_WALLET_ADDRESS && walletAddress) {
+            if (walletAddress) {
                 getWalletBalanceByWalletAddress(walletAddress)
                     .then(setTokenBalance)
                     .catch(() => setTokenBalance(0));
@@ -113,29 +121,34 @@ const HomePage = () => {
     };
 
     return (
-        <div className="home-container">
-            {contextHolder}
-            <h1 className="title">Wallet Overview</h1>
-            <div className="wallet-details">
-                <Tag icon={<WalletOutlined />} color="blue">{walletAddress}</Tag>
-                <CopyToClipboard text={walletAddress} onCopy={handledCopyAccount}>
-                    <Button icon={isAccountCopied ? <CheckOutlined /> : <CopyOutlined />} />
-                </CopyToClipboard>
+        walletAddress === null ? (
+            <NoWallet />
+        ) : (
+            <div className="home-container">
+                {contextHolder}
+                <h1 className="title">Wallet Overview</h1>
+                <div className="wallet-details">
+                    <Tag icon={<WalletOutlined />} color="blue">{walletAddress}</Tag>
+                    <CopyToClipboard text={walletAddress} onCopy={handledCopyAccount}>
+                        <Button icon={isAccountCopied ? <CheckOutlined /> : <CopyOutlined />} />
+                    </CopyToClipboard>
+                </div>
+                <div className="balance-section">
+                    <h2>{TOTAL_BALANCE}</h2>
+                    {isTokenBalanceLoading ? (
+                        <Spin indicator={<LoadingOutlined />} />
+                    ) : (
+                        <NumericFormat value={tokenBalance} displayType={'text'} thousandSeparator={true} />
+                    )}
+                </div>
+                <div className="actions">
+                    <Button type="primary" icon={<SendOutlined />} onClick={() => navigate("/send")}>{SEND}</Button>
+                    <Button icon={<DownloadOutlined />} onClick={() => navigate("/request")}>{REQUEST}</Button>
+                </div>
             </div>
-            <div className="balance-section">
-                <h2>{TOTAL_BALANCE}</h2>
-                {isTokenBalanceLoading ? (
-                    <Spin indicator={<LoadingOutlined />} />
-                ) : (
-                    <NumericFormat value={tokenBalance} displayType={'text'} thousandSeparator={true} />
-                )}
-            </div>
-            <div className="actions">
-                <Button type="primary" icon={<SendOutlined />} onClick={() => navigate("/send")}>{SEND}</Button>
-                <Button icon={<DownloadOutlined />} onClick={() => navigate("/request")}>{REQUEST}</Button>
-            </div>
-        </div>
+        )
     );
+    
 };
 
 export default HomePage;

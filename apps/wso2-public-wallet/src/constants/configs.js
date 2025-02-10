@@ -37,7 +37,7 @@ export const MESSAGE_TYPES = {
 
 // -- account and mnemonic --
 export const PASS_PHRASE_LENGTH = 12;
-export const DEFAULT_WALLET_ADDRESS = "0x";
+// export const DEFAULT_WALLET_ADDRESS = "0x";
 
 
 // -- asgardeo configurations
