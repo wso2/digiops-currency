@@ -18,6 +18,7 @@ import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
 import { STORAGE_KEYS } from "../../constants/configs";
 import { showAlertBox } from "../../helpers/alerts";
 import { useAuthContext } from '@asgardeo/auth-react';
+import NoWallet from "../no-wallet/no-wallet";
 
 const { Title, Text } = Typography;
 
@@ -39,8 +40,10 @@ function Profile() {
       try {
         const walletAddressResponse = await getLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS);
         const privateKeyResponse = await getLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY);
+        if ( walletAddressResponse) {
         setWalletAddress(walletAddressResponse);
         setWalletPrivateKey(privateKeyResponse);
+        }
       } catch (error) {
         console.error("Error reading wallet details: ", error);
       }
@@ -81,6 +84,8 @@ function Profile() {
   };
 
   return (
+
+    (walletAddress === null) ? <NoWallet /> :
     <div className="profile-container">
       <Card className="profile-card" bordered={false}>
         <div className="avatar-container">

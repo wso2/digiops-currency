@@ -9,7 +9,7 @@
 
 .no-wallet-icon {
     font-size: 3rem;
-    color: red;
+    color: var(--primary-color);
     margin-bottom: 1rem;
 }
 
@@ -19,17 +19,16 @@
 }
 
 .no-wallet-text {
-    color: gray;
+    color: var(--primary-color);
     margin-top: 0.5rem;
 }
 
 .no-wallet-button {
     margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    background: var(--primary-color);
-    color: rgb(13, 141, 24);
-    font-weight: bold;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    background: var(--background-color);
+    color: var(--primary-color);
     cursor: pointer;
     transition: background 0.2s ease-in-out;
 }

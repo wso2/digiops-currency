@@ -131,6 +131,8 @@ const HomePage = () => {
     };
 
     return (
+
+        (walletAddress == null) ? <NoWallet /> :
         <div className="wallet-container">
             <h1 className="title">Wallet Overview</h1>
             <div className="wallet-details">

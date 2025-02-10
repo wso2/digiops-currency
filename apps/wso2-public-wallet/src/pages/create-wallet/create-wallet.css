@@ -3,7 +3,6 @@
     margin-top: 50px;
     display: flex;
     height: 80vh;
-
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -21,7 +20,7 @@
 
 /* Button styling */
 .primary-button {
-    background-color: #1890ff;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     font-size: 16px;
@@ -43,7 +42,7 @@
 .wallet-create-restore-wallet {
     display: block;
     margin-top: 15px;
-    color: #1890ff;
+    color: var(--primary-color);
     font-weight: 500;
     cursor: pointer;
     transition: color 0.3s;
