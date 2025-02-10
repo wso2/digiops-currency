@@ -40,31 +40,23 @@ export const getCurrentBlockNumber = async (retryCount = 0) => {
 
 // ----- get wallet balance by wallet address ----
 export const getWalletBalanceByWalletAddress = async (walletAddress) => {
-    try {
-        const provider = getRpcProvider();
-
-        // crearte new ERC-20 contract instance
-        const contract = new ethers.Contract(CONTRACT_ADDRESS, JSON.parse(CONTRACT_ABI), provider);
-
-
-        // get the balance of the wallet
-        const balance = await contract.balanceOf(walletAddress);
-
-
-        // get the decimals of the token
-        const decimals = await contract.decimals();
-
-        // format the balance
-        const formatTheBalance = ethers.utils.formatUnits(balance, decimals);
-
-        return formatTheBalance;
-
-
-    } catch (error) {
-        console.log("Error in getting wallet balance");
-        return null;
-    }
-}
+    const provider = await getRpcProvider();
+    //create ERC20 contract instance
+    const contract = new ethers.Contract(
+      CONTRACT_ADDRESS,
+      JSON.parse(CONTRACT_ABI),
+      provider
+    );
+    const balance = await contract.balanceOf(walletAddress);
+  
+    //check contract decimals
+    const decimals = await contract.decimals();
+  
+    //format the balance
+    const formattedBalance = ethers.utils.formatUnits(balance, decimals);
+    return formattedBalance;
+  };
+  
 
 // ----- get wallet balance by wallet address ----
 export const transferTokens = async (receiverWalletAddress, transferAmount) => {

@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { RightOutlined, ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined, ExportOutlined } from "@ant-design/icons";
-import { Avatar, Spin } from 'antd';
-import {
-    getLocalDataAsync
-} from '../../helpers/storage';
+import { RightOutlined, ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Avatar, Spin, Card, Col, Row, Tag } from 'antd';
+import { getLocalDataAsync } from '../../helpers/storage';
 import { getTransactionHistory } from '../../services/blockchain.service';
-import {
-    ERROR_READING_WALLET_DETAILS,
-    RECENT_ACTIVITIES,
-    TRANSFER,
-    WSO2_TOKEN
-} from '../../constants/strings';
+import { ERROR_READING_WALLET_DETAILS, RECENT_ACTIVITIES, WSO2_TOKEN } from '../../constants/strings';
 import { STORAGE_KEYS } from '../../constants/configs';
-
+import moment from 'moment';
+import './recent-activities.css';
 // --- recent activities component ---
 const RecentActivities = () => {
-
-    // --- states to store transaction history and loading status ---
     const [walletAddress, setWalletAddress] = useState('');
     const [recentTransactions, setRecentTransactions] = useState([]);
     const [isRecentTransactionsLoading, setIsRecentTransactionsLoading] = useState(false);
@@ -24,16 +16,13 @@ const RecentActivities = () => {
     // --- fetch wallet address ---
     const fetchWalletAddress = async () => {
         try {
-            const walletAddressResponse = await getLocalDataAsync(
-                STORAGE_KEYS.WALLET_ADDRESS
-            );
+            const walletAddressResponse = await getLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS);
             setWalletAddress(walletAddressResponse);
         } catch (error) {
             console.log(ERROR_READING_WALLET_DETAILS);
         }
     };
 
-    // --- fetch wallet address when page mounts ---
     useEffect(() => {
         fetchWalletAddress();
     }, []);
@@ -44,6 +33,7 @@ const RecentActivities = () => {
             setIsRecentTransactionsLoading(true);
             const transactionHistory = await getTransactionHistory(walletAddress);
             setRecentTransactions(transactionHistory);
+            console.log("this is the transation history --- > **" ,transactionHistory);
         } catch (error) {
             console.log(error);
         } finally {
@@ -51,43 +41,35 @@ const RecentActivities = () => {
         }
     };
 
-    // --- fetch wallet address when page mounts ---
     useEffect(() => {
         if (walletAddress) {
             fetchTransactionHistory();
         }
     }, [walletAddress]);
 
+    // Fetch recent transactions in background
     const fetchRecentTransactionsDoInBackground = async () => {
         try {
             const recentTransactions = await getTransactionHistory(walletAddress);
             setRecentTransactions(recentTransactions);
         } catch (error) {
-            console.log("error while fetching recent transactions", error);
+            console.log("Error fetching recent transactions", error);
         }
     };
 
-    // --- fetch wallet address when page mounts ---
     useEffect(() => {
         const interval = setInterval(() => {
             if (walletAddress) {
                 fetchRecentTransactionsDoInBackground();
             }
-            // Place your function here.
         }, 5000);
 
-        // This is important, as it clears the interval when the component is unmounted.
         return () => clearInterval(interval);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [walletAddress]);
-
-
 
     return (
         <div className="recent-activities-container">
-            <div className="recent-activities-header">
-                {RECENT_ACTIVITIES}
-            </div>
+            <h3>{RECENT_ACTIVITIES}</h3>
             <div className="recent-activities-content">
                 {isRecentTransactionsLoading ? (
                     <div className="recent-activities-loading">
@@ -95,41 +77,49 @@ const RecentActivities = () => {
                     </div>
                 ) : (
                     recentTransactions.map((transaction, index) => (
-                        <div key={index} className="recent-activity-item">
-                            <div className="recent-activity-item-left">
-                                <Avatar
-                                    size={40}
-                                    src={transaction.from === walletAddress ? transaction.to : transaction.from}
-                                />
-                            </div>
-                            <div className="recent-activity-item-center">
-                                <div className="recent-activity-item-center-top">
-                                    <span>
-                                        {transaction.from === walletAddress ? "Sent" : "Received"}
-                                    </span>
-                                    <span>
-                                        {transaction.from === walletAddress ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-                                    </span>
-                                </div>
-                                <div className="recent-activity-item-center-bottom">
-                                    <span>
-                                        {transaction.from === walletAddress ? transaction.to : transaction.from}
-                                    </span>
-                                    <span>
-                                        {transaction.amount} {WSO2_TOKEN}
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="recent-activity-item-right">
-                                <RightOutlined />
-                            </div>
-                        </div>
+                        <Card key={index} className="recent-activity-item" bordered={false}>
+                            <Row gutter={[16, 16]} align="middle">
+                                <Col>
+                                    <Avatar
+                                        size={50}
+                                        src={transaction.direction === "send" ? transaction.to : transaction.from}
+                                    />
+                                </Col>
+                                <Col flex="auto">
+                                    <div className="transaction-info">
+                                        <div className="transaction-header">
+                                            <span className="transaction-direction">
+                                                {transaction.direction === 'send' ? "Sent" : "Received"}
+                                            </span>
+                                            <Tag color={transaction.from === walletAddress ? "green" : "blue"}>
+                                                {transaction.direction === 'send' ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+                                            </Tag>
+                                        </div>
+                                        <div className="transaction-footer">
+                                            <span className="transaction-address">
+                                                {transaction.direction === 'send' ? transaction.to : transaction.from}
+                                            </span>
+                                            <span className="transaction-amount">
+                                                {transaction.tokenAmount} {WSO2_TOKEN}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col>
+                                    <div className="transaction-time">
+                                        {moment(transaction.timestamp).format('MMM DD, hh:mm A')}
+                                    </div>
+                                </Col>
+                                <Col>
+                                    <RightOutlined />
+                                </Col>
+                            </Row>
+                        </Card>
                     ))
                 )}
             </div>
         </div>
     );
-}
-
+};
 
 export default RecentActivities;
