@@ -2,11 +2,18 @@
   background: var(--background-color);
   height: auto;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  
+}
+
+[data-theme="dark"] .navbar-header {
+  background: var(--navbar-background-dark);  
+  height: auto;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-container {
   width: 100%;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -14,8 +21,11 @@
 }
 
 .navbar-logo {
-  flex: 1;
+  display : flex;
+  flex: row;
+  padding : 10px;
   text-align: left;
+
 }
 
 .navbar-title {

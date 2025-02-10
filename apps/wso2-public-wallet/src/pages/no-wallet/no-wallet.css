@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 80vh;
     text-align: center;
 }
 
@@ -21,4 +21,15 @@
 .no-wallet-text {
     color: gray;
     margin-top: 0.5rem;
+}
+
+.no-wallet-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background: var(--primary-color);
+    color: rgb(13, 141, 24);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
 }

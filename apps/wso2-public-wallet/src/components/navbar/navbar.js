@@ -6,6 +6,7 @@ import { Sun, Moon } from 'react-feather';
 import { useThemeSwitcher } from "react-css-theme-switcher";
 import { getCurrentBlockNumber } from '../../services/blockchain.service.js';
 import { saveLocalDataAsync } from '../../helpers/storage.js';
+import Wso2MainImg from "../../assets/images/wso2_main.png";
 import {
     WSO2_WALLET,
     CONNECTED,
@@ -41,10 +42,18 @@ const NavBar = () => {
         await saveLocalDataAsync(STORAGE_KEYS.THEME_MODE, newTheme);
     };
 
+    // set default theme to light -- this code needs to be udated in fucture - to be added : check stored theme in local storage
+    useEffect(() => {
+        // set default theme to light
+        switcher({ theme: 'light' });
+    }, []);
+
+
     return (
         <Header className="navbar-header">
             <Row justify="center" align="middle" className="navbar-container">
                 <Col className="navbar-logo">
+                    <img src={Wso2MainImg} alt="WSO2 Wallet" className="navbar-logo-img" style={{ width: 100 }} />
                     <h2 className="navbar-title">{WSO2_WALLET}</h2>
                 </Col>
                 
@@ -67,9 +76,9 @@ const NavBar = () => {
                         <Menu.Item key="/profile" icon={<UserOutlined />}>
                             <Link to="/profile">Profile</Link>
                         </Menu.Item>
-                        <Menu.Item key="/recover-wallet" icon={<ReloadOutlined />}>
+                        {/* <Menu.Item key="/recover-wallet" icon={<ReloadOutlined />}>
                             <Link to="/recover-wallet">Recover Wallet</Link>
-                        </Menu.Item>
+                        </Menu.Item> */}
                     </Menu>
                 </Col>
                 
@@ -85,7 +94,7 @@ const NavBar = () => {
                     {currentBlockNumber ? (
                         <Tag color="green" className="status-tag">
                             <span className="status-dot status-dot-connected" />
-                            {CONNECTED} ({currentBlockNumber})
+                            {CONNECTED} 
                         </Tag>
                     ) : (
                         <Tag color="red" className="status-tag">

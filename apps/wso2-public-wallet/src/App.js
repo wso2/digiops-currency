@@ -1,23 +1,21 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LayoutView from './LayoutView';
 import { useAuthContext } from '@asgardeo/auth-react';
 import { useEffect } from 'react';
-
+import "./App.css";
 
 function App() {
-
-  // --- get the navigate function from useNavigate hook ---
-
-
-  // --- get the sign in function from useAuthContext hook ---
   const { state, signIn } = useAuthContext();
 
-
-  // --- check if the user is authenticated and wallet is already exist in wallet db ---
+  // --- Sign in only if the user is not authenticated ---
   useEffect(() => {
-    if (!state.isAuthenticated) {
-      signIn();
-    }
+    const authenticateUser = async () => {
+      if (!state.isAuthenticated) {
+        await signIn();
+      }
+    };
+
+    authenticateUser();
   }, [state.isAuthenticated, signIn]);
 
   return (
