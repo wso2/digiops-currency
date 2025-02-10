@@ -154,9 +154,9 @@ const HomePage = () => {
                 <button className="action-btn send" onClick={() => navigate("/send")}>
                     <FaPaperPlane /> Send
                 </button>
-                <button className="action-btn request" onClick={() => navigate("/request")}>
+                {/* <button className="action-btn request" onClick={() => navigate("/request")}>
                     <FaDownload /> Request
-                </button>
+                </button> */}
             </div>
         </div>
     );
