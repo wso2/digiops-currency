@@ -61,9 +61,9 @@ const NavBar = () => {
                         <Menu.Item key="/history" icon={<HistoryOutlined />}>
                             <Link to="/history">History</Link>
                         </Menu.Item>
-                        <Menu.Item key="/create-wallet" icon={<WalletOutlined />}>
+                        {/* <Menu.Item key="/create-wallet" icon={<WalletOutlined />}>
                             <Link to="/create-wallet">Create Wallet</Link>
-                        </Menu.Item>
+                        </Menu.Item> */}
                         <Menu.Item key="/profile" icon={<UserOutlined />}>
                             <Link to="/profile">Profile</Link>
                         </Menu.Item>

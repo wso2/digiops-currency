@@ -1,22 +1,28 @@
-import logo from './logo.svg';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LayoutView from './LayoutView';
-import LoginPage from './pages/login/login';
 import { useAuthContext } from '@asgardeo/auth-react';
-
-
+import { useEffect } from 'react';
 
 function App() {
+    const { state, signIn } = useAuthContext();
 
-  const { state } = useAuthContext();
+    useEffect(() => {
+        if (!state.isAuthenticated) {
+            signIn();
+        }
+    }, [state.isAuthenticated, signIn]);
 
-
-  return (
-    <Router>
-      <Routes>
-        {state.isAuthenticated ? <Route path="/*" element={<LayoutView />} /> : <Route path="/" element={<LoginPage />} />}
-      </Routes>
-    </Router>
-  );
+    return (
+        <Router>
+            <Routes>
+                {state.isAuthenticated ? (
+                    <Route path="/*" element={<LayoutView />} />
+                ) : (
+                    <Route path="/*" element={<div>Loading...</div>} />
+                )}
+            </Routes>
+        </Router>
+    );
 }
+
 export default App;

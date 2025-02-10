@@ -15,6 +15,7 @@ function LayoutView() {
     useEffect (() => {
         if ( 
             location.pathname === '/wallet-phrase' 
+            || location.pathname === '/create-wallet'
         ){
             setIsShowNavBar(false);
            
