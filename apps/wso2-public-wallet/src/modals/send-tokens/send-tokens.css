@@ -1,0 +1,62 @@
+.send-tokens-page {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+
+    /* background-color: #fff; */
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .send-tokens-title {
+    text-align: center;
+    color: #ee7b2f;
+  }
+  
+  .send-tokens-form {
+    padding: 20px;
+  }
+  
+  .send-tokens__wallet-address,
+  .send-tokens__amount {
+    margin-bottom: 15px;
+  }
+  
+  .send-tokens__error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  .send-tokens__balance {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .send-tokens__buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .cancel-button {
+    background-color: #ccc;
+    border: none;
+    color: #333;
+  }
+  
+  .cancel-button:hover {
+    background-color: #b3b3b3;
+  }
+  
+  .send-tokens__buttons .ant-btn-primary {
+    background-color: #ee7b2f;
+    border: none;
+  }
+  
+  .send-tokens__buttons .ant-btn-primary:hover {
+    background-color: #cc5f1a;
+  }
+  

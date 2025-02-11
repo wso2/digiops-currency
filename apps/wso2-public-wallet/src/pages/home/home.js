@@ -1,4 +1,4 @@
-import { message ,Modal} from "antd";
+import { message, Modal } from "antd";
 import { ClipLoader } from "react-spinners";
 import { FaWallet, FaCopy, FaCheck, FaPaperPlane, FaDownload } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
@@ -30,7 +30,7 @@ import "./home.css";
 import { useAuthContext } from '@asgardeo/auth-react';
 import NoWallet from "../no-wallet/no-wallet";
 import RecentActivities from "../../components/home/recent-activities";
-import SendTokens from "../../modals/send-tokens";
+// import SendTokens from "../../modals/send-tokens/send-tokens";
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -39,14 +39,14 @@ const HomePage = () => {
     const [tokenBalance, setTokenBalance] = useState(0);
     const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
-    const [isSendModalVisible, setIsSendModalVisible] = useState(false);
+    // const [isSendModalVisible, setIsSendModalVisible] = useState(false);
 
     // additonal code begins here
 
     const { isAuthenticated, getBasicUserInfo, getIDToken } = useAuthContext();
 
     const [copied, setCopied] = useState(false);
-    
+
     const handleCopy = () => {
         handledCopyAccount();
         setCopied(true);
@@ -73,13 +73,13 @@ const HomePage = () => {
                 STORAGE_KEYS.WALLET_ADDRESS
             );
             if (walletAddressResponse) {
-            setWalletAddress(walletAddressResponse);
+                setWalletAddress(walletAddressResponse);
             }
 
-            console.log("this is wallet address response --- > " , walletAddressResponse);
-            console.log("this is wallet address availability --- > " , walletAddress==null);
+            console.log("this is wallet address response --- > ", walletAddressResponse);
+            console.log("this is wallet address availability --- > ", walletAddress == null);
 
-            console.log("this is wallet address --- > " , walletAddress);
+            console.log("this is wallet address --- > ", walletAddress);
         } catch (error) {
             messageApi.error(ERROR_RETRIEVE_WALLET_ADDRESS);
         }
@@ -95,9 +95,9 @@ const HomePage = () => {
     const fetchCurrentTokenBalance = async () => {
         try {
             setIsTokenBalanceLoading(true);
-            console.log("this is wallet address --- > " , walletAddress);
+            console.log("this is wallet address --- > ", walletAddress);
             const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
-            console.log("this is token balance --- > " , tokenBalance);
+            console.log("this is token balance --- > ", tokenBalance);
             setTokenBalance(tokenBalance);
         } catch (error) {
             setTokenBalance(0);
@@ -134,59 +134,59 @@ const HomePage = () => {
     };
 
     const handleSendClick = () => {
-        setIsSendModalVisible(true);
-      };
-    
+        navigate("/send-tokens");
+    };
+
     //   const handleSendModalOk = () => {
     //     console.log("Sending to:", sendAddress, "Amount:", sendAmount);
     //     message.success("Transaction initiated!");
     //     setIsSendModalVisible(false);
     //   };
-    
-      const handleSendModalCancel = () => {
-        setIsSendModalVisible(false);
-      };
+
+    // const handleSendModalCancel = () => {
+    //     setIsSendModalVisible(false);
+    // };
 
     return (
 
         (walletAddress == null) ? <NoWallet /> :
-        <div className="wallet-container">
-            <h1 className="title">Wallet Overview</h1>
-            <div className="wallet-details">
-                <div className="wallet-address">
-                    <FaWallet className="icon" />
-                    <span>{walletAddress}</span>
-                    <button className="copy-btn" onClick={handleCopy}>
-                        {copied ? <FaCheck className="copied" /> : <FaCopy />}
-                    </button>
+            <div className="wallet-container">
+                <h1 className="title">Wallet Overview</h1>
+                <div className="wallet-details">
+                    <div className="wallet-address">
+                        <FaWallet className="icon" />
+                        <span>{walletAddress}</span>
+                        <button className="copy-btn" onClick={handleCopy}>
+                            {copied ? <FaCheck className="copied" /> : <FaCopy />}
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div className="balance-section">
-                <h2>Balance</h2>
-                {isTokenBalanceLoading ? (
-                    <ClipLoader size={20} color="#EE7B2F" />
-                ) : (
-                    <NumericFormat value={tokenBalance} displayType={'text'} thousandSeparator={true} />
-                )}
-            </div>
-            <div className="actions">
-                <button className="action-btn send" onClick={() => handleSendClick()}>
-                    <FaPaperPlane /> Send
-                </button>
-                {/* <button className="action-btn request" onClick={() => navigate("/request")}>
+                <div className="balance-section">
+                    <h2>Balance</h2>
+                    {isTokenBalanceLoading ? (
+                        <ClipLoader size={20} color="#EE7B2F" />
+                    ) : (
+                        <NumericFormat value={tokenBalance} displayType={'text'} thousandSeparator={true} />
+                    )}
+                </div>
+                <div className="actions">
+                    <button className="action-btn send" onClick={() => handleSendClick()}>
+                        <FaPaperPlane /> Send
+                    </button>
+                    {/* <button className="action-btn request" onClick={() => navigate("/request")}>
                     <FaDownload /> Request
                 </button> */}
-            </div>
-            {/* recent activities */}
-            <div className="recent-activities-container">
-                <RecentActivities />
-            </div>
+                </div>
+                {/* recent activities */}
+                <div className="recent-activities-container">
+                    <RecentActivities />
+                </div>
 
-            {/* send modal */}
-            <SendTokens isOpen={isSendModalVisible}  onClose={handleSendModalCancel} />
-        </div>
+                {/* send modal */}
+                {/* <SendTokens isOpen={isSendModalVisible} onClose={handleSendModalCancel} /> */}
+            </div>
     );
-    
+
 };
 
 export default HomePage;

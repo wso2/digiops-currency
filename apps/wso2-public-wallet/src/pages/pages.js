@@ -7,6 +7,7 @@ import HistoryPage from './history/history';
 import CreateWallet from './create-wallet/create-wallet';
 import ProfilePage from './profile/profile';
 import RecoverWallet from './recover-wallet/recover-wallet';
+import SendTokens from '../modals/send-tokens/send-tokens';
 
 function Pages() {
     return (
@@ -16,6 +17,7 @@ function Pages() {
             <Route path="/create-wallet" element={<CreateWallet />} />
             <Route path= "/profile" element={<ProfilePage />} />
             <Route path="/recover-wallet" element={<RecoverWallet />} />
+            <Route path="/send-tokens" element={<SendTokens />} />
         </Routes>
     );
 }

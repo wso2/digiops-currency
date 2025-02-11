@@ -8,6 +8,7 @@
     "antd": "^5.23.3",
     "cra-template": "1.2.0",
     "crypto-js": "^4.2.0",
+    "ethereum-address": "^0.0.4",
     "ethers": "^5.7.2",
     "identicon.js": "^2.3.3",
     "luxon": "^3.5.0",

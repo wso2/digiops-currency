@@ -24,6 +24,7 @@ const RecentActivities = () => {
         }
     };
 
+    // --- Fetch Wallet Address when page mounts ---
     useEffect(() => {
         fetchWalletAddress();
     }, []);
