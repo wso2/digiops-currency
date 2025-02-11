@@ -6,23 +6,26 @@ import "./App.css";
 
 function App() {
   const { state, signIn } = useAuthContext();
-  const [loading, setLoading] = useState(true); // State to manage loading state
+  const [loading, setLoading] = useState(true);
 
-  // --- Sign in only if the user is not authenticated ---
   useEffect(() => {
     const authenticateUser = async () => {
-      if (!state.isAuthenticated) {
-        await signIn();
+      if (!state?.isAuthenticated) {
+        try {
+          await new Promise(resolve => setTimeout(resolve, 1000)); // Add delay
+          await signIn();
+        } catch (error) {
+          console.error("Authentication failed:", error);
+        }
       }
-      setLoading(false); // Set loading to false after authentication check
+      setLoading(false);
     };
 
     authenticateUser();
-  }, [state.isAuthenticated, signIn]);
+  }, [state?.isAuthenticated, signIn]);
 
-  // Show loading state while authentication is being checked
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="loading-screen">Authenticating...</div>;
   }
 
   return (

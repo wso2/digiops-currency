@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message ,Modal} from "antd";
 import { ClipLoader } from "react-spinners";
 import { FaWallet, FaCopy, FaCheck, FaPaperPlane, FaDownload } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
@@ -29,6 +29,8 @@ import { STORAGE_KEYS } from "../../constants/configs";
 import "./home.css";
 import { useAuthContext } from '@asgardeo/auth-react';
 import NoWallet from "../no-wallet/no-wallet";
+import RecentActivities from "../../components/home/recent-activities";
+import SendTokens from "../../modals/send-tokens";
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -37,6 +39,7 @@ const HomePage = () => {
     const [tokenBalance, setTokenBalance] = useState(0);
     const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
+    const [isSendModalVisible, setIsSendModalVisible] = useState(false);
 
     // additonal code begins here
 
@@ -130,6 +133,20 @@ const HomePage = () => {
         });
     };
 
+    const handleSendClick = () => {
+        setIsSendModalVisible(true);
+      };
+    
+    //   const handleSendModalOk = () => {
+    //     console.log("Sending to:", sendAddress, "Amount:", sendAmount);
+    //     message.success("Transaction initiated!");
+    //     setIsSendModalVisible(false);
+    //   };
+    
+      const handleSendModalCancel = () => {
+        setIsSendModalVisible(false);
+      };
+
     return (
 
         (walletAddress == null) ? <NoWallet /> :
@@ -153,13 +170,20 @@ const HomePage = () => {
                 )}
             </div>
             <div className="actions">
-                <button className="action-btn send" onClick={() => navigate("/send")}>
+                <button className="action-btn send" onClick={() => handleSendClick()}>
                     <FaPaperPlane /> Send
                 </button>
                 {/* <button className="action-btn request" onClick={() => navigate("/request")}>
                     <FaDownload /> Request
                 </button> */}
             </div>
+            {/* recent activities */}
+            <div className="recent-activities-container">
+                <RecentActivities />
+            </div>
+
+            {/* send modal */}
+            <SendTokens isOpen={isSendModalVisible}  onClose={handleSendModalCancel} />
         </div>
     );
     

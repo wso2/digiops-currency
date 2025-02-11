@@ -7,13 +7,14 @@ import { ERROR_READING_WALLET_DETAILS, RECENT_ACTIVITIES, WSO2_TOKEN } from '../
 import { STORAGE_KEYS } from '../../constants/configs';
 import moment from 'moment';
 import './recent-activities.css';
-// --- recent activities component ---
+
+// --- Recent Activities Component ---
 const RecentActivities = () => {
     const [walletAddress, setWalletAddress] = useState('');
     const [recentTransactions, setRecentTransactions] = useState([]);
     const [isRecentTransactionsLoading, setIsRecentTransactionsLoading] = useState(false);
 
-    // --- fetch wallet address ---
+    // --- Fetch Wallet Address ---
     const fetchWalletAddress = async () => {
         try {
             const walletAddressResponse = await getLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS);
@@ -27,13 +28,13 @@ const RecentActivities = () => {
         fetchWalletAddress();
     }, []);
 
-    // --- fetch transaction history ---
+    // --- Fetch Transaction History ---
     const fetchTransactionHistory = async () => {
         try {
             setIsRecentTransactionsLoading(true);
             const transactionHistory = await getTransactionHistory(walletAddress);
             setRecentTransactions(transactionHistory);
-            console.log("this is the transation history --- > **" ,transactionHistory);
+            console.log("this is the transaction history --- > **", transactionHistory);
         } catch (error) {
             console.log(error);
         } finally {
@@ -47,7 +48,7 @@ const RecentActivities = () => {
         }
     }, [walletAddress]);
 
-    // Fetch recent transactions in background
+    // Fetch recent transactions in the background
     const fetchRecentTransactionsDoInBackground = async () => {
         try {
             const recentTransactions = await getTransactionHistory(walletAddress);
@@ -91,8 +92,25 @@ const RecentActivities = () => {
                                             <span className="transaction-direction">
                                                 {transaction.direction === 'send' ? "Sent" : "Received"}
                                             </span>
-                                            <Tag color={transaction.from === walletAddress ? "green" : "blue"}>
-                                                {transaction.direction === 'send' ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+                                            <Tag
+                                                className="transaction-tag"
+                                                style={{
+                                                    backgroundColor: transaction.direction === 'send' ? '#FFE5D1' : '#DFFFE2',
+                                                    border: `2px solid ${transaction.direction === 'send' ? '#B6551A' : '#147A3D'}`,
+                                                    borderRadius: '50%',
+                                                    padding: '6px',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    width: '32px',
+                                                    height: '32px'
+                                                }}
+                                            >
+                                                {transaction.direction === 'send' ? (
+                                                    <ArrowUpOutlined style={{ color: '#B6551A', fontSize: '18px' }} />
+                                                ) : (
+                                                    <ArrowDownOutlined style={{ color: '#147A3D', fontSize: '18px' }} />
+                                                )}
                                             </Tag>
                                         </div>
                                         <div className="transaction-footer">
