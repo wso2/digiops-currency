@@ -66,7 +66,7 @@ const SendTokens = () => {
     try {
       await saveLocalDataAsync(STORAGE_KEYS.SENDING_AMOUNT, sendAmount);
       await saveLocalDataAsync(STORAGE_KEYS.SENDER_WALLET_ADDRESS, sendWalletAddress);
-      navigate("/confirm-assets-send");
+      navigate("/confirm-tokens-send");
     } catch (error) {
       console.log(`${ERROR_SAVING_TX_DETAILS}: ${error}`);
     }

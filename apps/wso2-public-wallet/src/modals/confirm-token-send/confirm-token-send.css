@@ -1,0 +1,66 @@
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .wso2-logo {
+    width: 150px;
+    height: auto;
+  }
+  
+  .avatar {
+    margin: 10px;
+    border: 2px solid #ee7b2f;
+  }
+  
+  h2 {
+    color: #ee7b2f;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  p {
+    font-size: 16px;
+    color: #333;
+    margin-top: 10px;
+  }
+  
+  .mt-5 {
+    margin-top: 30px;
+  }
+  
+  button {
+    width: 120px;
+    height: 40px;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+  
+  button.ml-3 {
+    margin-left: 15px;
+  }
+  
+  .ant-btn-primary {
+    background-color: #ee7b2f;
+    border: none;
+  }
+  
+  .ant-btn-primary:hover {
+    background-color: #cc5f1a;
+  }
+  
+  .ant-btn {
+    background-color: #ccc;
+    border: none;
+    color: #333;
+  }
+  
+  .ant-btn:hover {
+    background-color: #b3b3b3;
+  }
+  
