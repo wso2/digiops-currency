@@ -2,7 +2,6 @@
 .wallet-create-top-margin {
     margin-top: 50px;
     display: flex;
-    height: 80vh;
     justify-content: center;
     align-items: center;
     flex-direction: column;

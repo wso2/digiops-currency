@@ -1,0 +1,100 @@
+/* Container for the wallet phrase component */
+.wallet-phrase {
+    background-color: #f9f9f9;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    height: auto;
+  }
+  
+  /* Header section with a back button */
+  .wallet-phrase .recovery-phrase-header {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+  }
+  
+  /* Styling for the back button */
+  .wallet-phrase .back-button {
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 5px;
+    color: #007bff;
+  }
+  
+  /* Container for alerts */
+  .create-wallet-content {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  /* General alert styles */
+  .wallet-phrase .custom-alert-message {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  /* Error alert (red background) */
+  .wallet-phrase .error-alert {
+    margin-bottom: 15px;
+    color: #ff4d4f;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Success alert (green background) */
+  .wallet-phrase .success-alert {
+    margin-bottom: 20px;
+    color: #52c41a;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Styling for the PhraseCopy component */
+  .wallet-phrase .phrase-copy-container {
+    margin-top: 20px;
+  }
+  
+  /* Button for continuing (primary button) */
+  .wallet-phrase .primary-button {
+    background-color: #1890ff;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border: none;
+  }
+  
+  .wallet-phrase .primary-button:disabled {
+    background-color: #d9d9d9;
+    color: #a6a6a6;
+  }
+  
+  .wallet-phrase .primary-button:hover:not(:disabled) {
+    background-color: #40a9ff;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .wallet-phrase {
+      padding: 10px;
+    }
+  
+    .wallet-phrase .recovery-phrase-header {
+      font-size: 20px;
+    }
+  
+    .wallet-phrase .primary-button {
+      font-size: 14px;
+      height: 45px;
+    }
+  }
+  
