@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { RightOutlined, ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined } from "@ant-design/icons";
+import { RightOutlined, ArrowUpOutlined, ArrowDownOutlined, SmileOutlined } from "@ant-design/icons";
 import { Avatar, Spin, Card, Col, Row, Tag } from 'antd';
 import { getLocalDataAsync } from '../../helpers/storage';
 import { getTransactionHistory } from '../../services/blockchain.service';
@@ -77,7 +77,20 @@ const RecentActivities = () => {
                     <div className="recent-activities-loading">
                         <Spin size='large' />
                     </div>
-                ) : (
+                ) : 
+                    recentTransactions.length === 0 ? (
+                        <div className="no-recent-activities">
+                          <div className='no-recent-activities-content'>
+                           
+                              <SmileOutlined style={{ fontSize: 30, color: '#b0b0b0' }} />
+                           
+                              <span className="no-recent-activities-text">
+                                No recent activities
+                              </span>
+                            
+                          </div>
+                        </div>
+                      ) : (
                     recentTransactions.map((transaction, index) => (
                         <Card key={index} className="recent-activity-item" bordered={false}>
                             <Row gutter={[16, 16]} align="middle">
