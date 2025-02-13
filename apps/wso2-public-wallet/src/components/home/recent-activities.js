@@ -75,7 +75,7 @@ const RecentActivities = () => {
             <div className="recent-activities-content">
                 {isRecentTransactionsLoading ? (
                     <div className="recent-activities-loading">
-                        <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+                        <Spin size='large' />
                     </div>
                 ) : (
                     recentTransactions.map((transaction, index) => (

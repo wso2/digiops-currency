@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LayoutView from './LayoutView';
 import { useAuthContext } from '@asgardeo/auth-react';
 import { useEffect, useState } from 'react';
+import { Spin } from 'antd';
 import "./App.css";
 
 function App() {
@@ -29,7 +30,13 @@ function App() {
 
   // --- show loading screen --- need to change this after testing ------------>>>>>>
   if (loading) {
-    return <div className="loading-screen">Authenticating...</div>;
+    return  < div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh'
+    }} ><Spin size="large" />
+    </  div>;
   }
 
   return (

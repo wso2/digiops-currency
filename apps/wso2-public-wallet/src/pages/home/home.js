@@ -1,5 +1,4 @@
-import { message, Modal } from "antd";
-import { ClipLoader } from "react-spinners";
+import { message, Modal, Spin } from "antd";
 import { FaWallet, FaCopy, FaCheck, FaPaperPlane, FaDownload } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import {
@@ -164,7 +163,7 @@ const HomePage = () => {
                 <div className="balance-section">
                     <h2>Balance</h2>
                     {isTokenBalanceLoading ? (
-                        <ClipLoader size={20} color="#EE7B2F" />
+                        <Spin size="large" />
                     ) : (
                         <NumericFormat value={tokenBalance} displayType={'text'} thousandSeparator={true} />
                     )}
