@@ -10,7 +10,7 @@ import RecoverWallet from './recover-wallet/recover-wallet';
 import SendTokens from '../modals/send-tokens/send-tokens';
 import ConfirmSendTokens from '../modals/confirm-token-send/confirm-token-send';
 
-function Pages() {
+const Pages = () => {
     return (
         <Routes>
             <Route path="/" element={<HomePage />} />

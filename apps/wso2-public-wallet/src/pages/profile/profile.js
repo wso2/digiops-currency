@@ -108,7 +108,6 @@ function Profile() {
   };
 
   return (
-
     (!walletAddress) ? <NoWallet /> :
       <div className="profile-container">
         {contextHolder}

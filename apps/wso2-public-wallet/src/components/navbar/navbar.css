@@ -39,6 +39,43 @@
 
 }
 
+/* Styling for the selected menu item */
+.navbar-menu .ant-menu-item-selected {
+  background-color: #ff7818; /* Customize the background color */
+  color: white;              /* Change the font color of the selected item */
+}
+
+/* Optional: Hover styles for non-selected items */
+.navbar-menu .ant-menu-item:hover {
+  background-color: #e6f7ff; /* Light background on hover */
+  color: #d5ff18;            /* Font color on hover */
+}
+
+/* Optional: If you want to style the non-selected items with custom background */
+.navbar-menu .ant-menu-item {
+  background-color: transparent; /* Default background for non-selected items */
+}
+
+
+/* --navbar-item-background-dark */
+ .menu-item {
+  background-color: var(--navbar-item-background-light);
+  padding: 10px 20px;
+  border-radius: 10px;
+
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
+}
+
+[data-theme="dark"] .menu-item {
+  background-color: var(--navbar-item-background-dark); 
+}
+
+.menu-item:hover {
+  background-color: var(--navbar-item-background-hover);
+}
+
 .navbar-menu {
   background: transparent !important;
   border: none;

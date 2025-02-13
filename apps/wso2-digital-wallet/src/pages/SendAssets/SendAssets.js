@@ -26,6 +26,7 @@ import { getWalletBalanceByWalletAddress } from "../../services/blockchain.servi
 function SendAssets() {
   const navigate = useNavigate();
 
+  // --- Message API ---
   const [messageApi, contextHolder] = message.useMessage();
 
   const [sendWalletAddress, setSendWalletAddress] = useState("");

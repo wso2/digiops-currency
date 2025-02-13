@@ -1,4 +1,4 @@
-import { message, Modal, Spin } from "antd";
+import { message, Modal, Spin , Tag, Tooltip} from "antd";
 import { FaWallet, FaCopy, FaCheck, FaPaperPlane, FaDownload } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import {
@@ -50,6 +50,7 @@ const HomePage = () => {
         handledCopyAccount();
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
+        message.success(COPIED);
     };
     useEffect(() => {
         getBasicUserInfo().then((response) => {
@@ -152,13 +153,18 @@ const HomePage = () => {
             <div className="wallet-container">
                 <h1 className="title">Wallet Overview</h1>
                 <div className="wallet-details">
-                    <div className="wallet-address">
-                        <FaWallet className="icon" />
-                        <span>{walletAddress}</span>
-                        <button className="copy-btn" onClick={handleCopy}>
-                            {copied ? <FaCheck className="copied" /> : <FaCopy />}
-                        </button>
-                    </div>
+                <CopyToClipboard className="wallet-address-text-container" text={walletAddress} onCopy={handleCopy}>
+                  <Tooltip title={isAccountCopied ? "Copied" : "Copy to Clipboard"}>
+                    <Tag className="wallet-tag">
+                      {walletAddress}
+                      {isAccountCopied ? (
+                        <CheckOutlined className="icon-copied" />
+                      ) : (
+                        <CopyOutlined className="icon-copy" />
+                      )}
+                    </Tag>
+                  </Tooltip>
+                </CopyToClipboard>
                 </div>
                 <div className="balance-section">
                     <h2>Balance</h2>

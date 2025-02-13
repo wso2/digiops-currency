@@ -4,8 +4,13 @@ import { useAuthContext } from '@asgardeo/auth-react';
 import { useEffect, useState } from 'react';
 import { Spin } from 'antd';
 import "./App.css";
+import AppAuthProvider from './context/authcontext';
+import AppHandler from './AppHandler';
 
+// other imports
 function App() {
+
+  document.title = "Public Wallet App";
 
   // ---  states to handle the loading state ---
   const { state, signIn } = useAuthContext();
@@ -30,7 +35,7 @@ function App() {
 
   // --- show loading screen --- need to change this after testing ------------>>>>>>
   if (loading) {
-    return  < div style={{
+    return < div style={{
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
@@ -40,11 +45,10 @@ function App() {
   }
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/*" element={state.isAuthenticated ? <LayoutView /> : <div>Unauthorized Access</div>} />
-      </Routes>
-    </Router>
+
+    <AppAuthProvider>
+        <AppHandler />
+    </AppAuthProvider>
   );
 }
 
