@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CopyOutlined, CheckOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Input, Button } from 'antd';
-import { showAlertBox } from '../../helpers/alerts';
+import { Input, Button, message } from 'antd';
 import { COPIED, OK } from '../../constants/strings';
 import { defaultIconPrefixCls } from 'antd/es/config-provider';
 
@@ -12,6 +11,9 @@ const WalletAddressCopy = (props) => {
     //---  get address , topic and  button text from props ---
     const { address, topic, buttonText = "Show Private Key" } = props;
     const [walletAddressCopied, setWalletAddressCopied] = useState(false);
+
+    // --- message api to show alerts ---   
+    const [messageApi, contextHolder] = message.useMessage();
 
     // state to store the copied status
     const [showPrivateKey, setShowPrivateKey] = useState(false);
@@ -23,7 +25,7 @@ const WalletAddressCopy = (props) => {
 
     //--- handle copy address ---
     const handleCopyAddress = async () => {
-        await showAlertBox(COPIED, `${topic} ${COPIED}`, OK);
+        await messageApi.success(COPIED);
         setWalletAddressCopied(true);
         setTimeout(() => {
             setWalletAddressCopied(false);
@@ -34,6 +36,7 @@ const WalletAddressCopy = (props) => {
     // --- return the wallet address copy component ---
     return (
         <div>
+            {contextHolder}
             <div className="d-flex justify-content-start">
                 <span className="wallet-copy-topic mb-2">{topic}</span>
             </div>

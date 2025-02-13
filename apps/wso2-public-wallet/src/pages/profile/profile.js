@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Button, Tag, Tooltip, Card, Typography, Divider } from "antd";
+import { Avatar, Button, Tag, Tooltip, Card, Typography, Divider, message } from "antd";
 import Identicon from "identicon.js";
 import { SHA256 } from "crypto-js";
 import { CopyOutlined, CheckOutlined, LogoutOutlined } from "@ant-design/icons";
@@ -16,7 +16,6 @@ import "./profile.css";
 import { useNavigate } from "react-router-dom";
 import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
 import { STORAGE_KEYS } from "../../constants/configs";
-import { showAlertBox } from "../../helpers/alerts";
 import { useAuthContext } from '@asgardeo/auth-react';
 import NoWallet from "../no-wallet/no-wallet";
 
@@ -26,13 +25,18 @@ function Profile() {
 
   // --- get the navigate function from useNavigate hook ---
   const navigate = useNavigate();
-
   const { signOut } = useAuthContext();
+
+  // --- get the message api and context holder from the message hook ---
+  const [messageApi, contextHolder] = message.useMessage();
 
   // --- set the initial state for account copied status ---
   const [isAccountCopied, setIsAccountCopied] = useState(false);
+  const [isPrivateKryCopied, setIsPrivateKryCopied] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [walletPrivateKey, setWalletPrivateKey] = useState("");
+  const [showPrivateKey, setShowPrivateKey] = useState(false);
+
 
   // --- fetch the wallet details from local storage ---
   useEffect(() => {
@@ -40,9 +44,9 @@ function Profile() {
       try {
         const walletAddressResponse = await getLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS);
         const privateKeyResponse = await getLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY);
-        if ( walletAddressResponse) {
-        setWalletAddress(walletAddressResponse);
-        setWalletPrivateKey(privateKeyResponse);
+        if (walletAddressResponse) {
+          setWalletAddress(walletAddressResponse);
+          setWalletPrivateKey(privateKeyResponse);
         }
       } catch (error) {
         console.error("Error reading wallet details: ", error);
@@ -64,17 +68,37 @@ function Profile() {
 
   // --- handle copy account ---
   const handleCopyAccount = async () => {
-    await showAlertBox(COPY_TO_CLIPBOARD, WALLET_ADDRESS_COPIED, OK);
+    await messageApi.open({
+      content: WALLET_ADDRESS_COPIED,
+      duration: 3,
+      key: "copyAccount",
+    })
     setIsAccountCopied(true);
     setTimeout(() => setIsAccountCopied(false), 2000);
   };
+
+  // --- handle copy private key ---
+  const handlePrivateKeyCopy = async () => {
+    await messageApi.open({
+      content: WALLET_PRIVATE_KEY,
+      duration: 3,
+      key:  "copyPrivateKey",
+    });
+    setIsPrivateKryCopied(true);
+    setTimeout(() => setIsPrivateKryCopied(false), 2000);
+  }
 
   // --- handle logout ---
   const handleLogout = async () => {
     try {
       await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, "");
       await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, "");
-      console.log("Logged out successfully");
+      messageApi.open({
+        content: "Logged out successfully",
+        duration: 3,
+        key: "logout",
+      });
+
       await signOut();
       console.log("Logged out successfully from asgardeo ---->>>>");
       navigate("/create-wallet");
@@ -86,35 +110,60 @@ function Profile() {
   return (
 
     (!walletAddress) ? <NoWallet /> :
-    <div className="profile-container">
-      <Card className="profile-card" bordered={false}>
-        <div className="avatar-container">
-          <Avatar size={80} src={avatarUrl} />
-          <Title level={4} className="profile-title">Wallet Profile</Title>
-        </div>
-        <Divider />
-        <div className="wallet-section">
-          <Text strong>Wallet Address</Text>
-          <CopyToClipboard text={walletAddress} onCopy={handleCopyAccount}>
-            <Tooltip title={isAccountCopied ? "Copied" : "Copy to Clipboard"}>
-              <Tag className="wallet-tag">
-                {walletAddress.slice(0, 6)}...{walletAddress.slice(-6)}
-                {isAccountCopied ? (
-                  <CheckOutlined className="icon-copied" />
-                ) : (
-                  <CopyOutlined className="icon-copy" />
-                )}
-              </Tag>
-            </Tooltip>
-          </CopyToClipboard>
-        </div>
-        <WalletAddressCopy address={walletPrivateKey} topic={WALLET_PRIVATE_KEY} />
-        <Divider />
-        <Button type="primary" danger icon={<LogoutOutlined />} block onClick={handleLogout}>
-          {LOGOUT}
-        </Button>
-      </Card>
-    </div>
+      <div className="profile-container">
+        {contextHolder}
+        <Card className="profile-card" bordered={false}>
+          <div className="avatar-container">
+            <Avatar size={80} src={avatarUrl} />
+            <Title level={4} className="profile-title">Wallet Profile</Title>
+          </div>
+          <Divider />
+          <div className="wallet-section">
+            <Text strong className="wallet-text">Wallet Address</Text>
+            <CopyToClipboard className="wallet-address-text-container" text={walletAddress} onCopy={handleCopyAccount}>
+              <Tooltip title={isAccountCopied ? "Copied" : "Copy to Clipboard"}>
+                <Tag className="wallet-tag">
+                  {walletAddress}
+                  {isAccountCopied ? (
+                    <CheckOutlined className="icon-copied" />
+                  ) : (
+                    <CopyOutlined className="icon-copy" />
+                  )}
+                </Tag>
+              </Tooltip>
+            </CopyToClipboard>
+            <Text strong className="wallet-text">Wallet Private Key</Text>
+            {showPrivateKey ? (
+              <div className="wallet-address-text-container">
+                <CopyToClipboard className="wallet-address-text-container" text={walletPrivateKey} onCopy={handlePrivateKeyCopy}>
+                  <Tooltip title={isPrivateKryCopied ? "Copied" : "Copy to Clipboard"}>
+                    <Tag className="wallet-tag">
+                      {walletPrivateKey}
+                      {isPrivateKryCopied ? (
+                        <CheckOutlined className="icon-copied" />
+                      ) : (
+                        <CopyOutlined className="icon-copy" />
+                      )}
+                    </Tag>
+                  </Tooltip>
+                </CopyToClipboard>
+                <Button className="show-private-key-button" onClick={() => setShowPrivateKey(false)}>
+                  Hide Private Key
+                </Button>
+              </div>
+            ) : (
+              <Button className="show-private-key-button" onClick={() => setShowPrivateKey(true)}>
+                Show Private Key
+              </Button>
+            )}
+
+            <Divider />
+          </div>
+          <Button type="primary" danger icon={<LogoutOutlined />} block onClick={handleLogout}>
+            {LOGOUT}
+          </Button>
+        </Card>
+      </div>
   );
 }
 

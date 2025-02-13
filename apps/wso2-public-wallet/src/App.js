@@ -5,14 +5,17 @@ import { useEffect, useState } from 'react';
 import "./App.css";
 
 function App() {
+
+  // ---  states to handle the loading state ---
   const { state, signIn } = useAuthContext();
   const [loading, setLoading] = useState(true);
 
+  // --- authenticate the user ---
   useEffect(() => {
     const authenticateUser = async () => {
       if (!state?.isAuthenticated) {
         try {
-          await new Promise(resolve => setTimeout(resolve, 1000)); // Add delay
+          await new Promise(resolve => setTimeout(resolve, 3000)); // Add delay
           await signIn();
         } catch (error) {
           console.error("Authentication failed:", error);
@@ -24,6 +27,7 @@ function App() {
     authenticateUser();
   }, [state?.isAuthenticated, signIn]);
 
+  // --- show loading screen --- need to change this after testing ------------>>>>>>
   if (loading) {
     return <div className="loading-screen">Authenticating...</div>;
   }
