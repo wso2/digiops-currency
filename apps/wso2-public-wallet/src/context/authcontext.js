@@ -48,6 +48,7 @@ const AppAuthProvider = (props) => {
                         console.error("One or more of the required values are undefined:", { userInfo, idToken, decodedIdToken });
                         return;
                     }
+                    console.log("Token: ", getDecodedIDToken());
 
                     setAuthState({
                         isAuthenticated: true,

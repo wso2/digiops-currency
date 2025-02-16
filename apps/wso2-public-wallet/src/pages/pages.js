@@ -7,8 +7,8 @@ import HistoryPage from './history/history';
 import CreateWallet from './create-wallet/create-wallet';
 import ProfilePage from './profile/profile';
 import RecoverWallet from './recover-wallet/recover-wallet';
-import SendTokens from '../modals/send-tokens/send-tokens';
-import ConfirmSendTokens from '../modals/confirm-token-send/confirm-token-send';
+import SendTokens from './send-tokens/send-tokens';
+import ConfirmSendTokens from './confirm-token-send/confirm-token-send';
 
 const Pages = () => {
     return (

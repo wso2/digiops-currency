@@ -30,6 +30,9 @@ service http:InterceptableService / on new http:Listener(9091) {
             userEmail: check ctx.getWithType(EMAIL),
             walletAddress
         };
+
+        log:printInfo(string `Adding wallet for user ${userWallet.userEmail}`);
+        
         if check database:isUserWalletExists(walletAddress) {
             log:printInfo(string `Wallet ${walletAddress} already exists`);
             return http:CONFLICT;

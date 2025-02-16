@@ -5,8 +5,8 @@ import Profile from "./pages/profile/profile";
 import Error from "./pages/404";
 import HistoryPage from "./pages/history/history";
 import CreateWallet from "./pages/create-wallet/create-wallet";
-import SendTokens from "./modals/send-tokens/send-tokens";
-import ConfirmSendTokens from "./modals/confirm-token-send/confirm-token-send";
+import SendTokens from "./pages/send-tokens/send-tokens";
+import ConfirmSendTokens from "./pages/confirm-token-send/confirm-token-send";
 import RecoverWallet from "./pages/recover-wallet/recover-wallet";
 
 // Simulate auth data, could be set from a context, or fetched from an API or localStorage
