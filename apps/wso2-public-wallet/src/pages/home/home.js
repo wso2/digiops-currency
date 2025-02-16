@@ -172,7 +172,7 @@ const HomePage = () => {
             <WalletOverview walletAddress={walletAddress} tokenBalance={tokenBalance} isTokenBalanceLoading={isTokenBalanceLoading} handleSendClick={handleSendClick} handleCopy={handleCopy} isAccountCopied={isAccountCopied} />
        
                 {/* recent activities */}
-                <div className="recent-activities-container">
+                <div styles={{ padding: '20px' }}>
                     <RecentActivities />
                 </div>
 

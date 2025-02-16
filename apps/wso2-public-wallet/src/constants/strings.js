@@ -92,3 +92,5 @@ export const ERROR_TRANSFERRING_TOKEN =
 // Success messages
 export const SUCCESS_TOKEN_TRANSFER = "Token has been transferred successfully";
 export const SUCCESS_WALLET_CREATED = "Wallet has been created successfully";
+
+export const NO_RECENT_ACTIVITIES = "No recent activities";

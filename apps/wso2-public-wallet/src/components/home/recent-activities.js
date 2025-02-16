@@ -20,6 +20,8 @@ import { getLocalDataAsync } from '../../helpers/storage';
 import { getTransactionHistory } from '../../services/blockchain.service';
 import { ERROR_READING_WALLET_DETAILS, RECENT_ACTIVITIES, WSO2_TOKEN } from '../../constants/strings';
 import { STORAGE_KEYS } from '../../constants/configs';
+import NoRecentActivities from '../no-recent-activities/no-recent-activities';
+import RecentTransactionCard from '../recent-transaction-card/recent-transaction-card';
 import moment from 'moment';
 import './recent-activities.css';
 
@@ -94,74 +96,12 @@ const RecentActivities = () => {
                     </div>
                 ) : 
                     recentTransactions.length === 0 ? (
-                        <div className="no-recent-activities">
-                          <div className='no-recent-activities-content'>
-                           
-                              <SmileOutlined style={{ fontSize: 30, color: '#b0b0b0' }} />
-                           
-                              <span className="no-recent-activities-text">
-                                No recent activities
-                              </span>
-                            
-                          </div>
-                        </div>
+                        <NoRecentActivities />
+                       
                       ) : (
                     recentTransactions.map((transaction, index) => (
-                        <Card key={index} className="recent-activity-item" bordered={false}>
-                            <Row gutter={[16, 16]} align="middle">
-                                <Col>
-                                    <Avatar
-                                        size={50}
-                                        src={transaction.direction === "send" ? transaction.to : transaction.from}
-                                    />
-                                </Col>
-                                <Col flex="auto">
-                                    <div className="transaction-info">
-                                        <div className="transaction-header">
-                                            <span className="transaction-direction">
-                                                {transaction.direction === 'send' ? "Sent" : "Received"}
-                                            </span>
-                                            <Tag
-                                                className="transaction-tag"
-                                                style={{
-                                                    backgroundColor: transaction.direction === 'send' ? '#FFE5D1' : '#DFFFE2',
-                                                    border: `2px solid ${transaction.direction === 'send' ? '#B6551A' : '#147A3D'}`,
-                                                    borderRadius: '50%',
-                                                    padding: '6px',
-                                                    display: 'inline-flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    width: '32px',
-                                                    height: '32px'
-                                                }}
-                                            >
-                                                {transaction.direction === 'send' ? (
-                                                    <ArrowUpOutlined style={{ color: '#B6551A', fontSize: '18px' }} />
-                                                ) : (
-                                                    <ArrowDownOutlined style={{ color: '#147A3D', fontSize: '18px' }} />
-                                                )}
-                                            </Tag>
-                                        </div>
-                                        <div className="transaction-footer">
-                                            <span className="transaction-address">
-                                                {transaction.direction === 'send' ? transaction.to : transaction.from}
-                                            </span>
-                                            <span className="transaction-amount">
-                                                {transaction.tokenAmount} {WSO2_TOKEN}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col>
-                                    <div className="transaction-time">
-                                        {moment(transaction.timestamp).format('MMM DD, hh:mm A')}
-                                    </div>
-                                </Col>
-                                <Col>
-                                    <RightOutlined />
-                                </Col>
-                            </Row>
-                        </Card>
+                        <RecentTransactionCard key={index} transaction={transaction} />
+                        
                     ))
                 )}
             </div>

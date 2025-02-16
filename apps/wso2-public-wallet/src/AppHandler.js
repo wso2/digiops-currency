@@ -8,6 +8,7 @@ import CreateWallet from "./pages/create-wallet/create-wallet";
 import SendTokens from "./pages/send-tokens/send-tokens";
 import ConfirmSendTokens from "./pages/confirm-token-send/confirm-token-send";
 import RecoverWallet from "./pages/recover-wallet/recover-wallet";
+import HomePage from "./pages/home/home";
 
 // Simulate auth data, could be set from a context, or fetched from an API or localStorage
 const AppHandler = () => {
@@ -38,6 +39,10 @@ const AppHandler = () => {
       element: <LayoutView />,
       errorElement: <Error />,
       children: [
+        {
+          path: "/",
+          element: <HomePage />,
+        },
         {
             path: "/profile",
             element: <Profile />,

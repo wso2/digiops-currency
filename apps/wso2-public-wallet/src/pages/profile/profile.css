@@ -2,16 +2,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* background-color: #f4f6f9; */
+    background-color: #c8c9cb;
   }
   
   .profile-card {
     width: 100%;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 0px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    background: white;
+    background: rgb(127, 126, 126);
   }
   
   .avatar-container {

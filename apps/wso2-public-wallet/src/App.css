@@ -7,11 +7,11 @@
   --navbar-item-background-light: #ffffff;
   --navbar-item-background-dark: #1a1a1a;
 }
-
 .App {
   max-width: 1000px;
-  align-self: center;
-  height: 100vh;
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  margin: auto; /* Ensures centering in the available space */
   overflow: hidden;
-  /* background-color: #212121; */
 }

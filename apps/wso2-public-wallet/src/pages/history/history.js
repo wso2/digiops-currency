@@ -59,7 +59,7 @@ const HistoryPage = () => {
 
   return (
     (!walletAddress) ? <NoWallet /> :
-      <div>
+      <div style={{ padding: '20px' }}>
         <RecentActivities />
       </div>
   );
