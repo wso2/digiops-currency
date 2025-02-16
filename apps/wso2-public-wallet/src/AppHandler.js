@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import LayoutView from "./LayoutView";
 import Profile from "./pages/profile/profile";
-import Error from "./pages/404";
+import Error from "./pages/not-found/404";
 import HistoryPage from "./pages/history/history";
 import CreateWallet from "./pages/create-wallet/create-wallet";
 import SendTokens from "./pages/send-tokens/send-tokens";
