@@ -29,13 +29,10 @@ import Identicon from "identicon.js";
 import { SHA256 } from "crypto-js";
 import { CopyOutlined, CheckOutlined, LogoutOutlined } from "@ant-design/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import WalletAddressCopy from "../../components/home/wallet-address-copy";
 import {
   WALLET_PRIVATE_KEY,
   LOGOUT,
-  COPY_TO_CLIPBOARD,
   WALLET_ADDRESS_COPIED,
-  OK,
 } from "../../constants/strings";
 import "./profile.css";
 import { useNavigate } from "react-router-dom";

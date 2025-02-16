@@ -15,9 +15,7 @@
 // under the License.
 
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LayoutView from "../LayoutView";
-import LoginPage from "./login/login";
+import { BrowserRouter as Routes, Route } from "react-router-dom";
 import HomePage from "./home/home";
 import HistoryPage from "./history/history";
 import CreateWallet from "./create-wallet/create-wallet";

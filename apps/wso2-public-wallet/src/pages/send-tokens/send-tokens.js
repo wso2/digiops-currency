@@ -19,23 +19,22 @@ import { Input, Button, message, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { isAddress } from "ethereum-address";
 import { Col, Row, Container } from "reactstrap";
-
 import {
-  ERROR_FETCHING_LOCAL_TX_DETAILS,
   ERROR_RESETTING_TX_VALUES,
   ERROR_SAVING_TX_DETAILS,
-  ERROR_RETRIEVE_WALLET_ADDRESS
+  ERROR_RETRIEVE_WALLET_ADDRESS,
 } from "../../constants/strings";
 import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
 import { STORAGE_KEYS } from "../../constants/configs";
 import { getWalletBalanceByWalletAddress } from "../../services/blockchain.service";
-
 import "./send-tokens.css";
 
 const SendTokens = () => {
+  // --- get the navigate function from useNavigate hook ---
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
 
+  // --- states to store send wallet address and amount ---
   const [sendWalletAddress, setSendWalletAddress] = useState("");
   const [sendAmount, setSendAmount] = useState(0);
   const [isValidWalletAddress, setIsValidWalletAddress] = useState(false);
@@ -49,7 +48,9 @@ const SendTokens = () => {
   // --- Fetch Wallet Address ---
   const fetchWalletAddress = async () => {
     try {
-      const walletAddressResponse = await getLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS);
+      const walletAddressResponse = await getLocalDataAsync(
+        STORAGE_KEYS.WALLET_ADDRESS
+      );
       setWalletAddress(walletAddressResponse);
     } catch (error) {
       console.log(`${ERROR_RETRIEVE_WALLET_ADDRESS} - ${error}`);
@@ -76,12 +77,15 @@ const SendTokens = () => {
       fetchCurrentTokenBalance();
     }
   }, [walletAddress]);
-  
+
   // --- Handle Next Button ---
   const handleSendTokensNext = async () => {
     try {
       await saveLocalDataAsync(STORAGE_KEYS.SENDING_AMOUNT, sendAmount);
-      await saveLocalDataAsync(STORAGE_KEYS.SENDER_WALLET_ADDRESS, sendWalletAddress);
+      await saveLocalDataAsync(
+        STORAGE_KEYS.SENDER_WALLET_ADDRESS,
+        sendWalletAddress
+      );
       navigate("/confirm-tokens-send");
     } catch (error) {
       console.log(`${ERROR_SAVING_TX_DETAILS}: ${error}`);
@@ -119,7 +123,11 @@ const SendTokens = () => {
 
   // --- Check if user can continue ---
   useEffect(() => {
-    if (sendWalletAddress && parseFloat(sendAmount) > 0 && isValidWalletAddress) {
+    if (
+      sendWalletAddress &&
+      parseFloat(sendAmount) > 0 &&
+      isValidWalletAddress
+    ) {
       setIsCanContinue(true);
     } else {
       setIsCanContinue(false);
@@ -135,7 +143,7 @@ const SendTokens = () => {
       {contextHolder}
       <h2 className="send-tokens-title">Send Tokens</h2>
       <div className="send-tokens-form">
-      <Row>
+        <Row>
           <Col>
             <div className="send-tokens__balance">
               <div className="send-tokens__balance__label">Your Balance</div>
@@ -153,7 +161,11 @@ const SendTokens = () => {
                 value={sendWalletAddress}
                 onChange={handleWalletAddressInputChange}
               />
-              {isShowErrorMsg && <div className="send-tokens__error">{walletValidationErrorMsg}</div>}
+              {isShowErrorMsg && (
+                <div className="send-tokens__error">
+                  {walletValidationErrorMsg}
+                </div>
+              )}
             </div>
           </Col>
         </Row>
@@ -169,12 +181,15 @@ const SendTokens = () => {
             </div>
           </Col>
         </Row>
-        
         <div className="send-tokens__buttons">
           <Button className="cancel-button" onClick={handleCancel}>
             Cancel
           </Button>
-          <Button type="primary" disabled={!isCanContinue} onClick={handleSendTokensNext}>
+          <Button
+            type="primary"
+            disabled={!isCanContinue}
+            onClick={handleSendTokensNext}
+          >
             Next
           </Button>
         </div>

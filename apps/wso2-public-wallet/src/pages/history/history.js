@@ -39,16 +39,7 @@ const HistoryPage = () => {
       if (walletAddressResponse) {
         setWalletAddress(walletAddressResponse);
       }
-
-      console.log(
-        "this is wallet address response --- > ",
-        walletAddressResponse
-      );
-      console.log(
-        "this is wallet address availability --- > ",
-        walletAddress == null
-      );
-
+      
       console.log("this is wallet address --- > ", walletAddress);
     } catch (error) {
       messageApi.error(ERROR_RETRIEVE_WALLET_ADDRESS);

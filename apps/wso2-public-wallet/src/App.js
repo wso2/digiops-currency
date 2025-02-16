@@ -14,8 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LayoutView from './LayoutView';
 import { useAuthContext } from '@asgardeo/auth-react';
 import { useEffect, useState } from 'react';
 import { Spin } from 'antd';
@@ -26,6 +24,7 @@ import AppHandler from './AppHandler';
 // other imports
 function App() {
 
+  // --- set the document title ---
   document.title = "Public Wallet App";
 
   // ---  states to handle the loading state ---

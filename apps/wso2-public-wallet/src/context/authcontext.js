@@ -17,8 +17,6 @@
 import React, { useContext, useEffect, useState, createContext } from "react";
 import { Button, Modal, Spin, Alert } from "antd";
 import { useAuthContext, SecureApp } from "@asgardeo/auth-react";
-// import StatusWithAction from "@component/ui/StatusWithAction";
-// import { APIService } from "@utils/apiService";
 
 const AuthContext = createContext({});
 

@@ -15,12 +15,11 @@
 // under the License.
 
 import React, { useState } from "react";
-import { Input, Button, Row, Col, Typography, Card, Spin } from "antd";
+import { Input, Button, Row, Col, Typography, Card, message } from "antd";
 import { ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
 import WalletAddressCopy from "../../components/home/wallet-address-copy";
 import { saveLocalDataAsync } from "../../helpers/storage";
-import { showAlertBox } from "../../helpers/alerts";
 import {
   RECOVER_WALLET,
   PASTE_PHRASE_HERE,
@@ -28,17 +27,17 @@ import {
   CONTINUE,
   WALLET_ADDRESS,
   WALLET_PRIVATE_KEY,
-  OK,
-  ERROR,
   RECOVER_WALLET_ERROR,
   SHOW_WALLET_ADDRESS,
 } from "../../constants/strings";
-import { PASS_PHRASE_LENGTH, STORAGE_KEYS } from "../../constants/configs";
+import { STORAGE_KEYS } from "../../constants/configs";
 import "./recover-wallet.css";
 
+// --- Title and Text components from Typography of Ant Design ---
 const { Title, Text } = Typography;
 
 const RecoverWallet = () => {
+  // --- states to store the mnemonic phrase, wallet address, private key, and loading status ---
   const [wordList, setWordList] = useState(Array(12).fill(""));
   const [walletAddress, setWalletAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
@@ -47,10 +46,10 @@ const RecoverWallet = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // --- handle input change ---
   const handleInputChange = (index, value) => {
     const words = value.trim().split(" ");
     const newWordList = [...wordList];
-
     if (words.length === 12) {
       for (let i = 0; i < 12; i++) {
         newWordList[i] = words[i] || "";
@@ -63,6 +62,7 @@ const RecoverWallet = () => {
     setWordList(newWordList);
   };
 
+  // --- recover wallet from the mnemonic phrase ---
   const handleRecover = async () => {
     setLoading(true);
     try {
@@ -75,7 +75,7 @@ const RecoverWallet = () => {
       setWalletRecovered(true);
     } catch (error) {
       setWalletRecovered(false);
-      showAlertBox(ERROR, RECOVER_WALLET_ERROR, OK);
+      message.error(RECOVER_WALLET_ERROR);
     }
     setLoading(false);
   };

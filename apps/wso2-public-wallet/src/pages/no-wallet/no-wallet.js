@@ -24,7 +24,6 @@ const NoWallet = () => {
   const navigate = useNavigate();
 
   // --- handle navigation to create wallet page ---
-
   const handledNavigation = () => {
     navigate("/create-wallet");
   };

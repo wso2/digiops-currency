@@ -16,16 +16,13 @@
 
 import React from "react";
 import { Card, Row, Col, Avatar, Typography } from "antd";
-import {
-  ArrowUpOutlined,
-  WalletOutlined,
-  SwapOutlined,
-} from "@ant-design/icons";
+import { WalletOutlined, SwapOutlined } from "@ant-design/icons";
 import moment from "moment";
 
 const { Text } = Typography;
 
 const RecentTransactionCard = ({ transaction }) => {
+  // --- Check if the transaction is sent or received ---
   const isSent = transaction.direction === "send";
 
   return (

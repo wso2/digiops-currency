@@ -15,27 +15,25 @@
 // under the License.
 
 import React, { useState, useEffect } from "react";
-import { Row, Col, Alert, Button, message } from "antd";
-import { LeftOutlined, ExclamationCircleFilled } from "@ant-design/icons";
+import { Alert, Button, message } from "antd";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 import PhraseCopy from "../../components/home/phrase-copy";
 import { useNavigate } from "react-router-dom";
 import {
-  RECOVERY_PHRASE,
   RECOVERY_PHRASE_WARNING_TEXT,
   CONTINUE,
   WALLET_SECURE_TIPS,
-  ERROR_READING_WALLET_DETAILS
+  ERROR_READING_WALLET_DETAILS,
 } from "../../constants/strings";
 import { STORAGE_KEYS } from "../../constants/configs";
 import { getLocalDataAsync } from "../../helpers/storage";
-import './wallet-parse.css'; // Importing the CSS file
+import "./wallet-parse.css";
 
 const WalletPhrase = (props) => {
-
   // --- states to store wallet address and private key ---
   const [walletAddress, setWalletAddress] = useState("");
   const [walletPrivateKey, setWalletPrivateKey] = useState("");
-  const { walletPhrase, onGoBack } = props;
+  const { walletPhrase } = props;
 
   // --- navigate to home page ---
   const navigate = useNavigate();
@@ -63,22 +61,16 @@ const WalletPhrase = (props) => {
   // --- fetch wallet details when page mounts ---
   useEffect(() => {
     fetchWalletDetails();
-  }, []);
+  });
 
   // --- handle continue ---
   const handleContinue = () => {
     navigate("/");
-  }
-
-  // --- handle back ---
-  const handleClick = () => {
-    onGoBack(false);
-  }
+  };
 
   return (
     <div className="wallet-phrase">
       {contextHolder}
-     
 
       <div className="create-wallet-content">
         <div className="mt-5">
@@ -107,7 +99,7 @@ const WalletPhrase = (props) => {
             type="success"
           />
         </div>
-        
+
         <div className="mt-3 phrase-copy-container">
           <PhraseCopy phrase={walletPhrase} />
         </div>
@@ -125,6 +117,6 @@ const WalletPhrase = (props) => {
       </div>
     </div>
   );
-}
+};
 
 export default WalletPhrase;

@@ -25,7 +25,6 @@ import {
   OK,
   PHRASE_COPIED,
 } from "../../constants/strings";
-import { Alert } from "../../helpers/alerts";
 
 function WalletAddressCopy(props) {
   const [messageApi, contextHolder] = message.useMessage();
