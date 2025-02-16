@@ -13,10 +13,10 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
+
 export const getEllipsisTxt = (str, n) => {
-    if (str) {
-      return `${str.slice(0, n)}...${str.slice(str.length - n)}`;
-    }
-    return "";
+  if (str) {
+    return `${str.slice(0, n)}...${str.slice(str.length - n)}`;
+  }
+  return "";
 };
-  

@@ -43,6 +43,6 @@ const Error = () => {
       </Col>
     </Row>
   );
-}
+};
 
 export default Error;

@@ -13,3 +13,30 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
+
+// get tokens using storage keys...
+// import { getTokenAsync } from "../helpers/auth";
+
+export const updateUserWalletAddress = async (walletAddress) => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/user-wallet?walletAddress=${walletAddress}`,
+      {
+        method: "POST",
+        headers: {
+          //   Authorization: `Bearer ${await getTokenAsync()}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      const errorMessage = errorData.message || "Unknown error";
+      throw new Error(
+        `Failed to update user wallet address: ${response.status} - ${errorMessage}`
+      );
+    }
+  } catch (error) {
+    console.error("Error while updating user wallet address: ", error);
+    throw error;
+  }
+};
