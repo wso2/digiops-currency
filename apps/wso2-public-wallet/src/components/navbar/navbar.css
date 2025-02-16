@@ -1,129 +1,100 @@
-.navbar-header {
-  background: var(--background-color);
-  height: auto;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  
-}
+/* navbar.css */
 
-[data-theme="dark"] .navbar-header {
-  background: var(--navbar-background-dark);  
-  height: auto;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+.navbar-header {
+  background: #ffffff;
+  padding: 0 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: 120px;
 }
 
 .navbar-container {
   width: 100%;
-  /* max-width: 1200px; */
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
 .navbar-logo {
-  display : flex;
-  flex: row;
-  padding : 10px;
-  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
+.navbar-logo-img {
+  width: 100px;
+  height: auto;
 }
 
 .navbar-title {
-  font-size: 1.5rem;
+  color: rgb(217, 102, 8);
+  font-size: 20px;
   font-weight: bold;
-  color: var(--text-color);
+  margin: 0;
 }
 
 .navbar-menu-container {
-  justify-content: center;
-
-}
-
-/* Styling for the selected menu item */
-.navbar-menu .ant-menu-item-selected {
-  background-color: #ff7818; /* Customize the background color */
-  color: white;              /* Change the font color of the selected item */
-}
-
-/* Optional: Hover styles for non-selected items */
-.navbar-menu .ant-menu-item:hover {
-  background-color: #e6f7ff; /* Light background on hover */
-  color: #d5ff18;            /* Font color on hover */
-}
-
-/* Optional: If you want to style the non-selected items with custom background */
-.navbar-menu .ant-menu-item {
-  background-color: transparent; /* Default background for non-selected items */
-}
-
-
-/* --navbar-item-background-dark */
- .menu-item {
-  background-color: var(--navbar-item-background-light);
-  padding: 10px 20px;
-  border-radius: 10px;
-
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-
-}
-
-[data-theme="dark"] .menu-item {
-  background-color: var(--navbar-item-background-dark); 
-}
-
-.menu-item:hover {
-  background-color: var(--navbar-item-background-hover);
-}
-
-.navbar-menu {
-  background: transparent !important;
-  border: none;
   display: flex;
   justify-content: center;
+  flex-grow: 1;
+  gap: 20px;
+}
+
+.navbar-menu-container button {
+  background: transparent;
+  border: none;
+  color: orange;
+  font-size: 18px;
+  font-weight: 500;
+  transition: color 0.3s ease-in-out;
+}
+
+.navbar-menu-container button:hover {
+  color: #ffa500;
+}
+
+.navbar-menu-container a {
+  text-decoration: none;
+  color: inherit;
 }
 
 .navbar-controls {
-  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 16px;
+  gap: 15px;
 }
 
 .theme-switcher {
-  transform: scale(1.2);
+  background: #333;
+  border-radius: 15px;
+  padding: 5px;
 }
 
-.scan-icon {
-  font-size: 18px;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
+.theme-switcher {
+ scale: 1.2;
+ width: 70px;
 }
 
-.scan-icon:hover {
-  transform: scale(1.1);
-}
 
 .status-tag {
-  font-size: 0.9rem;
-  font-weight: 500;
-  border-radius: 6px;
-  padding: 4px 10px;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-weight: bold;
 }
 
 .status-dot {
-  height: 8px;
   width: 8px;
+  height: 8px;
   border-radius: 50%;
   display: inline-block;
   margin-right: 5px;
 }
 
 .status-dot-connected {
-  background: #52c41a;
+  background: green;
 }
 
 .status-dot-not-connected {
-  background: #ff4d4f;
+  background: red;
 }

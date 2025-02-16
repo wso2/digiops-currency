@@ -45,7 +45,7 @@ function LayoutView() {
 
             {isShowNavBar && <NavBar />}
             <Content>
-                <div className="site-layout-content">
+                <div >
                    <Pages />
                 </div>
             </Content>
