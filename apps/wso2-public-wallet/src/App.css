@@ -1,11 +1,17 @@
 :root {
-    --background-color:  white;  
-    --primary-color: #EE7B2F;
-    --secondary-color: #34a853;
-    --navbar-background-light: #ffffff; 
-    --navbar-background-dark: #1a1a1a;
-    --navbar-item-background-light: #ffffff;
-    --navbar-item-background-dark: #1a1a1a;
-   
-  }
-  
+  --background-color: white;
+  --primary-color: #ee7b2f;
+  --secondary-color: #34a853;
+  --navbar-background-light: #ffffff;
+  --navbar-background-dark: #212121;
+  --navbar-item-background-light: #ffffff;
+  --navbar-item-background-dark: #1a1a1a;
+}
+
+.App {
+  max-width: 1000px;
+  align-self: center;
+  height: 100vh;
+  overflow: hidden;
+  /* background-color: #212121; */
+}

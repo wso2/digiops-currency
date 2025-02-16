@@ -44,6 +44,7 @@ import "./home.css";
 import { useAuthContext } from '@asgardeo/auth-react';
 import NoWallet from "../no-wallet/no-wallet";
 import RecentActivities from "../../components/home/recent-activities";
+import WalletOverview from "../../components/wallet-overview/wallet-overview";
 // import SendTokens from "../../modals/send-tokens/send-tokens";
 
 const HomePage = () => {
@@ -165,38 +166,11 @@ const HomePage = () => {
     return (
 
         (walletAddress == null) ? <NoWallet /> :
-            <div className="wallet-container">
-                <h1 className="title">Wallet Overview</h1>
-                <div className="wallet-details">
-                <CopyToClipboard className="wallet-address-text-container" text={walletAddress} onCopy={handleCopy}>
-                  <Tooltip title={isAccountCopied ? "Copied" : "Copy to Clipboard"}>
-                    <Tag className="wallet-tag">
-                      {walletAddress}
-                      {isAccountCopied ? (
-                        <CheckOutlined className="icon-copied" />
-                      ) : (
-                        <CopyOutlined className="icon-copy" />
-                      )}
-                    </Tag>
-                  </Tooltip>
-                </CopyToClipboard>
-                </div>
-                <div className="balance-section">
-                    <h2>Balance</h2>
-                    {isTokenBalanceLoading ? (
-                        <Spin size="large" />
-                    ) : (
-                        <NumericFormat value={tokenBalance} displayType={'text'} thousandSeparator={true} />
-                    )}
-                </div>
-                <div className="actions">
-                    <button className="action-btn send" onClick={() => handleSendClick()}>
-                        <FaPaperPlane /> Send
-                    </button>
-                    {/* <button className="action-btn request" onClick={() => navigate("/request")}>
-                    <FaDownload /> Request
-                </button> */}
-                </div>
+        <>
+        <div className="home-container">
+           
+            <WalletOverview walletAddress={walletAddress} tokenBalance={tokenBalance} isTokenBalanceLoading={isTokenBalanceLoading} handleSendClick={handleSendClick} handleCopy={handleCopy} isAccountCopied={isAccountCopied} />
+       
                 {/* recent activities */}
                 <div className="recent-activities-container">
                     <RecentActivities />
@@ -205,6 +179,8 @@ const HomePage = () => {
                 {/* send modal */}
                 {/* <SendTokens isOpen={isSendModalVisible} onClose={handleSendModalCancel} /> */}
             </div>
+        </>
+            
     );
 
 };

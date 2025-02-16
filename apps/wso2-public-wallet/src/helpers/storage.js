@@ -26,7 +26,6 @@ export const getLocalDataAsync = async (key) => {
 // -- storage access --
 export const saveLocalDataAsync = async (key, value) => {    
     localStorage.setItem(key, value);
-
 }
 
 // -- storage access --
