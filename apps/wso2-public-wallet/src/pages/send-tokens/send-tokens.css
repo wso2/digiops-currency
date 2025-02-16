@@ -1,62 +1,109 @@
 .send-tokens-page {
-    max-width: 1000px;
-    margin: 40px auto;
-    padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  background: linear-gradient(135deg, #ff7b2f, #ee7b2f);
+}
 
-    /* background-color: #fff; */
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .send-tokens-title {
-    text-align: center;
-    color: #ee7b2f;
-  }
-  
-  .send-tokens-form {
-    padding: 20px;
-  }
-  
-  .send-tokens__wallet-address,
-  .send-tokens__amount {
-    margin-bottom: 15px;
-  }
-  
-  .send-tokens__error {
-    color: red;
-    font-size: 12px;
-    margin-top: 5px;
-  }
-  
-  .send-tokens__balance {
-    margin-top: 10px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-  }
-  
-  .send-tokens__buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
-  .cancel-button {
-    background-color: #ccc;
-    border: none;
-    color: #333;
-  }
-  
-  .cancel-button:hover {
-    background-color: #b3b3b3;
-  }
-  
-  .send-tokens__buttons .ant-btn-primary {
-    background-color: #ee7b2f;
-    border: none;
-  }
-  
-  .send-tokens__buttons .ant-btn-primary:hover {
-    background-color: #cc5f1a;
-  }
-  
+.send-tokens-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.send-tokens-form {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+.send-tokens__balance {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.send-tokens__balance__label {
+  font-size: 14px;
+  color: #555;
+}
+
+.send-tokens__balance__amount {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.send-tokens__wallet-address,
+.send-tokens__amount {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.send-tokens__wallet-address input,
+.send-tokens__amount input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease-in-out;
+}
+
+.send-tokens__wallet-address input:focus,
+.send-tokens__amount input:focus {
+  border-color: #ee7b2f;
+  box-shadow: 0 0 8px rgba(238, 123, 47, 0.3);
+}
+
+.send-tokens__error {
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.send-tokens__buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.cancel-button {
+  background: #ddd !important;
+  color: #333 !important;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+.cancel-button:hover {
+  background: #bbb !important;
+}
+
+button[type="primary"] {
+  background: #ee7b2f !important;
+  color: #fff !important;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+button[type="primary"]:hover {
+  background: #d46929 !important;
+}
+
+button[type="primary"]:disabled {
+  background: #ccc !important;
+  cursor: not-allowed;
+}

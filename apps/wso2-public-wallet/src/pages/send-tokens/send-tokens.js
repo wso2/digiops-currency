@@ -135,6 +135,16 @@ const SendTokens = () => {
       {contextHolder}
       <h2 className="send-tokens-title">Send Tokens</h2>
       <div className="send-tokens-form">
+      <Row>
+          <Col>
+            <div className="send-tokens__balance">
+              <div className="send-tokens__balance__label">Your Balance</div>
+              <div className="send-tokens__balance__amount">
+                {isTokenBalanceLoading ? <Spin /> : tokenBalance}
+              </div>
+            </div>
+          </Col>
+        </Row>
         <Row>
           <Col>
             <div className="send-tokens__wallet-address">
@@ -159,16 +169,7 @@ const SendTokens = () => {
             </div>
           </Col>
         </Row>
-        <Row>
-          <Col>
-            <div className="send-tokens__balance">
-              <div className="send-tokens__balance__label">Your Balance</div>
-              <div className="send-tokens__balance__amount">
-                {isTokenBalanceLoading ? <Spin /> : tokenBalance}
-              </div>
-            </div>
-          </Col>
-        </Row>
+        
         <div className="send-tokens__buttons">
           <Button className="cancel-button" onClick={handleCancel}>
             Cancel
