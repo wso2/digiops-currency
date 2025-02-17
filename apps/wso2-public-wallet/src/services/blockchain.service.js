@@ -147,5 +147,3 @@ export const getTransactionHistory = async (walletAddress) => {
       return transactions?.reverse();
 
 }
-
-
