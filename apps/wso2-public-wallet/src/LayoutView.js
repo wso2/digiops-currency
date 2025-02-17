@@ -16,9 +16,8 @@
 
 import { Layout } from "antd";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import NavBar from "./components/navbar/navbar";
-import Pages from "./pages/pages";
 
 function LayoutView() {
   const { Content } = Layout;
@@ -40,7 +39,7 @@ function LayoutView() {
       {isShowNavBar && <NavBar />}
       <Content>
         <div>
-          <Pages />
+            <Outlet />
         </div>
       </Content>
     </Layout>
