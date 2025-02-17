@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from "react";
 import { CopyOutlined, CheckOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Input, Button, message } from 'antd';
+import { Input, Button } from 'antd';
 import { Row, Col } from 'reactstrap';
 import {
     COPIED,
