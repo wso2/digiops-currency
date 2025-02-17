@@ -8,7 +8,6 @@
 import { getTokenAsync } from "../helpers/auth";
 
 export const updateUserWalletAddress = async (walletAddress) => {
-  
   try {
     const response = await fetch(
       `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/user-wallet?walletAddress=${walletAddress}`,
