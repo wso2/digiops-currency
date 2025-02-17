@@ -57,5 +57,4 @@ function WalletAddressCopy(props) {
         </>
     )
 }
-
 export default WalletAddressCopy;
