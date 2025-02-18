@@ -30,7 +30,6 @@ const config = {
   scope: ASGARDEO_CONFIG.SCOPES,
 };
 
-
 let themeSatate  = "dark";
 
 // need to mention theme details here 
