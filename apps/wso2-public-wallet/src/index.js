@@ -22,7 +22,6 @@ import { ThemeSwitcherProvider } from 'react-css-theme-switcher';
 import { AuthProvider } from "@asgardeo/auth-react";
 import { ASGARDEO_CONFIG } from './constants/configs';
 
-
 const config = {
   signInRedirectURL: ASGARDEO_CONFIG.SIGN_IN_URL,
   signOutRedirectURL: ASGARDEO_CONFIG.SIGN_OUT_URL,
