@@ -16,7 +16,6 @@
 
 import React from "react";
 import { Button, Typography, Row, Col } from "antd";
-import { Link } from "react-router-dom";
 
 const Error = () => {
   return (

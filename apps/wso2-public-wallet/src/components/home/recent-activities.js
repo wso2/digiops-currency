@@ -15,25 +15,17 @@
 // under the License.
 
 import React, { useEffect, useState } from "react";
-import {
-  RightOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
-  SmileOutlined,
-} from "@ant-design/icons";
-import { Avatar, Spin, Card, Col, Row, Tag } from "antd";
+import { Spin } from "antd";
 import { getLocalDataAsync } from "../../helpers/storage";
 import { getTransactionHistory } from "../../services/blockchain.service";
 import {
   ERROR_READING_WALLET_DETAILS,
   RECENT_ACTIVITIES,
-  WSO2_TOKEN,
 } from "../../constants/strings";
 import { STORAGE_KEYS } from "../../constants/configs";
 import NoRecentActivities from "../no-recent-activities/no-recent-activities";
 import RecentTransactionCard from "../recent-transaction-card/recent-transaction-card";
-import moment from "moment";
-import "./recent-activities.css";
+import "./RecentActivities.css";
 
 // --- Recent Activities Component ---
 const RecentActivities = () => {
@@ -50,7 +42,7 @@ const RecentActivities = () => {
       );
       setWalletAddress(walletAddressResponse);
     } catch (error) {
-      console.log(ERROR_READING_WALLET_DETAILS);
+      console.error(ERROR_READING_WALLET_DETAILS);
     }
   };
 
@@ -65,12 +57,8 @@ const RecentActivities = () => {
       setIsRecentTransactionsLoading(true);
       const transactionHistory = await getTransactionHistory(walletAddress);
       setRecentTransactions(transactionHistory);
-      console.log(
-        "this is the transaction history --- > **",
-        transactionHistory
-      );
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsRecentTransactionsLoading(false);
     }
@@ -88,7 +76,7 @@ const RecentActivities = () => {
       const recentTransactions = await getTransactionHistory(walletAddress);
       setRecentTransactions(recentTransactions);
     } catch (error) {
-      console.log("Error fetching recent transactions", error);
+      console.error("Error fetching recent transactions", error);
     }
   };
 

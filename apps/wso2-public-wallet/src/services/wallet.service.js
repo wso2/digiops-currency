@@ -24,7 +24,7 @@ export const updateUserWalletAddress = async (walletAddress) => {
       {
         method: "POST",
         headers: {
-          //   Authorization: `Bearer ${await getTokenAsync()}`,
+          Authorization: `Bearer ${await getTokenAsync()}`,
         },
       }
     );

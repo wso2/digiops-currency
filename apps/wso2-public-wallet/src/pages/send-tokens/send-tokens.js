@@ -53,7 +53,7 @@ const SendTokens = () => {
       );
       setWalletAddress(walletAddressResponse);
     } catch (error) {
-      console.log(`${ERROR_RETRIEVE_WALLET_ADDRESS} - ${error}`);
+      console.error(`${ERROR_RETRIEVE_WALLET_ADDRESS} - ${error}`);
       messageApi.error(ERROR_RETRIEVE_WALLET_ADDRESS);
     }
   };
@@ -65,7 +65,7 @@ const SendTokens = () => {
       const balance = await getWalletBalanceByWalletAddress(walletAddress);
       setTokenBalance(balance);
     } catch (error) {
-      console.log("Error while fetching token balance", error);
+      console.error("Error while fetching token balance", error);
       setTokenBalance(0);
     } finally {
       setIsTokenBalanceLoading(false);
@@ -88,7 +88,7 @@ const SendTokens = () => {
       );
       navigate("/confirm-tokens-send");
     } catch (error) {
-      console.log(`${ERROR_SAVING_TX_DETAILS}: ${error}`);
+      console.error(`${ERROR_SAVING_TX_DETAILS}: ${error}`);
     }
   };
 
@@ -99,7 +99,7 @@ const SendTokens = () => {
       await saveLocalDataAsync(STORAGE_KEYS.SENDER_WALLET_ADDRESS, "");
       navigate("/");
     } catch (error) {
-      console.log(`${ERROR_RESETTING_TX_VALUES}: ${error}`);
+      console.error(`${ERROR_RESETTING_TX_VALUES}: ${error}`);
     }
   };
 

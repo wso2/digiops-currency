@@ -78,6 +78,7 @@ const HomePage = () => {
       setTokenBalance(tokenBalance);
     } catch (error) {
       setTokenBalance(0);
+      console.error("Error fetching token balance", error);
     } finally {
       setIsTokenBalanceLoading(false);
     }

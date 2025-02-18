@@ -39,9 +39,10 @@ const HistoryPage = () => {
       if (walletAddressResponse) {
         setWalletAddress(walletAddressResponse);
       }
-      
+
       console.log("this is wallet address --- > ", walletAddress);
     } catch (error) {
+      console.error(ERROR_RETRIEVE_WALLET_ADDRESS);
       messageApi.error(ERROR_RETRIEVE_WALLET_ADDRESS);
     }
   };

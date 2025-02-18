@@ -31,22 +31,19 @@ const AppHandler = () => {
   const [auth, setAuth] = useState({
     status: "loading", // 'loading', 'success', 'failed'
     mode: "active", // 'active', 'maintenance'
-    roles: [], // user's roles
     statusMessage: "Loading...", // status message during loading
   });
 
   useEffect(() => {
     // Simulating the fetching of authentication data
-    setTimeout(() => {
-      // Simulate success auth state, change this as needed
       setAuth({
         status: "success",
         mode: "active",
-        roles: ["user", "admin"], // Example roles
         statusMessage: "Authenticated successfully",
       });
-    }, 2000); // Simulate a loading time
+   
   }, []);
+
 
   // Setting up the router with the active routes
   const router = createBrowserRouter([

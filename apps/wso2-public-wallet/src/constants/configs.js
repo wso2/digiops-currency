@@ -47,9 +47,9 @@ export const PASS_PHRASE_LENGTH = 12;
 
 // -- asgardeo configurations
 export const ASGARDEO_CONFIG = {
-  SIGN_IN_URL: process.env.REACT_APP_SIGN_IN_URL,
-  SIGN_OUT_URL: process.env.REACT_APP_SIGN_OUT_URL,
-  CLIENT_ID: process.env.REACT_APP_CLIENT_ID,
-  BASE_URL: process.env.REACT_APP_BASE_URL,
+  SIGN_IN_URL: window.config?.REACT_APP_SIGN_IN_URL,
+  SIGN_OUT_URL: window.config?.REACT_APP_SIGN_OUT_URL,
+  CLIENT_ID: window.config?.REACT_APP_CLIENT_ID,
+  BASE_URL: window.config?.REACT_APP_BASE_URL,
   SCOPES: ["openid", "profile"],
 };

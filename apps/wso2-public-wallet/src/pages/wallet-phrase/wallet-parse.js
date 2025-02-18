@@ -17,7 +17,7 @@
 import React, { useState, useEffect } from "react";
 import { Alert, Button, message } from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import PhraseCopy from "../../components/home/phrase-copy";
+import PhraseCopy from "../../components/home/PharseCopy";
 import { useNavigate } from "react-router-dom";
 import {
   RECOVERY_PHRASE_WARNING_TEXT,
@@ -53,7 +53,7 @@ const WalletPhrase = (props) => {
       setWalletPrivateKey(privateKeyResponse);
       setWalletAddress(walletAddressResponse);
     } catch (err) {
-      console.log(`${ERROR_READING_WALLET_DETAILS} - ${err}`);
+      console.error(`${ERROR_READING_WALLET_DETAILS} - ${err}`);
       messageApi.error(ERROR_READING_WALLET_DETAILS);
     }
   };

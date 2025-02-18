@@ -15,7 +15,7 @@
 // under the License.
 
 import React, { useContext, useEffect, useState, createContext } from "react";
-import { Button, Modal, Spin, Alert } from "antd";
+import { Button, Modal, Spin } from "antd";
 import { useAuthContext, SecureApp } from "@asgardeo/auth-react";
 
 const AuthContext = createContext({});
