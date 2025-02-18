@@ -25,7 +25,6 @@ import {
   COPIED,
 } from "../../constants/Strings";
 import { STORAGE_KEYS } from "../../constants/Configs";
-import { useAuthContext } from "@asgardeo/auth-react";
 import NoWallet from "../no-wallet/NoWallet";
 import RecentActivities from "../../components/home/RecentActivities";
 import WalletOverview from "../../components/wallet-overview/WalletOverview";

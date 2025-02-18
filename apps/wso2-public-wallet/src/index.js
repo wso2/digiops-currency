@@ -28,6 +28,9 @@ const config = {
   baseUrl: ASGARDEO_CONFIG.BASE_URL,
   scope: ASGARDEO_CONFIG.SCOPES,
 };
+console.log("Window config", window.config);
+
+console.log("CONFIG", config);
 
 let themeSatate  = "dark";
 

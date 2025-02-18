@@ -14,56 +14,24 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { useAuthContext } from '@asgardeo/auth-react';
-import { useEffect, useState } from 'react';
-import { Spin } from 'antd';
+import { useAuthContext } from "@asgardeo/auth-react";
+import { useState } from "react";
+import { Spin } from "antd";
 import "./App.css";
-import AppAuthProvider from './context/AuthContext';
-import AppHandler from './AppHandler';
+import AppAuthProvider from "./context/AuthContext";
+import AppHandler from "./AppHandler";
 
 // other imports
 function App() {
-
   // --- set the document title ---
-  document.title = "Public Wallet App";
+  document.title = "Wallet App";
 
-  // ---  states to handle the loading state ---
-  const { state, signIn } = useAuthContext();
-  const [loading, setLoading] = useState(true);
-
-  // --- authenticate the user ---
-  useEffect(() => {
-    const authenticateUser = async () => {
-      if (!state?.isAuthenticated) {
-        try {
-          await new Promise(resolve => setTimeout(resolve, 3000)); // Add delay
-          await signIn();
-        } catch (error) {
-          console.error("Authentication failed:", error);
-        }
-      }
-      setLoading(false);
-    };
-
-    authenticateUser();
-  }, [state?.isAuthenticated, signIn]);
-
-  // --- show loading screen --- need to change this after testing ------------>>>>>>
-  if (loading) {
-    return < div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh'
-    }} ><Spin size="large" />
-    </  div>;
-  }
-
+  console.log(window.config);
   return (
     <div className="App">
-    <AppAuthProvider>
+      <AppAuthProvider>
         <AppHandler />
-    </AppAuthProvider>
+      </AppAuthProvider>
     </div>
   );
 }

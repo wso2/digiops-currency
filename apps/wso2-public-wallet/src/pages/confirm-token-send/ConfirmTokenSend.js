@@ -77,7 +77,7 @@ const ConfirmSendTokens = () => {
   // --- generate avatar based on the wallet address ---
   const generateAvatar = (seed) => {
     const options = {
-      size: 80, // Adjust the size of the identicon image
+      size: 80, 
     };
     const hash = SHA256(seed).toString();
     const data = new Identicon(hash.slice(0, 15), options).toString();
@@ -92,14 +92,12 @@ const ConfirmSendTokens = () => {
 
   // --- reset input fields ---
   const resetInputFields = async () => {
-    console.log("resetting input fields");
     try {
       await saveLocalDataAsync(STORAGE_KEYS.SENDING_AMOUNT, "");
       await saveLocalDataAsync(STORAGE_KEYS.SENDER_WALLET_ADDRESS, "");
     } catch (error) {
-      console.log(`${ERROR_RESETTING_TX_VALUES}: ${error}`);
+      console.error(`${ERROR_RESETTING_TX_VALUES}: ${error}`);
     }
-    console.log("resetting input fields done");
   };
 
   // --- handle confirm ---
@@ -107,21 +105,15 @@ const ConfirmSendTokens = () => {
     try {
       setIsTransferLoading(true);
       const receipt = await transferTokens(senderAddress, sendAmount);
-      console.log("this is receipt --- > ", receipt);
       if (receipt) {
         await resetInputFields();
-        // wait 3 seconds before navigating to home page
-        messageApi.success(SUCCESS, SUCCESS_TOKEN_TRANSFER);
-        console.log("Alert shown");
-
-        setTimeout(() => {
-          navigate("/");
-          setIsTransferLoading(false);
-        }, 3000);
+        message.success(SUCCESS, SUCCESS_TOKEN_TRANSFER);
+        navigate("/");
+        setIsTransferLoading(false);
       }
     } catch (error) {
-      console.log("error while transferring token", error);
-      await messageApi.error(ERROR, ERROR_TRANSFERRING_TOKEN);
+      console.error("error while transferring token", error);
+      message.error(ERROR, ERROR_TRANSFERRING_TOKEN);
       setIsTransferLoading(false);
     }
   };

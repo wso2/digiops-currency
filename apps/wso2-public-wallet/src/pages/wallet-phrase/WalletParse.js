@@ -54,7 +54,7 @@ const WalletPhrase = (props) => {
       setWalletAddress(walletAddressResponse);
     } catch (err) {
       console.error(`${ERROR_READING_WALLET_DETAILS} - ${err}`);
-      messageApi.error(ERROR_READING_WALLET_DETAILS);
+      message.error(ERROR_READING_WALLET_DETAILS);
     }
   };
 

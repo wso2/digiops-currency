@@ -36,11 +36,11 @@ const HistoryPage = () => {
         STORAGE_KEYS.WALLET_ADDRESS
       );
 
+      // --- set wallet address to state ---
       if (walletAddressResponse) {
         setWalletAddress(walletAddressResponse);
       }
 
-      console.log("this is wallet address --- > ", walletAddress);
     } catch (error) {
       console.error(ERROR_RETRIEVE_WALLET_ADDRESS);
       messageApi.error(ERROR_RETRIEVE_WALLET_ADDRESS);

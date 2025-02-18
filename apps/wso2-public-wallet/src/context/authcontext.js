@@ -76,7 +76,6 @@ const AppAuthProvider = (props) => {
             });
             return;
           }
-          console.log("Token: ", getDecodedIDToken());
 
           setAuthState({
             isAuthenticated: true,
@@ -95,13 +94,16 @@ const AppAuthProvider = (props) => {
 
   // --- Handle the app state ---
   useEffect(() => {
-    if (appState === "active") {
-      if (!authState.isAuthenticated) {
-        signIn();
+    const appSiginLogic = async () => {
+      if (appState === "active") {
+        if (!authState.isAuthenticated) {
+          await signIn();
+        }
+      } else if (appState === "loading") {
       }
-    } else if (appState === "loading") {
-      // Show loading spinner while the app is loading
-    }
+    };
+
+    appSiginLogic();
   }, [authState.isAuthenticated, appState]);
 
   // --- Refresh the tokens ---
@@ -144,7 +146,7 @@ const AppAuthProvider = (props) => {
         <>
           <Modal
             title="Are you still there?"
-            visible={open}
+            open={open}
             onCancel={() => setOpen(false)}
             footer={[
               <Button key="continue" onClick={() => setOpen(false)}>

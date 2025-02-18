@@ -37,8 +37,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/Storage";
 import { STORAGE_KEYS } from "../../constants/Configs";
-import { useAuthContext } from "@asgardeo/auth-react";
 import NoWallet from "../no-wallet/NoWallet";
+import { useAppAuthContext } from "../../context/AuthContext";
 import "./Profile.css";
 
 const { Title, Text } = Typography;
@@ -46,7 +46,7 @@ const { Title, Text } = Typography;
 function Profile() {
   // --- get the navigate function from useNavigate hook ---
   const navigate = useNavigate();
-  const { signOut } = useAuthContext();
+  const { appSignOut } = useAppAuthContext();
 
   // --- get the message api and context holder from the message hook ---
   const [messageApi, contextHolder] = message.useMessage();
@@ -92,39 +92,37 @@ function Profile() {
 
   // --- handle copy account ---
   const handleCopyAccount = async () => {
-    await messageApi.open({
-      content: WALLET_ADDRESS_COPIED,
-      duration: 3,
-      key: "copyAccount",
-    });
+    message.success(WALLET_ADDRESS_COPIED);
     setIsAccountCopied(true);
-    setTimeout(() => setIsAccountCopied(false), 2000);
   };
 
   // --- handle copy private key ---
   const handlePrivateKeyCopy = async () => {
-    await messageApi.open({
+    await message.open({
       content: WALLET_PRIVATE_KEY,
       duration: 3,
       key: "copyPrivateKey",
     });
     setIsPrivateKryCopied(true);
-    setTimeout(() => setIsPrivateKryCopied(false), 2000);
   };
 
   // --- handle logout ---
   const handleLogout = async () => {
     try {
+      // --- sign out the user ---
+      appSignOut();
+      
+      // --- clear the local storage ---
       await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, "");
       await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, "");
-      messageApi.open({
+      // --- show the logout message ---
+      message.open({
         content: "Logged out successfully",
         duration: 3,
         key: "logout",
       });
-
-      await signOut();
-      console.log("Logged out successfully from asgardeo ---->>>>");
+      // --- sign out the user ---
+     
       navigate("/create-wallet");
     } catch (error) {
       console.error("Error when logging out: ", error);

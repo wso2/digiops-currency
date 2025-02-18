@@ -49,8 +49,12 @@ function CreateWallet() {
     setWalletCreateLoading(true);
     try {
       const wallet = ethers.Wallet.createRandom();
+
+      // Save wallet address and private key to local storage
       await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, wallet.address);
       await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, wallet.privateKey);
+      
+      // Save wallet phrase to local storage
       setWalletPhrase(wallet.mnemonic.phrase);
       setIsWalletCreated(true);
     } catch (error) {
