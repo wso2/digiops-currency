@@ -74,9 +74,7 @@ const HomePage = () => {
   const fetchCurrentTokenBalance = async () => {
     try {
       setIsTokenBalanceLoading(true);
-      console.log("this is wallet address --- > ", walletAddress);
       const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
-      console.log("this is token balance --- > ", tokenBalance);
       setTokenBalance(tokenBalance);
     } catch (error) {
       setTokenBalance(0);
