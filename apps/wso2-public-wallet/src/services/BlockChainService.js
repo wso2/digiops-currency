@@ -21,9 +21,9 @@ import {
     CONTRACT_ADDRESS,
     CONTRACT_ABI,
     STORAGE_KEYS
-} from "../constants/configs";
+} from "../constants/Configs";
 import { DateTime } from 'luxon';
-import { getLocalDataAsync, saveLocalDataAsync} from '../helpers/storage';
+import { getLocalDataAsync, saveLocalDataAsync} from '../helpers/Storage';
 
 
 // ---- get rpc provider ----

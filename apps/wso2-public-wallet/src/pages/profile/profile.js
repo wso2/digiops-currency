@@ -33,13 +33,13 @@ import {
   WALLET_PRIVATE_KEY,
   LOGOUT,
   WALLET_ADDRESS_COPIED,
-} from "../../constants/strings";
-import "./profile.css";
+} from "../../constants/Strings";
 import { useNavigate } from "react-router-dom";
-import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
-import { STORAGE_KEYS } from "../../constants/configs";
+import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/Storage";
+import { STORAGE_KEYS } from "../../constants/Configs";
 import { useAuthContext } from "@asgardeo/auth-react";
-import NoWallet from "../no-wallet/no-wallet";
+import NoWallet from "../no-wallet/NoWallet";
+import "./Profile.css";
 
 const { Title, Text } = Typography;
 

@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 import { CopyOutlined, CheckOutlined } from "@ant-design/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Input, Button, message } from "antd";
-import { COPIED, OK } from "../../constants/strings";
+import { COPIED, OK } from "../../constants/Strings";
 import { defaultIconPrefixCls } from "antd/es/config-provider";
 
 const WalletAddressCopy = (props) => {

@@ -24,10 +24,10 @@ import {
   CONTINUE,
   WALLET_SECURE_TIPS,
   ERROR_READING_WALLET_DETAILS,
-} from "../../constants/strings";
-import { STORAGE_KEYS } from "../../constants/configs";
-import { getLocalDataAsync } from "../../helpers/storage";
-import "./wallet-parse.css";
+} from "../../constants/Strings";
+import { STORAGE_KEYS } from "../../constants/Configs";
+import { getLocalDataAsync } from "../../helpers/Storage";
+import "./WalletParse.css";
 
 const WalletPhrase = (props) => {
   // --- states to store wallet address and private key ---

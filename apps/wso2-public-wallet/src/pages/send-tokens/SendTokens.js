@@ -23,11 +23,11 @@ import {
   ERROR_RESETTING_TX_VALUES,
   ERROR_SAVING_TX_DETAILS,
   ERROR_RETRIEVE_WALLET_ADDRESS,
-} from "../../constants/strings";
-import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
-import { STORAGE_KEYS } from "../../constants/configs";
-import { getWalletBalanceByWalletAddress } from "../../services/blockchain.service";
-import "./send-tokens.css";
+} from "../../constants/Strings";
+import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/Storage";
+import { STORAGE_KEYS } from "../../constants/Configs";
+import { getWalletBalanceByWalletAddress } from "../../services/BlockChainService";
+import "./SendTokens.css";
 
 const SendTokens = () => {
   // --- get the navigate function from useNavigate hook ---

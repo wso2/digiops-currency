@@ -17,19 +17,19 @@
 import { message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getLocalDataAsync } from "../../helpers/storage";
-import { getWalletBalanceByWalletAddress } from "../../services/blockchain.service";
+import { getLocalDataAsync } from "../../helpers/Storage";
+import { getWalletBalanceByWalletAddress } from "../../services/BlockChainService";
 import {
   ERROR_RETRIEVE_WALLET_ADDRESS,
   WALLET_ADDRESS_COPIED,
   COPIED,
-} from "../../constants/strings";
-import { STORAGE_KEYS } from "../../constants/configs";
-import "./home.css";
+} from "../../constants/Strings";
+import { STORAGE_KEYS } from "../../constants/Configs";
 import { useAuthContext } from "@asgardeo/auth-react";
-import NoWallet from "../no-wallet/no-wallet";
-import RecentActivities from "../../components/home/recent-activities";
-import WalletOverview from "../../components/wallet-overview/wallet-overview";
+import NoWallet from "../no-wallet/NoWallet";
+import RecentActivities from "../../components/home/RecentActivities";
+import WalletOverview from "../../components/wallet-overview/WalletOverview";
+import "./Home.css";
 
 const HomePage = () => {
   // --- get the navigate function from useNavigate hook ---

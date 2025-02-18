@@ -17,7 +17,7 @@
 import { Layout } from "antd";
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import NavBar from "./components/navbar/navbar";
+import NavBar from "./components/navbar/NavBar";
 
 function LayoutView() {
   const { Content } = Layout;

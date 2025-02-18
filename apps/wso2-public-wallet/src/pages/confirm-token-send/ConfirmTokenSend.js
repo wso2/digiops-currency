@@ -21,9 +21,9 @@ import { Avatar, Button, message } from "antd";
 import { Col, Row } from "reactstrap";
 import Wso2MainImg from "../../assets/images/wso2_main.png";
 import { useNavigate } from "react-router-dom";
-import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
-import { transferTokens } from "../../services/blockchain.service";
-import { getEllipsisTxt } from "../../helpers/formatter";
+import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/Storage";
+import { transferTokens } from "../../services/BlockChainService";
+import { getEllipsisTxt } from "../../helpers/Formatter";
 import {
   ERROR,
   ERROR_FETCHING_LOCAL_TX_DETAILS,
@@ -31,9 +31,9 @@ import {
   ERROR_TRANSFERRING_TOKEN,
   SUCCESS,
   SUCCESS_TOKEN_TRANSFER,
-} from "../../constants/strings";
-import { STORAGE_KEYS } from "../../constants/configs";
-import "./confirm-token-send.css";
+} from "../../constants/Strings";
+import { STORAGE_KEYS } from "../../constants/Configs";
+import "./ConfirmTokenSend.css";
 
 const ConfirmSendTokens = () => {
   // --- get the navigate function from useNavigate hook ---

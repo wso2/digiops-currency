@@ -16,15 +16,15 @@
 
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
-import { getLocalDataAsync } from "../../helpers/storage";
-import { getTransactionHistory } from "../../services/blockchain.service";
+import { getLocalDataAsync } from "../../helpers/Storage";
+import { getTransactionHistory } from "../../services/BlockChainService";
 import {
   ERROR_READING_WALLET_DETAILS,
   RECENT_ACTIVITIES,
-} from "../../constants/strings";
-import { STORAGE_KEYS } from "../../constants/configs";
-import NoRecentActivities from "../no-recent-activities/no-recent-activities";
-import RecentTransactionCard from "../recent-transaction-card/recent-transaction-card";
+} from "../../constants/Strings";
+import { STORAGE_KEYS } from "../../constants/Configs";
+import NoRecentActivities from "../no-recent-activities/NoRecentActivities";
+import RecentTransactionCard from "../recent-transaction-card/RecentTransactionCard";
 import "./RecentActivities.css";
 
 // --- Recent Activities Component ---

@@ -15,12 +15,12 @@
 // under the License.
 
 import React, { useEffect, useState } from "react";
-import RecentActivities from "../../components/home/recent-activities";
-import { getLocalDataAsync } from "../../helpers/storage";
-import { STORAGE_KEYS } from "../../constants/configs";
-import { ERROR_RETRIEVE_WALLET_ADDRESS } from "../../constants/strings";
+import RecentActivities from "../../components/home/RecentActivities";
+import { getLocalDataAsync } from "../../helpers/Storage";
+import { STORAGE_KEYS } from "../../constants/Configs";
+import { ERROR_RETRIEVE_WALLET_ADDRESS } from "../../constants/Strings";
 import { message } from "antd";
-import NoWallet from "../no-wallet/no-wallet";
+import NoWallet from "../no-wallet/NoWallet";
 
 const HistoryPage = () => {
   // --- states to store wallet address ---

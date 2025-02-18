@@ -17,16 +17,16 @@
 import { Button, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import WalletPhrase from "../wallet-phrase/wallet-parse";
+import WalletPhrase from "../wallet-phrase/WalletParse";
 import { useNavigate } from "react-router-dom";
 import {
   CREATE_A_NEW_WALLET,
   RESTORE_EXISTING_WALLET,
   ERROR_CREATING_WALLET,
-} from "../../constants/strings";
-import { STORAGE_KEYS } from "../../constants/configs";
-import { saveLocalDataAsync, getLocalDataAsync } from "../../helpers/storage";
-import "./create-wallet.css";
+} from "../../constants/Strings";
+import { STORAGE_KEYS } from "../../constants/Configs";
+import { saveLocalDataAsync, getLocalDataAsync } from "../../helpers/Storage";
+import "./CreateWallet.css";
 
 function CreateWallet() {
   const [walletCreateLoading, setWalletCreateLoading] = useState(false);

@@ -16,7 +16,7 @@
 
 import React from "react";
 import { WarningOutlined } from "@ant-design/icons";
-import "./no-wallet.css";
+import "./NoWallet.css";
 import { useNavigate } from "react-router-dom";
 
 const NoWallet = () => {

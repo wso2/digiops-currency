@@ -17,14 +17,14 @@
 import React, { useState, useEffect } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import LayoutView from "./LayoutView";
-import Profile from "./pages/profile/profile";
+import Profile from "./pages/profile/Profile";
 import Error from "./pages/not-found/404";
-import HistoryPage from "./pages/history/history";
-import CreateWallet from "./pages/create-wallet/create-wallet";
-import SendTokens from "./pages/send-tokens/send-tokens";
-import ConfirmSendTokens from "./pages/confirm-token-send/confirm-token-send";
-import RecoverWallet from "./pages/recover-wallet/recover-wallet";
-import HomePage from "./pages/home/home";
+import HistoryPage from "./pages/history/History";
+import CreateWallet from "./pages/create-wallet/CreateWallet";
+import SendTokens from "./pages/send-tokens/SendTokens";
+import ConfirmSendTokens from "./pages/confirm-token-send/ConfirmTokenSend";
+import RecoverWallet from "./pages/recover-wallet/RecoverWallet";
+import HomePage from "./pages/home/Home";
 
 // Simulate auth data, could be set from a context, or fetched from an API or localStorage
 const AppHandler = () => {

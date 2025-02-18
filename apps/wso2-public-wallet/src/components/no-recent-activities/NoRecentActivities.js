@@ -16,7 +16,7 @@
 
 import React from "react";
 import { Empty, Button } from "antd";
-import { NO_RECENT_ACTIVITIES } from "../../constants/strings";
+import { NO_RECENT_ACTIVITIES } from "../../constants/Strings";
 
 const NoRecentActivities = () => {
 

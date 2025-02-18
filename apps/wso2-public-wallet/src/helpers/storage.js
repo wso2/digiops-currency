@@ -15,7 +15,7 @@
 // under the License.
 
 //helper function for storage access
-import { STORAGE_KEYS } from "../constants/configs";
+import { STORAGE_KEYS } from "../constants/Configs";
 
 // -- storage access --
 export const getLocalDataAsync = async (key) => {

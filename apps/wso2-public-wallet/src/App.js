@@ -18,7 +18,7 @@ import { useAuthContext } from '@asgardeo/auth-react';
 import { useEffect, useState } from 'react';
 import { Spin } from 'antd';
 import "./App.css";
-import AppAuthProvider from './context/authcontext';
+import AppAuthProvider from './context/AuthContext';
 import AppHandler from './AppHandler';
 
 // other imports

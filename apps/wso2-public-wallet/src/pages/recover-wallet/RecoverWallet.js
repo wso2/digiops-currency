@@ -18,8 +18,8 @@ import React, { useState } from "react";
 import { Input, Button, Row, Col, Typography, Card, message } from "antd";
 import { ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
-import WalletAddressCopy from "../../components/home/wallet-address-copy";
-import { saveLocalDataAsync } from "../../helpers/storage";
+import WalletAddressCopy from "../../components/home/WalletAddressCopy";
+import { saveLocalDataAsync } from "../../helpers/Storage";
 import {
   RECOVER_WALLET,
   PASTE_PHRASE_HERE,
@@ -29,9 +29,9 @@ import {
   WALLET_PRIVATE_KEY,
   RECOVER_WALLET_ERROR,
   SHOW_WALLET_ADDRESS,
-} from "../../constants/strings";
-import { STORAGE_KEYS } from "../../constants/configs";
-import "./recover-wallet.css";
+} from "../../constants/Strings";
+import { STORAGE_KEYS } from "../../constants/Configs";
+import "./RecoverWallet.css";
 
 // --- Title and Text components from Typography of Ant Design ---
 const { Title, Text } = Typography;

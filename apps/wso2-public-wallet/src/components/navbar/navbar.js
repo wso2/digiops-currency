@@ -19,16 +19,16 @@ import { Link, useLocation } from "react-router-dom";
 import { Layout, Row, Col, Tag, Switch, Button } from "antd";
 import { Sun, Moon } from "react-feather";
 import { useThemeSwitcher } from "react-css-theme-switcher";
-import { getCurrentBlockNumber } from "../../services/blockchain.service.js";
-import { saveLocalDataAsync } from "../../helpers/storage.js";
+import { getCurrentBlockNumber } from "../../services/BlockChainService.js";
+import { saveLocalDataAsync } from "../../helpers/Storage.js";
 import Wso2MainImg from "../../assets/images/wso2_main.png";
 import {
   WSO2_WALLET,
   CONNECTED,
   NOT_CONNECTED,
-} from "../../constants/strings.js";
-import { STORAGE_KEYS } from "../../constants/configs.js";
-import "./navbar.css";
+} from "../../constants/Strings.js";
+import { STORAGE_KEYS } from "../../constants/Configs.js";
+import "./NavBar.css";
 
 const { Header } = Layout;
 
@@ -86,7 +86,6 @@ const NavBar = () => {
             </Link>
           </Button>
         </Col>
-
         <Col className="navbar-controls">
           <Switch
             className="theme-switcher"

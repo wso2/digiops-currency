@@ -24,7 +24,7 @@ import {
   COPY_TO_CLIPBOARD,
   OK,
   PHRASE_COPIED,
-} from "../../constants/strings";
+} from "../../constants/Strings";
 
 function WalletAddressCopy(props) {
   const [messageApi, contextHolder] = message.useMessage();
