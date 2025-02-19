@@ -341,4 +341,3 @@ modules = [
 	{org = "wso2", packageName = "wallet_service", moduleName = "wallet_service.database"},
 	{org = "wso2", packageName = "wallet_service", moduleName = "wallet_service.types"}
 ]
-
