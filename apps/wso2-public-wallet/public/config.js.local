@@ -1,7 +1,7 @@
 window.config = {
-    signInRedirectURL: "<https://example.com/signin>", // URL to redirect users after sign-in
-    signOutRedirectURL: "<https://example.com/signout>", // URL to redirect users after sign-out
-    clientID: "<your-client-id>", // OAuth2 or application client ID
+    signInRedirectUrl: "<https://example.com/signin>", // URL to redirect users after sign-in
+    signOutRedirectUrl: "<https://example.com/signout>", // URL to redirect users after sign-out
+    clientId: "<your-client-id>", // OAuth2 or application client ID
     baseUrl: "<https://api.example.com>", // Base URL of your authentication API
     scope: "<openid profile email>", // OAuth2 scopes required for authentication
     rpcEndpoint: "<https://rpc.example.com>", // RPC endpoint for blockchain interaction

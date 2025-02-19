@@ -47,9 +47,9 @@ export const PASS_PHRASE_LENGTH = 12;
 
 // -- asgardeo configurations
 export const ASGARDEO_CONFIG = {
-  SIGN_IN_URL: window.config?.signInRedirectURL || "",
-  SIGN_OUT_URL: window.config?.signOutRedirectURL || "",
-  CLIENT_ID: window.config?.clientID || "",
+  SIGN_IN_URL: window.config?.signInRedirectUrl || "",
+  SIGN_OUT_URL: window.config?.signOutRedirectUrl || "",
+  CLIENT_ID: window.config?.clientId || "",
   BASE_URL: window.config?.baseUrl || "",
   SCOPES: ["openid", "profile"],
 };
