@@ -1,0 +1,19 @@
+{
+    "name": "Wallet",
+    "description": "WSO2 Digital Wallet app for the WSO2 Coin",
+    "promoText": "Manage your WSO2 Coin transactions",
+    "appId": "com.wso2.superapp.microapp.wallet",
+    "iconUrl": "https://stprodmobileinternal.blob.core.windows.net/files/super-app/prod-wso2-org/coin/coin-banner.png",
+    "bannerImageUrl": "https://stprodmobileinternal.blob.core.windows.net/files/super-app/prod-wso2-org/coin/coin-icon.png",
+    "isMandatory": 0,
+    "clientId": "F9KGEUW96OcuKifkL16AKILpCfUa",
+    "versions": [
+        {
+            "version": "1.0.1",
+            "build": 6,
+            "releaseNotes": "Initial release",
+            "downloadUrl": "https://stprodmobileinternal.blob.core.windows.net/files/super-app/stg/wallet/1_0_0_prod_build_6.zip",
+            "iconUrl": "https://stprodmobileinternal.blob.core.windows.net/files/super-app/prod-wso2-org/coin/coin-banner.png"
+        }
+    ]
+}
