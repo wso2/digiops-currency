@@ -5,7 +5,7 @@
 # herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 # You may not alter or remove any copyright or other notice from copies of this content.
 
-FROM ethereum/client-go:alltools-v1.13.13
+FROM ethereum/client-go
 
 # Install any needed packages
 RUN apk add --no-cache bash curl jq
