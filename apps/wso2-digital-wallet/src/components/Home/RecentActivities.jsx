@@ -123,7 +123,7 @@ function RecentActivities() {
             <div className="recent-activities-widget-inner">
                 <div className="mt-3">
                     <div className="d-flex justify-content-between">
-                        <div>
+                        <div className = "sub-heading">
                             <h4>{RECENT_ACTIVITIES}</h4>
                         </div>
                         <div>
