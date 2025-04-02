@@ -1,49 +1,51 @@
 .main-background {
-    background: #717171 !important;
-    color: #FFFFFF !important;
+  background: #717171 !important;
+  color: #ffffff !important;
 }
 .ant-layout {
-    background-color: #0F1D2E;
+  background-color: #0f1d2e;
 }
 .total-balance-tag {
-    color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.5);
 }
 .total-balance-value {
-    color: #FFFFFF;
+  color: #ffffff;
 }
 .total-balance-action {
-    color: #ffffff;
+  color: #ffffff;
 }
 .footer-icons {
-    color: #EE7B2F;
-    cursor: pointer;
+  color: #ee7b2f;
+  cursor: pointer;
 }
 .footer-names {
-    margin-top: 5px;
-    color: #ffffff;
-    font-size: 10px;
-    font-weight: 500;
-    line-height: 12px;
-    letter-spacing: 0.20000000298023224px;
-    text-align: center;
-
+  margin-top: 5px;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 12px;
+  letter-spacing: 0.20000000298023224px;
+  text-align: center;
 }
 .status-tag {
-    color: #FFFFFF;
+  color: #000000;
 }
 .ant-layout-footer {
-    background-color: #0F1D2E !important;
+  background-color: #0f1d2e !important;
 }
 
 .recent-activity-topic {
-    color: #FFFFFF;
+  color: #ffffff;
 }
 .recent-activity-time {
-    color: #9395A4;
+  color: #9395a4;
 }
 .sending-details {
-    background-color: #09111c;
-    padding: 15px;
-    align-items: flex-start;
-    border-radius: 5px;
-  }
+  background-color: #09111c;
+  padding: 15px;
+  align-items: flex-start;
+  border-radius: 5px;
+}
+.sub-heading {
+  color: #ffffff;
+}
