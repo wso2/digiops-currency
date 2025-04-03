@@ -24,34 +24,44 @@ service http:InterceptableService / on new http:Listener(9091) {
     # + walletAddress - Wallet address
     # + return - http:OK if user wallet added successfully, http:Conflict if user wallet already exists
     resource function post user\-wallet(http:RequestContext ctx, string walletAddress, int? defaultWallet)
-        returns http:Ok|http:Conflict|error {
-        
-        log:printInfo(defaultWallet is int ? defaultWallet.toBalString() : "No default wallet");
+        returns http:Ok|http:Conflict|error|http:InternalServerError? {
 
         types:UserWallet userWallet = {
             userEmail: check ctx.getWithType(EMAIL),
-            walletAddress,
+            walletAddress: walletAddress,
             defaultWallet: defaultWallet is int ? defaultWallet : 0
         };
-        if check database:isUserWalletExists(walletAddress)  && defaultWallet is int && defaultWallet == 0 {
+        if check database:isUserWalletExists(walletAddress) && defaultWallet is int && defaultWallet == 0 {
             log:printInfo(string `Wallet ${walletAddress} already exists`);
             return http:CONFLICT;
         }
 
-        types:UserWallet[]|error defaultWalletResponse = database:getUserWalletsByDefaultWallet(userWallet.userEmail, 1);
+        types:UserWallet[]|error walletResponse = database:getUserWallets(userWallet.userEmail);
 
-        if defaultWalletResponse is error {
-            log:printError("Error while getting user wallets", defaultWalletResponse);
-            return defaultWalletResponse;
+        if walletResponse is error {
+            log:printError("Error while getting user wallets", walletResponse);
+            return http:INTERNAL_SERVER_ERROR;
         }
 
-        if defaultWalletResponse is types:UserWallet[] && defaultWalletResponse.length() > 0 {
-            foreach types:UserWallet wallet in defaultWalletResponse {
-                if wallet.walletAddress != userWallet.walletAddress {
+        boolean isDefaultWallet = false;
+
+        if walletResponse is types:UserWallet[] && walletResponse.length() > 0 {
+            foreach types:UserWallet wallet in walletResponse {
+                if (wallet.walletAddress.toString() != userWallet.walletAddress.toString()) {
                     wallet.defaultWallet = 0;
                     check database:updateUserWallet(wallet);
+                } else {
+                    isDefaultWallet = true;
                 }
             }
+            log:printInfo("Updating default wallet");
+        }
+        
+        log:printInfo("Inserting user wallet");
+
+        if isDefaultWallet {
+            check database:updateUserWallet(userWallet);
+            return http:OK;
         }
         check database:insertUserWallet(userWallet);
         return http:OK;
