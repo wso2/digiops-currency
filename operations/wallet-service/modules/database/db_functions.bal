@@ -36,20 +36,27 @@ public isolated function insertUserWallet(types:UserWallet userWallet) returns s
 }
 
 
+# Description.
+#
+# + userEmail - parameter description
+# + return - return value description
 public isolated function getUserWallets(string userEmail) returns types:UserWallet[]|error {
     stream<types:UserWallet , error?> walletStream = dbClient->query(getUserWalletsQuery(userEmail));
 
-    
-    var nextWallet = walletStream.next();
+    stream<types:UserWallet , error?> dummy = walletStream;
 
-    if (nextWallet is error?) {
-        return  error("Error while getting user wallets", nextWallet);
+    if (walletStream.next() is error) {
+        log:printError("Error while getting user wallets");
+        return error("Error while getting user wallets");
     }
-
-    return from types:UserWallet wallet in walletStream 
-        select wallet;  
+    return from types:UserWallet wallet in dummy 
+        select wallet; 
 }
 
+# Description.
+#
+# + userWallet - parameter description
+# + return - return value description
 public isolated function updateUserWallet(types:UserWallet userWallet) returns sql:Error? {
     sql:ExecutionResult|sql:Error result = dbClient->execute(updateUserWalletQuery(userWallet));
     if result is error {
