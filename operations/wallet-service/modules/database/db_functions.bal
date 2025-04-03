@@ -50,21 +50,6 @@ public isolated function getUserWallets(string userEmail) returns types:UserWall
         select wallet;  
 }
 
-public isolated function getUserWalletsByDefaultWallet(string userEmail, int defaultWallet) returns types:UserWallet[]|error {
-    stream<types:UserWallet , error?> walletStream = dbClient->query(getUserWalletsByDefaultWalletQuery(userEmail, defaultWallet));
-
-    
-    var nextWallet = walletStream.next();
-
-    if (nextWallet is error?) {
-        return  error("Error while getting user wallets", nextWallet);
-    }
-
-    return from types:UserWallet wallet in walletStream 
-        select wallet;  
-}
-
-
 public isolated function updateUserWallet(types:UserWallet userWallet) returns sql:Error? {
     sql:ExecutionResult|sql:Error result = dbClient->execute(updateUserWalletQuery(userWallet));
     if result is error {

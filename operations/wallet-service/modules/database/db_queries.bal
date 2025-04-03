@@ -38,16 +38,6 @@ isolated function getUserWalletsQuery(string userEmail) returns sql:Parameterize
     WHERE
         user_email = ${userEmail}`;
 
-isolated function getUserWalletsByDefaultWalletQuery(string userEmail, int defaultWallet) returns sql:ParameterizedQuery =>
-    `SELECT
-        wallet_address,
-        user_email,
-        default_wallet
-    FROM
-        user_wallet
-    WHERE
-        user_email = ${userEmail} AND default_wallet = ${defaultWallet}`;
-
 isolated function updateUserWalletQuery(types:UserWallet userWallet) returns sql:ParameterizedQuery =>
     `UPDATE user_wallet
     SET default_wallet = ${userWallet.defaultWallet}
