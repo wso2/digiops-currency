@@ -47,13 +47,20 @@ service http:InterceptableService / on new http:Listener(9091) {
 
         if walletResponse is types:UserWallet[] && walletResponse.length() > 0 {
             foreach types:UserWallet wallet in walletResponse {
-                if (wallet.walletAddress.toString() != userWallet.walletAddress.toString()) {
+                if (wallet.walletAddress.toString() != userWallet.walletAddress.toString() && wallet.defaultWallet == 1) {
                     wallet.defaultWallet = 0;
                     check database:updateUserWallet(wallet);
-                } else {
-                    isDefaultWallet = true;
+                } else if (wallet.walletAddress.toString() == userWallet.walletAddress.toString()) {
+                    if (wallet.defaultWallet == 1) {
+                        log:printInfo(string `Default wallet ${walletAddress} already exists`);
+                        return http:CONFLICT;
+                    }
+                    else {
+                        isDefaultWallet = true;
+                    }
                 }
             }
+
         }
 
         if isDefaultWallet {
@@ -65,6 +72,7 @@ service http:InterceptableService / on new http:Listener(9091) {
     }
 
     # Get user wallets.
+    #
     # + ctx - Request context
     # + return - Wallet addresses of the user
     # + return - Error if error occurred
