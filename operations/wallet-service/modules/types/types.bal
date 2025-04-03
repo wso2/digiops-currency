@@ -14,4 +14,7 @@ public type UserWallet record {|
     # Wallet address
     @sql:Column {name: "wallet_address"}
     string walletAddress;
+    # Default wallet
+    @sql:Column {name: "default_wallet"}
+    int defaultWallet;
 |};
