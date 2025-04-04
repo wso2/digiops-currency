@@ -36,7 +36,7 @@ service class JwtInterceptor {
             log:printWarn("Email is empty in the JWT");
             return http:FORBIDDEN;
         }
-        ctx.set(EMAIL, sub is string ? sub : email);
+        ctx.set(EMAIL, email);
         return ctx.next();
     }
 }
