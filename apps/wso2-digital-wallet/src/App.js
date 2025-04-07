@@ -8,8 +8,6 @@
 import "./App.css";
 import { HashRouter as Router } from "react-router-dom";
 import LayoutView from "./LayoutView";
-import { useEffect } from "react";
-import { logService } from "./services/wallet.service";
 import { ModalProvider } from "./context/WalletsContext";
 
 function App() {
