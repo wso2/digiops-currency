@@ -31,7 +31,7 @@ service http:InterceptableService / on new http:Listener(9091) {
             walletAddress: walletAddress,
             defaultWallet: defaultWallet is int ? defaultWallet : 0
         };
-        if check database:isUserWalletExists(walletAddress) && defaultWallet is int && defaultWallet == 0 {
+        if check database:isUserWalletExists(walletAddress) && defaultWallet === 0 {
             log:printInfo(string `Wallet ${walletAddress} already exists`);
             return http:CONFLICT;
         }
@@ -40,29 +40,27 @@ service http:InterceptableService / on new http:Listener(9091) {
 
         if walletResponse is error {
             log:printError("Error while getting user wallets", walletResponse);
-            return <http:InternalServerError>{
-                    body: {
-                        message: errMsg
-                    }
-                };
+            string errMsg = "Error while getting user wallets";
+            return <http:InternalServerError> {
+                body: {
+                    message: errMsg
+                }
+            };
         }
 
         boolean isDefaultWallet = false;
 
         if walletResponse is types:UserWallet[] && walletResponse.length() > 0 {
             foreach types:UserWallet wallet in walletResponse {
-                if (wallet.walletAddress.toString() != userWallet.walletAddress.toString() && wallet.defaultWallet == 1) {
+                if (wallet.walletAddress !== userWallet.walletAddress && wallet.defaultWallet == 1) {
                     wallet.defaultWallet = 0;
                     check database:updateUserWallet(wallet);
-                }
-                if (wallet.walletAddress.toString() == userWallet.walletAddress.toString()) {
-                   string errMsg = `Default wallet ${walletAddress} already exists`;
-                        log:printInfo(errMsg);
-                        return <http:Conflict>{
-                               body: {
-                    message: errMsg
-                }
-            };
+                } 
+                if (wallet.walletAddress === userWallet.walletAddress) {
+                    if (wallet.defaultWallet == 1) {
+                        log:printInfo(string `Default wallet ${walletAddress} already exists`);
+                        return http:CONFLICT;
+                    }
                     else {
                         isDefaultWallet = true;
                     }
