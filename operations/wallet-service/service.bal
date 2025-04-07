@@ -23,18 +23,75 @@ service http:InterceptableService / on new http:Listener(9091) {
     # + ctx - Request context
     # + walletAddress - Wallet address
     # + return - http:OK if user wallet added successfully, http:Conflict if user wallet already exists
-    resource function post user\-wallet(http:RequestContext ctx, string walletAddress)
-        returns http:Ok|http:Conflict|error {
+    resource function post user\-wallet(http:RequestContext ctx, string walletAddress, int? defaultWallet)
+        returns http:Ok|http:Conflict|error|http:InternalServerError? {
 
         types:UserWallet userWallet = {
             userEmail: check ctx.getWithType(EMAIL),
-            walletAddress
+            walletAddress: walletAddress,
+            defaultWallet: defaultWallet is int ? defaultWallet : 0
         };
-        if check database:isUserWalletExists(walletAddress) {
+        if check database:isUserWalletExists(walletAddress) && defaultWallet === 0 {
             log:printInfo(string `Wallet ${walletAddress} already exists`);
             return http:CONFLICT;
+        }
+
+        types:UserWallet[]|error walletResponse = database:getUserWallets(userWallet.userEmail);
+
+        if walletResponse is error {
+            log:printError("Error while getting user wallets", walletResponse);
+            string errMsg = "Error while getting user wallets";
+            return <http:InternalServerError> {
+                body: {
+                    message: errMsg
+                }
+            };
+        }
+
+        boolean isDefaultWallet = false;
+
+        if walletResponse is types:UserWallet[] && walletResponse.length() > 0 {
+            foreach types:UserWallet wallet in walletResponse {
+                if (wallet.walletAddress !== userWallet.walletAddress && wallet.defaultWallet == 1) {
+                    wallet.defaultWallet = 0;
+                    check database:updateUserWallet(wallet);
+                } 
+                if (wallet.walletAddress === userWallet.walletAddress) {
+                    if (wallet.defaultWallet == 1) {
+                        log:printInfo(string `Default wallet ${walletAddress} already exists`);
+                        return http:CONFLICT;
+                    }
+                    else {
+                        isDefaultWallet = true;
+                    }
+                }
+            }
+
+        }
+
+        if isDefaultWallet {
+            check database:updateUserWallet(userWallet);
+            return http:OK;
         }
         check database:insertUserWallet(userWallet);
         return http:OK;
     }
+
+    # Get user wallets.
+    #
+    # + ctx - Request context
+    # + return - Wallet addresses of the user
+    # + return - Error if error occurred
+    resource function get user\-wallets(http:RequestContext ctx)
+        returns types:UserWallet[]|error? {
+        log:printInfo("Getting user wallets");
+        string userEmail = check ctx.getWithType(EMAIL);
+        types:UserWallet[]|error walletAddresses = check database:getUserWallets(userEmail);
+        if walletAddresses is error {
+            log:printError("Error while getting user wallets", walletAddresses);
+            return walletAddresses;
+        }
+        return walletAddresses;
+    }
+
 }

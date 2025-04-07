@@ -33,3 +33,31 @@ public isolated function insertUserWallet(types:UserWallet userWallet) returns s
         return result;
     }
 }
+
+
+# get user wallets using e-mail.
+#
+# + userEmail - parameter description
+# + return - return value description
+public isolated function getUserWallets(string userEmail) returns types:UserWallet[]|error {
+    stream<types:UserWallet , error?> walletStream = dbClient->query(getUserWalletsQuery(userEmail));
+    if (walletStream.next() is error) {
+        string customError = "Error while getting user wallets";
+        log:printError(customError);
+        return error(customError);
+    }
+    return from types:UserWallet wallet in walletStream 
+        select wallet; 
+}
+
+# Update default wallet by e-mail.
+#
+# + userWallet - parameter description
+# + return - return value description
+public isolated function updateUserWallet(types:UserWallet userWallet) returns sql:Error? {
+    sql:ExecutionResult|sql:Error result = dbClient->execute(updateUserWalletQuery(userWallet));
+    if result is error {
+        log:printError("Error while inserting user wallet", result, info = result.toString());
+        return result;
+    }
+}
