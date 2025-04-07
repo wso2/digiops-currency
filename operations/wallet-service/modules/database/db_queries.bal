@@ -25,3 +25,11 @@ isolated function insertUserWalletQuery(types:UserWallet userWallet) returns sql
         ${userWallet.userEmail},
         ${userWallet.walletAddress}
     )`;
+
+isolated function getUserWalletsQuery(string userEmail) returns sql:ParameterizedQuery =>
+    `SELECT
+        wallet_address
+    FROM
+        user_wallet
+    WHERE
+        user_email = ${userEmail}`;

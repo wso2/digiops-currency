@@ -1,0 +1,83 @@
+/*
+Copyright (c) 2025 WSO2 LLC. (https://www.wso2.com).
+
+WSO2 LLC. licenses this file to you under the Apache License,
+Version 2.0 (the "License"); you may not use this file except
+in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+*/
+
+.container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.wso2-logo {
+  width: 150px;
+  height: auto;
+}
+
+.avatar {
+  margin: 10px;
+  border: 2px solid #ee7b2f;
+}
+
+h2 {
+  color: #ee7b2f;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+p {
+  font-size: 16px;
+  color: #333;
+  margin-top: 10px;
+}
+
+.mt-5 {
+  margin-top: 30px;
+}
+
+button {
+  width: 120px;
+  height: 40px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+button.ml-3 {
+  margin-left: 15px;
+}
+
+.ant-btn-primary {
+  background-color: #ee7b2f;
+  border: none;
+}
+
+.ant-btn-primary:hover {
+  background-color: #cc5f1a;
+}
+
+.ant-btn {
+  background-color: #ccc;
+  border: none;
+  color: #333;
+}
+
+.ant-btn:hover {
+  background-color: #b3b3b3;
+}

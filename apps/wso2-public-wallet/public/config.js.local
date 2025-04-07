@@ -1,0 +1,11 @@
+window.config = {
+    signInRedirectUrl: "<https://example.com/signin>", // URL to redirect users after sign-in
+    signOutRedirectUrl: "<https://example.com/signout>", // URL to redirect users after sign-out
+    clientId: "<your-client-id>", // OAuth2 or application client ID
+    baseUrl: "<https://api.example.com>", // Base URL of your authentication API
+    scope: "<openid profile email>", // OAuth2 scopes required for authentication
+    rpcEndpoint: "<https://rpc.example.com>", // RPC endpoint for blockchain interaction
+    contractAddress: "<0xYourContractAddress>", // Smart contract address on the blockchain
+    chainId: "<12345>", // Chain ID of the blockchain network
+    walletServiceBaseUrl: "<https://wallet.example.com/api>" // Base URL for wallet-related services
+};

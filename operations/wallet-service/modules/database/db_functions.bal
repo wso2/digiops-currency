@@ -33,3 +33,17 @@ public isolated function insertUserWallet(types:UserWallet userWallet) returns s
         return result;
     }
 }
+
+
+public isolated function getUserWallets(string userEmail) returns types:UserWallet[]|error {
+    stream<types:UserWallet , error?> walletStream = dbClient->query(getUserWalletsQuery(userEmail));
+
+    var nextWallet = walletStream.next();
+
+    if (nextWallet is error?) {
+        return  error("Error while getting user wallets", nextWallet);
+    }
+
+    return from types:UserWallet wallet in walletStream 
+        select wallet;  
+}

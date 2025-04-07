@@ -30,11 +30,28 @@ service http:InterceptableService / on new http:Listener(9091) {
             userEmail: check ctx.getWithType(EMAIL),
             walletAddress
         };
+
         if check database:isUserWalletExists(walletAddress) {
             log:printInfo(string `Wallet ${walletAddress} already exists`);
             return http:CONFLICT;
         }
         check database:insertUserWallet(userWallet);
         return http:OK;
+    }
+
+    # Get user wallets.
+    # + ctx - Request context
+    # + return - Wallet addresses of the user
+    # + return - Error if error occurred
+    resource function get user\-wallets(http:RequestContext ctx)
+        returns json|error {
+        string userEmail = check ctx.getWithType(EMAIL);
+        types:UserWallet[]|error walletAddresses = check database:getUserWallets(userEmail);
+        if walletAddresses is error {
+            log:printError("Error while getting user wallets", walletAddresses);
+            return walletAddresses;
+        }
+        log:printInfo(string `Wallet addresses of the user`);
+        return walletAddresses;
     }
 }
