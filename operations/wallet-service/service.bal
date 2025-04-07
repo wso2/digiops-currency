@@ -40,7 +40,11 @@ service http:InterceptableService / on new http:Listener(9091) {
 
         if walletResponse is error {
             log:printError("Error while getting user wallets", walletResponse);
-            return http:INTERNAL_SERVER_ERROR;
+            return <http:InternalServerError>{
+                    body: {
+                        message: errMsg
+                    }
+                };
         }
 
         boolean isDefaultWallet = false;
