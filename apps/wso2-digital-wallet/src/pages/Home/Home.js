@@ -35,6 +35,10 @@ import {
 } from "../../constants/strings";
 import { DEFAULT_WALLET_ADDRESS, STORAGE_KEYS } from "../../constants/configs";
 import { showAlertBox } from "../../helpers/alerts";
+import { getUserWallets } from "../../services/wallet.service";
+import { logService } from "../../services/log.service";
+import WalletsModal from "../../modal/WalletsModal/WalletsModal";
+import { useModal } from "../../context/WalletsContext";
 
 function Home() {
   const navigate = useNavigate();
@@ -59,6 +63,8 @@ function Home() {
   const [isAccountCopied, setIsAccountCopied] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(0);
   const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
+
+  const { isModelVisible, setIsModelVisible, wallets, setWallets } = useModal();
 
   useEffect(() => {
     fetchWalletAddress();
@@ -116,6 +122,38 @@ function Home() {
     }
   };
 
+  const fetchWalletsFromWalletService = async () => {
+    logService({
+      type: "INFO",
+      message: `Fetching wallets from wallet service`,
+    });
+    try {
+      const wallets = await getUserWallets();
+
+      logService({
+        type: "INFO",
+        message: `Fetched ${wallets.length} wallet(s) from wallet service.`,
+      });
+      setWallets(wallets);
+      await logService({
+        type: "INFO",
+        message: `Fetched ${wallets.length} wallet(s) from wallet service.`,
+      });
+    } catch (error) {
+      console.error("Error while fetching wallets from wallet service", error);
+      messageApi.error("Error while fetching wallets from wallet service");
+
+      await logService({
+        type: "ERROR",
+        message: `Failed to fetch wallets: ${error.message}`,
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchWalletsFromWalletService();
+  }, []);
+
   const fetchCurrentTokenBalanceDoInBackground = async () => {
     try {
       const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
@@ -129,72 +167,78 @@ function Home() {
   const orangeColor = "#EE7B2F";
 
   return (
-    <div className="home-container ">
-      {contextHolder}
-      <div className="wallet-balance-details mt-4">
-        <span className="total-balance-tag">{TOTAL_BALANCE}</span>
-        <span className="total-balance-value">
-          {isTokenBalanceLoading ? (
-            <Spin
-              indicator={<LoadingOutlined style={{ color: orangeColor }} />}
-              style={{ margin: "10px " }}
-            />
-          ) : (
-            <NumericFormat
-              value={tokenBalance}
-              displayType={"text"}
-              thousandSeparator={true}
-            />
-          )}
-        </span>
-        <CopyToClipboard text={walletAddress} onCopy={handleCopyAccount}>
-          <Tooltip title={isAccountCopied ? "Copied" : "Copy to Clipboard"}>
-            <Tag className="total-balance-wallet-address mt-2">
-              {getEllipsisTxt(walletAddress, 13)}{" "}
-              {!isAccountCopied ? (
-                <CopyOutlined style={{ marginLeft: "5px" }} />
-              ) : (
-                <CheckOutlined style={{ marginLeft: "5px" }} />
-              )}
-            </Tag>
-          </Tooltip>
-        </CopyToClipboard>
-        <div className="d-flex justify-content-between mt-4">
-          <div onClick={handleSendIcon}>
-            <div className="total-balance-icons">
-              <div style={{ marginTop: "-2px", marginBottom: "-2px" }}>
-                <SendOutlined
-                  rotate={320}
-                  style={{ fontSize: "18px", cursor: "pointer" }}
-                />
+    <>
+      <div className="home-container ">
+        {contextHolder}
+        <div className="wallet-balance-details mt-4">
+          <span className="total-balance-tag">{TOTAL_BALANCE}</span>
+          <span className="total-balance-value">
+            {isTokenBalanceLoading ? (
+              <Spin
+                indicator={<LoadingOutlined style={{ color: orangeColor }} />}
+                style={{ margin: "10px " }}
+              />
+            ) : (
+              <NumericFormat
+                value={tokenBalance}
+                displayType={"text"}
+                thousandSeparator={true}
+              />
+            )}
+          </span>
+          <CopyToClipboard text={walletAddress} onCopy={handleCopyAccount}>
+            <Tooltip title={isAccountCopied ? "Copied" : "Copy to Clipboard"}>
+              <Tag className="total-balance-wallet-address mt-2">
+                {getEllipsisTxt(walletAddress, 13)}{" "}
+                {!isAccountCopied ? (
+                  <CopyOutlined style={{ marginLeft: "5px" }} />
+                ) : (
+                  <CheckOutlined style={{ marginLeft: "5px" }} />
+                )}
+              </Tag>
+            </Tooltip>
+          </CopyToClipboard>
+          <div className="d-flex justify-content-between mt-4">
+            <div onClick={handleSendIcon}>
+              <div className="total-balance-icons">
+                <div style={{ marginTop: "-2px", marginBottom: "-2px" }}>
+                  <SendOutlined
+                    rotate={320}
+                    style={{ fontSize: "18px", cursor: "pointer" }}
+                  />
+                </div>
               </div>
+              <div className="total-balance-action">{SEND}</div>
             </div>
-            <div className="total-balance-action">{SEND}</div>
-          </div>
-          <div>
-            <div className="total-balance-icons mx-5">
-              <div style={{ marginTop: "-2px", marginBottom: "-2px" }}>
-                <DownloadOutlined
-                  style={{ fontSize: "18px", cursor: "pointer" }}
-                />
+            <div>
+              <div className="total-balance-icons mx-5">
+                <div style={{ marginTop: "-2px", marginBottom: "-2px" }}>
+                  <DownloadOutlined
+                    style={{ fontSize: "18px", cursor: "pointer" }}
+                  />
+                </div>
               </div>
+              <div className="total-balance-action">{REQUEST}</div>
             </div>
-            <div className="total-balance-action">{REQUEST}</div>
-          </div>
-          <div>
-            <div className="total-balance-icons">
-              <div style={{ marginTop: "-2px", marginBottom: "-2px" }}>
-                <WalletOutlined
-                  style={{ fontSize: "18px", cursor: "pointer" }}
-                />
+            <div>
+              <div className="total-balance-icons">
+                <div style={{ marginTop: "-2px", marginBottom: "-2px" }}>
+                  <WalletOutlined
+                    style={{ fontSize: "18px", cursor: "pointer" }}
+                  />
+                </div>
               </div>
+              <div className="total-balance-action">{BUY}</div>
             </div>
-            <div className="total-balance-action">{BUY}</div>
           </div>
         </div>
+        <RecentActivities />
       </div>
-      <RecentActivities />
-    </div>
+      <WalletsModal
+        onClose={() => setIsModelVisible(false)}
+        isOpen={isModelVisible}
+      />
+    </>
   );
 }
 

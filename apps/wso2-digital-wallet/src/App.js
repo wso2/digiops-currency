@@ -4,18 +4,22 @@
 // Dissemination of any information or reproduction of any material contained
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
-
 import "./App.css";
 import { HashRouter as Router } from "react-router-dom";
 import LayoutView from "./LayoutView";
+import { useEffect } from "react";
+import { logService } from "./services/wallet.service";
+import { ModalProvider } from "./context/WalletsContext";
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <LayoutView />
-      </div>
-    </Router>
+    <ModalProvider>
+      <Router>
+        <div className="App">
+          <LayoutView />
+        </div>
+      </Router>
+    </ModalProvider>
   );
 }
 

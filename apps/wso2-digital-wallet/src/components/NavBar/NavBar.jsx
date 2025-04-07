@@ -5,24 +5,22 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import React, { useState, useEffect } from 'react';
-import { Row, Col, Tag } from 'antd';
-import { ScanOutlined } from "@ant-design/icons";
-import './NavBar.css';
-import { getCurrentBlockNumber } from '../../services/blockchain.service.js';
-import { saveLocalDataAsync } from '../../helpers/storage';
-import { Sun, Moon } from 'react-feather'
+import React, { useState, useEffect } from "react";
+import { Row, Col, Tag } from "antd";
+import { WalletOutlined } from "@ant-design/icons";
+import "./NavBar.css";
+import { getCurrentBlockNumber } from "../../services/blockchain.service.js";
+import { saveLocalDataAsync } from "../../helpers/storage";
+import { Sun, Moon } from "react-feather";
 import { useThemeSwitcher } from "react-css-theme-switcher";
-import {
-  WSO2_WALLET,
-  CONNECTED,
-  NOT_CONNECTED
-} from '../../constants/strings'
-import { STORAGE_KEYS } from '../../constants/configs';
+import { WSO2_WALLET, CONNECTED, NOT_CONNECTED } from "../../constants/strings";
+import { STORAGE_KEYS } from "../../constants/configs";
+import { useModal } from "../../context/WalletsContext.js";
 
 const NavBar = () => {
   const [currentBlockNumber, setCurrentBlockNumber] = useState(null);
   const { switcher, currentTheme } = useThemeSwitcher();
+  const { setIsModelVisible } = useModal();
 
   const getCurrentBlockStatus = async () => {
     const blockNumber = await getCurrentBlockNumber();
@@ -39,31 +37,34 @@ const NavBar = () => {
   }, []);
 
   const toggleTheme = async () => {
-    if (currentTheme === 'light') {
-      switcher({ theme: 'dark' });
-      saveLocalDataAsync(STORAGE_KEYS.THEME_MODE, 'dark')
+    if (currentTheme === "light") {
+      switcher({ theme: "dark" });
+      saveLocalDataAsync(STORAGE_KEYS.THEME_MODE, "dark");
     } else {
-      saveLocalDataAsync(STORAGE_KEYS.THEME_MODE, 'light')
-      switcher({ theme: 'light' });
+      saveLocalDataAsync(STORAGE_KEYS.THEME_MODE, "light");
+      switcher({ theme: "light" });
     }
   };
-
 
   return (
     <>
       <Row justify="space-between" align="middle" className="mt-4 mx-4">
         <Col flex="none">
-          {currentTheme === 'light' ? (
-            <Sun size={18} onClick={toggleTheme} className='theme-icon' />
+          {currentTheme === "light" ? (
+            <Sun size={18} onClick={toggleTheme} className="theme-icon" />
           ) : (
-            <Moon size={18} onClick={toggleTheme} className='theme-icon' />
+            <Moon size={18} onClick={toggleTheme} className="theme-icon" />
           )}
         </Col>
         <Col flex="auto">
           <span className="navbar-main-header">{WSO2_WALLET}</span>
         </Col>
         <Col flex="none">
-          <ScanOutlined style={{ fontSize: "18px", cursor: "pointer" }} className='scan-icon' />
+          <WalletOutlined
+            style={{ fontSize: "18px", cursor: "pointer" }}
+            className="wallet-icon"
+            onClick={() => setIsModelVisible(true)}
+          />
         </Col>
       </Row>
       <div>
