@@ -132,7 +132,7 @@ function Home() {
 
   useEffect(() => {
     fetchWalletsFromWalletService();
-  }, []);
+  });
 
   const fetchCurrentTokenBalanceDoInBackground = async () => {
     try {
