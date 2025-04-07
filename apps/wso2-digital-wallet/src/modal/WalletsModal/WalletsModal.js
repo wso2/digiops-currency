@@ -7,7 +7,6 @@
 
 import React from "react";
 import { Modal, Alert } from "antd"; 
-import { logService } from "../../services/log.service";
 import {
   getUserWallets,
   updateUserWalletAddress,
@@ -18,29 +17,15 @@ import { useModal } from "../../context/WalletsContext";
 const WalletsModal = ({ isOpen, onClose }) => {
   const { wallets, setWallets } = useModal();
   const handledSetDefaultWallet = (walletAddress) => async () => {
-    logService({
-      type: "info",
-      message: `this is the defaultWallet ${walletAddress}`,
-    });
     try {
       await updateUserWalletAddress({
         walletAddress: walletAddress,
         defaultWallet: 1,
       });
-
-      logService({
-        type: "info",
-        message: `set default wallet ${walletAddress}`,
-      });
-
       const wallets = await getUserWallets();
-
       setWallets(wallets);
     } catch (error) {
-      logService({
-        type: "error",
-        message: `Error setting default wallet: ${error.message}`,
-      });
+      console.error("Error updating wallet address: ", error);
     }
     onClose();
   };
