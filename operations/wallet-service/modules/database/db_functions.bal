@@ -42,8 +42,9 @@ public isolated function insertUserWallet(types:UserWallet userWallet) returns s
 public isolated function getUserWallets(string userEmail) returns types:UserWallet[]|error {
     stream<types:UserWallet , error?> walletStream = dbClient->query(getUserWalletsQuery(userEmail));
     if (walletStream.next() is error) {
-        log:printError("Error while getting user wallets");
-        return error("Error while getting user wallets");
+        string customError = "Error while getting user wallets"
+        log:printError(customError);
+        return error(customError);
     }
     return from types:UserWallet wallet in walletStream 
         select wallet; 
