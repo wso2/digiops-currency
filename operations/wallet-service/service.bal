@@ -52,10 +52,13 @@ service http:InterceptableService / on new http:Listener(9091) {
                     check database:updateUserWallet(wallet);
                 }
                 if (wallet.walletAddress.toString() == userWallet.walletAddress.toString()) {
-                    if (wallet.defaultWallet == 1) {
-                        log:printInfo(string `Default wallet ${walletAddress} already exists`);
-                        return http:CONFLICT;
-                    }
+                   string errMsg = `Default wallet ${walletAddress} already exists`;
+                        log:printInfo(errMsg);
+                        return <http:Conflict>{
+                               body: {
+                    message: errMsg
+                }
+            };
                     else {
                         isDefaultWallet = true;
                     }
