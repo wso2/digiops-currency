@@ -8,40 +8,30 @@
 import { getTokenAsync } from "../helpers/auth";
 import { logService } from "./log.service";
 
-export const updateUserWalletAddress = async ({walletAddress, defaultWallet}) => {
+export const updateUserWalletAddress = async ({
+  walletAddress,
+  defaultWallet,
+}) => {
   const token = await getTokenAsync();
-
-  logService({
-    type : 'info',
-    message : 'creating wallet '
-  }
-
-  )
-
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/user-wallet?walletAddress=${walletAddress}&defaultWallet=${defaultWallet || 0}`,
+      `${
+        process.env.REACT_APP_WALLET_SERVICE_BASE_URL
+      }/user-wallet?walletAddress=${walletAddress}&defaultWallet=${
+        defaultWallet || 0
+      }`,
       {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          'x-jwt-assertion': token,
+          "x-jwt-assertion": token,
         },
       }
     );
 
-
-    
-    
     if (!response.ok) {
       const errorData = await response.json();
       const errorMessage = errorData.message || "Unknown error";
-      logService(
-        {
-          type : 'error',
-          message : `${errorMessage}`
-        }
-      )
       throw new Error(
         `Failed to update user wallet address: ${response.status} - ${errorMessage}`
       );
@@ -55,28 +45,17 @@ export const updateUserWalletAddress = async ({walletAddress, defaultWallet}) =>
 export const getUserWallets = async () => {
   const token = await getTokenAsync();
 
-  logService(
-    {
-      type: "INFO",
-      message: `Fetching user wallets with token: ${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/user-wallets`,
-    }
-  )
   const response = await fetch(
     `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/user-wallets`,
     {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
-        'x-jwt-assertion': token,
+        "x-jwt-assertion": token,
       },
     }
   );
 
-  logService({
-    type: "INFO",
-    message: `Fetching user wallets with token: ${response.status}`,
-  });
-  
   if (!response.ok) {
     const errorData = await response.json();
     const errorMessage = errorData.message || "Unknown error";

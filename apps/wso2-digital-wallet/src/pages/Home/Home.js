@@ -129,24 +129,10 @@ function Home() {
     });
     try {
       const wallets = await getUserWallets();
-
-      logService({
-        type: "INFO",
-        message: `Fetched ${wallets.length} wallet(s) from wallet service.`,
-      });
       setWallets(wallets);
-      await logService({
-        type: "INFO",
-        message: `Fetched ${wallets.length} wallet(s) from wallet service.`,
-      });
     } catch (error) {
       console.error("Error while fetching wallets from wallet service", error);
       messageApi.error("Error while fetching wallets from wallet service");
-
-      await logService({
-        type: "ERROR",
-        message: `Failed to fetch wallets: ${error.message}`,
-      });
     }
   };
 

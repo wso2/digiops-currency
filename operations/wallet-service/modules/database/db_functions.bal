@@ -27,7 +27,6 @@ public isolated function isUserWalletExists(string walletAddress) returns boolea
 # + userWallet - User wallet information
 # + return - Error if error occurred
 public isolated function insertUserWallet(types:UserWallet userWallet) returns sql:Error? {
-    log:printInfo(userWallet.toString());
     sql:ExecutionResult|sql:Error result = dbClient->execute(insertUserWalletQuery(userWallet));
     if result is error {
         log:printError("Error while inserting user wallet", result, info = result.toString());
@@ -42,14 +41,11 @@ public isolated function insertUserWallet(types:UserWallet userWallet) returns s
 # + return - return value description
 public isolated function getUserWallets(string userEmail) returns types:UserWallet[]|error {
     stream<types:UserWallet , error?> walletStream = dbClient->query(getUserWalletsQuery(userEmail));
-
-    stream<types:UserWallet , error?> dummy = walletStream;
-
     if (walletStream.next() is error) {
         log:printError("Error while getting user wallets");
         return error("Error while getting user wallets");
     }
-    return from types:UserWallet wallet in dummy 
+    return from types:UserWallet wallet in walletStream 
         select wallet; 
 }
 
