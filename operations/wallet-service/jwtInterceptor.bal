@@ -13,6 +13,7 @@ const EMAIL = "email";
 # Request Interceptor used to decode the JWT.
 service class JwtInterceptor {
     *http:RequestInterceptor;
+
     isolated resource function 'default [string... path](http:RequestContext ctx, http:Request req)
     returns http:NextService|http:Forbidden|error? {
 
@@ -31,12 +32,14 @@ service class JwtInterceptor {
             log:printError("Error while decoding JWT", jwtInfo);
             return http:FORBIDDEN;
         }
+
         JwtPayload {email, sub} = jwtInfo;
+
         if isEmptyVal(email) && isEmptyVal(sub) {
             log:printWarn("Email is empty in the JWT");
             return http:FORBIDDEN;
         }
-        ctx.set(EMAIL, email);
+        ctx.set(EMAIL, sub is string ? sub : email);
         return ctx.next();
     }
 }

@@ -78,6 +78,7 @@ service http:InterceptableService / on new http:Listener(9091) {
     # + return - Error if error occurred
     resource function get user\-wallets(http:RequestContext ctx)
         returns types:UserWallet[]|error? {
+        log:printInfo("Getting user wallets");
         string userEmail = check ctx.getWithType(EMAIL);
         types:UserWallet[]|error walletAddresses = check database:getUserWallets(userEmail);
         if walletAddresses is error {
