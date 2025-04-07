@@ -50,7 +50,8 @@ service http:InterceptableService / on new http:Listener(9091) {
                 if (wallet.walletAddress.toString() != userWallet.walletAddress.toString() && wallet.defaultWallet == 1) {
                     wallet.defaultWallet = 0;
                     check database:updateUserWallet(wallet);
-                } else if (wallet.walletAddress.toString() == userWallet.walletAddress.toString()) {
+                }
+                if (wallet.walletAddress.toString() == userWallet.walletAddress.toString()) {
                     if (wallet.defaultWallet == 1) {
                         log:printInfo(string `Default wallet ${walletAddress} already exists`);
                         return http:CONFLICT;
