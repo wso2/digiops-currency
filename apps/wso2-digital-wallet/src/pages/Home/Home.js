@@ -36,13 +36,16 @@ import {
 import { DEFAULT_WALLET_ADDRESS, STORAGE_KEYS } from "../../constants/configs";
 import { showAlertBox } from "../../helpers/alerts";
 import { getUserWallets } from "../../services/wallet.service";
-import { logService } from "../../services/log.service";
 import WalletsModal from "../../modal/WalletsModal/WalletsModal";
 import { useModal } from "../../context/WalletsContext";
 
 function Home() {
   const navigate = useNavigate();
   const [walletAddress, setWalletAddress] = useState(DEFAULT_WALLET_ADDRESS);
+  const [isAccountCopied, setIsAccountCopied] = useState(false);
+  const [tokenBalance, setTokenBalance] = useState(0);
+  const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
+  const { isModelVisible, setIsModelVisible, setWallets } = useModal();
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -60,11 +63,6 @@ function Home() {
     }
   };
 
-  const [isAccountCopied, setIsAccountCopied] = useState(false);
-  const [tokenBalance, setTokenBalance] = useState(0);
-  const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
-
-  const { isModelVisible, setIsModelVisible, wallets, setWallets } = useModal();
 
   useEffect(() => {
     fetchWalletAddress();
@@ -123,10 +121,6 @@ function Home() {
   };
 
   const fetchWalletsFromWalletService = async () => {
-    logService({
-      type: "INFO",
-      message: `Fetching wallets from wallet service`,
-    });
     try {
       const wallets = await getUserWallets();
       setWallets(wallets);
