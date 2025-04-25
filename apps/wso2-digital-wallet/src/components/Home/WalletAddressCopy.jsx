@@ -5,15 +5,15 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import React, { useState, useEffect } from 'react';
-import { CopyOutlined, CheckOutlined } from '@ant-design/icons';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Input, Button } from 'antd';
-import { showAlertBox } from '../../helpers/alerts';
-import { COPIED, OK } from '../../constants/strings';
+import React, { useState, useEffect } from "react";
+import { CopyOutlined, CheckOutlined } from "@ant-design/icons";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { Input, Button } from "antd";
+import { showAlertBox } from "../../helpers/alerts";
+import { COPIED, OK } from "../../constants/strings";
 
 function WalletAddressCopy(props) {
-  const { address, topic, buttonText = 'Show Private Key' } = props;
+  const { address, topic, buttonText = "Show Private Key" } = props;
 
   const [walletAddressCopied, setWalletAddressCopied] = useState(false);
   const [showPrivateKey, setShowPrivateKey] = useState(false);
@@ -23,22 +23,26 @@ function WalletAddressCopy(props) {
   }, []);
 
   const handleCopyWalletAddress = async () => {
-
     await showAlertBox(COPIED, `${topic} ${COPIED}`, OK);
     setWalletAddressCopied(true);
     setTimeout(() => {
       setWalletAddressCopied(false);
-    }, 2000)
+    }, 2000);
   };
 
   return (
     <>
       <div>
-        <div className="d-flex justify-content-start">
+        <div className="d-flex justify-content-start sub-heading">
           <span className="wallet-copy-topic mb-2">{topic}</span>
         </div>
         {!showPrivateKey ? (
-          <Button className='w-100 primary-button' onClick={() => setShowPrivateKey(true)}>{buttonText}</Button>
+          <Button
+            className="w-100 primary-button"
+            onClick={() => setShowPrivateKey(true)}
+          >
+            {buttonText}
+          </Button>
         ) : (
           <Input
             id="inputField"

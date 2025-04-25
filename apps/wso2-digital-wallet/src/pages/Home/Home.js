@@ -14,7 +14,7 @@ import {
   CopyOutlined,
   CheckOutlined,
   LoadingOutlined,
-  SendOutlined
+  SendOutlined,
 } from "@ant-design/icons";
 import RecentActivities from "../../components/Home/RecentActivities";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -31,7 +31,7 @@ import {
   ERROR_RETRIEVE_WALLET_ADDRESS,
   WALLET_ADDRESS_COPIED,
   OK,
-  COPIED
+  COPIED,
 } from "../../constants/strings";
 import { DEFAULT_WALLET_ADDRESS, STORAGE_KEYS } from "../../constants/configs";
 import { showAlertBox } from "../../helpers/alerts";
@@ -47,7 +47,9 @@ function Home() {
       const walletAddressResponse = await getLocalDataAsync(
         STORAGE_KEYS.WALLET_ADDRESS
       );
-      setWalletAddress(walletAddressResponse);
+      if (walletAddressResponse !== walletAddress) {
+        setWalletAddress(walletAddressResponse);
+      }
     } catch (error) {
       console.log(`${ERROR_RETRIEVE_WALLET_ADDRESS} - ${error}`);
       messageApi.error(ERROR_RETRIEVE_WALLET_ADDRESS);
@@ -61,7 +63,7 @@ function Home() {
   useEffect(() => {
     fetchWalletAddress();
     // eslint-disable-next-line
-  }, []);
+  }, [walletAddress]);
 
   useEffect(() => {
     if (walletAddress !== DEFAULT_WALLET_ADDRESS && walletAddress) {
@@ -160,7 +162,7 @@ function Home() {
         <div className="d-flex justify-content-between mt-4">
           <div onClick={handleSendIcon}>
             <div className="total-balance-icons">
-              <div style={{ marginTop: "-5px" }}>
+              <div style={{ marginTop: "-2px", marginBottom: "-2px" }}>
                 <SendOutlined
                   rotate={320}
                   style={{ fontSize: "18px", cursor: "pointer" }}
@@ -171,7 +173,7 @@ function Home() {
           </div>
           <div>
             <div className="total-balance-icons mx-5">
-              <div style={{ marginTop: "-5px" }}>
+              <div style={{ marginTop: "-2px", marginBottom: "-2px" }}>
                 <DownloadOutlined
                   style={{ fontSize: "18px", cursor: "pointer" }}
                 />
@@ -181,7 +183,7 @@ function Home() {
           </div>
           <div>
             <div className="total-balance-icons">
-              <div style={{ marginTop: "-5px" }}>
+              <div style={{ marginTop: "-2px", marginBottom: "-2px" }}>
                 <WalletOutlined
                   style={{ fontSize: "18px", cursor: "pointer" }}
                 />
