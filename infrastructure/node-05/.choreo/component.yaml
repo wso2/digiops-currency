@@ -1,15 +1,15 @@
 schemaVersion: "1.2"
 endpoints:
-    - name: miner-node-02
-      displayName: WSO2 Blockchain Miner node 02
+    - name: miner-node-05
+      displayName: WSO2 Blockchain Miner node 05
       service:
         basePath: /
         port: 8545
       type: REST
       networkVisibilities:
         - Public
-    - name: udp-miner-node-02
-      displayName: WSO2 Blockchain Miner node 02 UDP service
+    - name: udp-miner-node-05
+      displayName: WSO2 Blockchain Miner node 05 UDP service
       service:
         basePath: /
         port: 30303
