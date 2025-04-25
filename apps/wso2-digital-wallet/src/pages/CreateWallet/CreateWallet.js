@@ -55,7 +55,7 @@ function CreateWallet() {
     try {
       const wallet = ethers.Wallet.createRandom();
       if (wallet.address) {
-        updateUserWalletAddress(wallet.address)
+        updateUserWalletAddress({walletAddress: wallet.address })
           .then(async () => {
             await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, wallet.address);
             await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, wallet.privateKey);
@@ -89,7 +89,9 @@ function CreateWallet() {
         <div className="wallet-create-top-margin">
           <div className="wallet-create-content">
             <Avatar size={100} src={Wso2MainImg} />
-            <span className="wallet-create-topic mt-3 mb-5">{WSO2_WALLET}</span>
+            <span className="wallet-create-topic mt-3 mb-5 sub sub-heading">
+              {WSO2_WALLET}
+            </span>
 
             <div className="footer-wrapper-buttons-section container">
               <Button

@@ -7,17 +7,27 @@
 
 import { getTokenAsync } from "../helpers/auth";
 
-export const updateUserWalletAddress = async (walletAddress) => {
+export const updateUserWalletAddress = async ({
+  walletAddress,
+  defaultWallet,
+}) => {
+  const token = await getTokenAsync();
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/user-wallet?walletAddress=${walletAddress}`,
+      `${
+        process.env.REACT_APP_WALLET_SERVICE_BASE_URL
+      }/user-wallet?walletAddress=${walletAddress}&defaultWallet=${
+        defaultWallet || 0
+      }`,
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${await getTokenAsync()}`,
+          Authorization: `Bearer ${token}`,
+          "x-jwt-assertion": token,
         },
       }
     );
+
     if (!response.ok) {
       const errorData = await response.json();
       const errorMessage = errorData.message || "Unknown error";
@@ -29,4 +39,29 @@ export const updateUserWalletAddress = async (walletAddress) => {
     console.error("Error while updating user wallet address: ", error);
     throw error;
   }
+};
+
+export const getUserWallets = async () => {
+  const token = await getTokenAsync();
+
+  const response = await fetch(
+    `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/user-wallets`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "x-jwt-assertion": token,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    const errorMessage = errorData.message || "Unknown error";
+    throw new Error(
+      `Failed to fetch user wallets: ${response.status} - ${errorMessage}`
+    );
+  }
+
+  return await response.json();
 };
