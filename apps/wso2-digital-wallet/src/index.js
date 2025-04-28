@@ -13,31 +13,30 @@ import ReactDOM from 'react-dom';
 import { ThemeSwitcherProvider } from 'react-css-theme-switcher';
 
 import App from './App';
-import { STORAGE_KEYS } from './constants/configs';
-import { getLocalDataAsync } from './helpers/storage';
 import reportWebVitals from './reportWebVitals';
-
-let themeState = "light";
-
-const fetchThemeStatus = async () => {
-  const theme = await getLocalDataAsync(STORAGE_KEYS.THEME_MODE);
-  // themeState = theme || "light";
-};
-
-fetchThemeStatus();
 
 const themes = {
   dark: `${process.env.PUBLIC_URL}/dark-theme.css`,
   light: `${process.env.PUBLIC_URL}/light-theme.css`
 };
 
-ReactDOM.render(
-  <React.StrictMode>
-    <ThemeSwitcherProvider themeMap={themes} defaultTheme={themeState}>
-      <App />
-    </ThemeSwitcherProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+const init = async () => {
+  // const storedTheme = await getLocalDataAsync(STORAGE_KEYS.THEME_MODE);
+  // const themeState = storedTheme || "light";
+  
+  // Set light theme as default
+  const themeState = "light";
+
+  ReactDOM.render(
+    <React.StrictMode>
+      <ThemeSwitcherProvider themeMap={themes} defaultTheme={themeState}>
+        <App />
+      </ThemeSwitcherProvider>
+    </React.StrictMode>,
+    document.getElementById("root")
+  );
+};
+
+init();
 
 reportWebVitals();
