@@ -5,20 +5,26 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import React, { useState, useEffect } from 'react';
-import { Row, Col, Tag } from 'antd';
-import { ScanOutlined } from "@ant-design/icons";
 import './NavBar.css';
-import { getCurrentBlockNumber } from '../../services/blockchain.service.js';
-import { saveLocalDataAsync } from '../../helpers/storage';
-import { Sun, Moon } from 'react-feather'
-import { useThemeSwitcher } from "react-css-theme-switcher";
+
+import React, {
+  useEffect,
+  useState,
+} from 'react';
+
 import {
-  WSO2_WALLET,
+  Col,
+  Row,
+  Tag,
+} from 'antd';
+import { useThemeSwitcher } from 'react-css-theme-switcher';
+
+import {
   CONNECTED,
-  NOT_CONNECTED
-} from '../../constants/strings'
-import { STORAGE_KEYS } from '../../constants/configs';
+  NOT_CONNECTED,
+  WSO2_WALLET,
+} from '../../constants/strings';
+import { getCurrentBlockNumber } from '../../services/blockchain.service.js';
 
 const NavBar = () => {
   const [currentBlockNumber, setCurrentBlockNumber] = useState(null);
@@ -38,33 +44,33 @@ const NavBar = () => {
     getCurrentBlockStatus();
   }, []);
 
-  const toggleTheme = async () => {
-    if (currentTheme === 'light') {
-      switcher({ theme: 'dark' });
-      saveLocalDataAsync(STORAGE_KEYS.THEME_MODE, 'dark')
-    } else {
-      saveLocalDataAsync(STORAGE_KEYS.THEME_MODE, 'light')
-      switcher({ theme: 'light' });
-    }
-  };
+  // const toggleTheme = async () => {
+  //   if (currentTheme === 'light') {
+  //     switcher({ theme: 'dark' });
+  //     saveLocalDataAsync(STORAGE_KEYS.THEME_MODE, 'dark')
+  //   } else {
+  //     saveLocalDataAsync(STORAGE_KEYS.THEME_MODE, 'light')
+  //     switcher({ theme: 'light' });
+  //   }
+  // };
 
 
   return (
     <>
       <Row justify="space-between" align="middle" className="mt-4 mx-4">
-        <Col flex="none">
+        {/* <Col flex="none">
           {currentTheme === 'light' ? (
             <Sun size={18} onClick={toggleTheme} className='theme-icon' />
           ) : (
             <Moon size={18} onClick={toggleTheme} className='theme-icon' />
           )}
-        </Col>
+        </Col> */}
         <Col flex="auto">
           <span className="navbar-main-header">{WSO2_WALLET}</span>
         </Col>
-        <Col flex="none">
+        {/* <Col flex="none">
           <ScanOutlined style={{ fontSize: "18px", cursor: "pointer" }} className='scan-icon' />
-        </Col>
+        </Col> */}
       </Row>
       <div>
         {currentBlockNumber ? (

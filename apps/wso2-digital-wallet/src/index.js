@@ -5,20 +5,23 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { ThemeSwitcherProvider } from "react-css-theme-switcher";
-import { getLocalDataAsync } from "./helpers/storage";
-import { STORAGE_KEYS } from "./constants/configs";
+import './index.css';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import { ThemeSwitcherProvider } from 'react-css-theme-switcher';
+
+import App from './App';
+import { STORAGE_KEYS } from './constants/configs';
+import { getLocalDataAsync } from './helpers/storage';
+import reportWebVitals from './reportWebVitals';
 
 let themeState = "dark";
 
 const fetchThemeStatus = async () => {
   const theme = await getLocalDataAsync(STORAGE_KEYS.THEME_MODE);
-  themeState = theme || "dark";
+  themeState = theme || "light";
 };
 
 fetchThemeStatus();
