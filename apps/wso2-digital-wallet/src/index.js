@@ -21,7 +21,9 @@ let themeState = "dark";
 
 const fetchThemeStatus = async () => {
   const theme = await getLocalDataAsync(STORAGE_KEYS.THEME_MODE);
-  themeState = theme || "light";
+  // Set the default theme to light
+  // themeState = theme || "light";
+  themeState = "light";
 };
 
 fetchThemeStatus();
