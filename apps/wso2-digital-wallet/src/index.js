@@ -17,13 +17,11 @@ import { STORAGE_KEYS } from './constants/configs';
 import { getLocalDataAsync } from './helpers/storage';
 import reportWebVitals from './reportWebVitals';
 
-let themeState = "dark";
+let themeState = "light";
 
 const fetchThemeStatus = async () => {
   const theme = await getLocalDataAsync(STORAGE_KEYS.THEME_MODE);
-  // Set the default theme to light
   // themeState = theme || "light";
-  themeState = "light";
 };
 
 fetchThemeStatus();
