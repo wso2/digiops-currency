@@ -5,36 +5,38 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { ThemeSwitcherProvider } from "react-css-theme-switcher";
-import { getLocalDataAsync } from "./helpers/storage";
-import { STORAGE_KEYS } from "./constants/configs";
+import './index.css';
 
-let themeState = "dark";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-const fetchThemeStatus = async () => {
-  const theme = await getLocalDataAsync(STORAGE_KEYS.THEME_MODE);
-  themeState = theme || "dark";
-};
+import { ThemeSwitcherProvider } from 'react-css-theme-switcher';
 
-fetchThemeStatus();
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 
 const themes = {
   dark: `${process.env.PUBLIC_URL}/dark-theme.css`,
   light: `${process.env.PUBLIC_URL}/light-theme.css`
 };
 
-ReactDOM.render(
-  <React.StrictMode>
-    <ThemeSwitcherProvider themeMap={themes} defaultTheme={themeState}>
-      <App />
-    </ThemeSwitcherProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+const init = async () => {
+  // const storedTheme = await getLocalDataAsync(STORAGE_KEYS.THEME_MODE);
+  // const themeState = storedTheme || "light";
+  
+  // Set light theme as default
+  const themeState = "light";
+
+  ReactDOM.render(
+    <React.StrictMode>
+      <ThemeSwitcherProvider themeMap={themes} defaultTheme={themeState}>
+        <App />
+      </ThemeSwitcherProvider>
+    </React.StrictMode>,
+    document.getElementById("root")
+  );
+};
+
+init();
 
 reportWebVitals();
