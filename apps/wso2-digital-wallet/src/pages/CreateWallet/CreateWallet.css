@@ -34,7 +34,7 @@
     line-height: 21px;
     letter-spacing: 0em;
     text-align: center;
-    color: #EE7B2F;
+    color: #ff7300;
     cursor: pointer;
 }
 .wallet-copy-topic {
@@ -46,20 +46,20 @@
 }
 .copy-button {
     color: #ffff !important;
-    background-color: #EE7B2F !important;
-    border: #EE7B2F !important;
+    background-color: #ff7300 !important;
+    border: #ff7300 !important;
 }
 .copy-button:hover {
     color: #ffff !important;
-    background-color: #EE7B2F !important;
-    border: #EE7B2F !important;
+    background-color: #ff7300 !important;
+    border: #ff7300 !important;
 }
 .ant-input-group-addon {
-    background-color: #EE7B2F !important;
+    background-color: #ff7300 !important;
 }
 .copy-to-clipboard-button {
     background: rgba(238, 123, 47, 0.2);
-    color: #EE7B2F !important;
+    color: #ff7300 !important;
     font-weight: 700;
 }
 .copy-to-clipboard-button:hover, .copy-to-clipboard-button:focus {

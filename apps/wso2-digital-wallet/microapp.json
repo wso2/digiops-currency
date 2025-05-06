@@ -6,7 +6,7 @@
     "iconUrl": "https://stprodmobileinternal.blob.core.windows.net/files/super-app/prod-wso2-org/coin/coin-banner.png",
     "bannerImageUrl": "https://stprodmobileinternal.blob.core.windows.net/files/super-app/prod-wso2-org/coin/coin-icon.png",
     "isMandatory": 0,
-    "clientId": "",
+    "clientId": "F9KGEUW96OcuKifkL16AKILpCfUa",
     "versions": [
         {
             "version": "1.0.1",

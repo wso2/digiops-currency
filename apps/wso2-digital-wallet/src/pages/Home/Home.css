@@ -32,8 +32,8 @@
       line-height: 44.53px;
   }
   .total-balance-wallet-address {
-      background-color: #ee7b2f5d;
-      color: #EE7B2F;
+      background-color: #ff74002d;
+      color: #ff7400;
       font-size: 11px !important;
       font-weight: 700;
       line-height: 12.89px;
@@ -43,7 +43,7 @@
   }
   .total-balance-icons {
       padding: 15px;
-      background: #EE7B2F;
+      background: #ff7400;
       border-radius: 50%;
       color: #ffff;
       cursor: pointer;
@@ -102,11 +102,6 @@
   
   .status-dot-not-connected {
     background-color: red;
-  }
-  .status-tag {
-    border: none !important;
-    cursor: pointer;
-    margin-top: -30px !important;
   }
 
   /* .main-layout{
