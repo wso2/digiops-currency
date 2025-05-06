@@ -111,7 +111,6 @@ export const getRecentTransactions = async (walletAddress) => {
 
   for (const log of events) {
     const parsedLog = contract.interface.parseLog(log);
-    console.log("parsedLog", log);
     if (
       parsedLog.args.to.toLowerCase() === walletAddress.toLowerCase() ||
       parsedLog.args.from.toLowerCase() === walletAddress.toLowerCase()
