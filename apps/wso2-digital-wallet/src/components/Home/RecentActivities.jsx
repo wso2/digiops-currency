@@ -42,7 +42,7 @@ function RecentActivities() {
       );
       setWalletAddress(walletAddressResponse);
     } catch (error) {
-      console.log(`${ERROR_READING_WALLET_DETAILS}: ${error}`);
+      console.error(`${ERROR_READING_WALLET_DETAILS}: ${error}`);
       setWalletAddress("");
     }
   };
@@ -79,7 +79,7 @@ function RecentActivities() {
       setIsRecentTransactionsLoading(false);
     } catch (error) {
       setIsRecentTransactionsLoading(false);
-      console.log("error while fetching recent transactions", error);
+      console.error("error while fetching recent transactions", error);
     }
   };
 
@@ -88,7 +88,7 @@ function RecentActivities() {
       const recentTransactions = await getRecentTransactions(walletAddress);
       setRecentTransactions(recentTransactions);
     } catch (error) {
-      console.log("error while fetching recent transactions", error);
+      console.error("error while fetching recent transactions", error);
     }
   };
 
