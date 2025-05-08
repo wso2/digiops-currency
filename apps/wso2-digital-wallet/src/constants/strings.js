@@ -12,11 +12,10 @@ export const NOT_CONNECTED = "Not Connected";
 
 // home page
 export const TOTAL_BALANCE = "Total Balance";
-export const SEND = "Send";
+export const SEND_TOKENS = "Send Tokens";
 export const REQUEST = "Request";
 export const BUY = "Buy";
 export const RECENT_ACTIVITIES = "Recent Activities";
-export const TRANSFER = "Transfer";
 export const WSO2_TOKEN = "WSO2";
 
 // footer

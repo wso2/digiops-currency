@@ -74,12 +74,12 @@ const NavBar = () => {
       </Row>
       <div>
         {currentBlockNumber ? (
-          <Tag className="status-tag">
+          <Tag>
             <span className="status-dot status-dot-connected" />
             {CONNECTED}
           </Tag>
         ) : (
-          <Tag className="status-tag">
+          <Tag>
             <span className="status-dot status-dot-not-connected" />
             {NOT_CONNECTED}
           </Tag>

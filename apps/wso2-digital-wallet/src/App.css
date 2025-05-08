@@ -47,7 +47,7 @@
   }
 }
 .primary-button {
-  background: #EE7B2F !important;
+  background: #ff7300 !important;
   color: #ffff;
   font-size: 16px;
   font-weight: 700;
@@ -60,16 +60,16 @@
 .primary-button.disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  color: #f3a058;
+  color: #ff7300;
 }
 .primary-button:hover {
-  background: #EE7B2F;
+  background: #ff7300;
   color: #ffffff !important;
-  border: 1px solid #f3a058 !important;
+  border: 1px solid #ff7300 !important;
 }
 .default-button {
-  border: 1px solid #f3a058 !important;
-  color: rgb(0, 0, 0);
+  border: 1px solid #050505 !important;
+  color: #050505;
   font-size: 16px;
   font-weight: 700;
   line-height: 21px;
@@ -80,7 +80,7 @@
 }
 .default-button:hover {
   color: #050505 !important;
-  border: 2px solid #f3a058 !important;
+  border: 2px solid #050505 !important;
 }
 .layout-content {
   height: fit-content !important;
@@ -101,15 +101,15 @@
   width: 100%;
 }
 .ant-input-affix-wrapper {
-  border: #EE7B2F 1px solid;
+  border: #ff7300 1px solid;
 }
 .ant-input-group-addon {
-  border: #EE7B2F 1px solid !important;
+  border: #ff7300 1px solid !important;
 }
 /* Set the color of the scrollbar track and thumb */
 ::-webkit-scrollbar {
   width: 2px;
-  background-color: #EE7B2F;
+  background-color: #ff7300;
 }
 
 /* Set the border radius of the scrollbar thumb */

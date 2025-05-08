@@ -5,36 +5,41 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import { Tag, Tooltip, Spin, message } from "antd";
-import React, { useState, useEffect } from "react";
-import { getEllipsisTxt } from "../../helpers/formatter";
+import './Home.css';
+
+import React, {
+  useEffect,
+  useState,
+} from 'react';
+
 import {
-  DownloadOutlined,
-  WalletOutlined,
-  CopyOutlined,
-  CheckOutlined,
-  LoadingOutlined,
-  SendOutlined,
-} from "@ant-design/icons";
-import RecentActivities from "../../components/Home/RecentActivities";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { useNavigate } from "react-router-dom";
-import "./Home.css";
-import { getLocalDataAsync } from "../../helpers/storage";
-import { getWalletBalanceByWalletAddress } from "../../services/blockchain.service";
-import { NumericFormat } from "react-number-format";
+  Button,
+  message,
+  Spin,
+} from 'antd';
+import { NumericFormat } from 'react-number-format';
+import { useNavigate } from 'react-router-dom';
+
+import { LoadingOutlined } from '@ant-design/icons';
+
+import RecentActivities from '../../components/Home/RecentActivities';
 import {
-  TOTAL_BALANCE,
-  SEND,
-  REQUEST,
-  BUY,
-  ERROR_RETRIEVE_WALLET_ADDRESS,
-  WALLET_ADDRESS_COPIED,
-  OK,
+  DEFAULT_WALLET_ADDRESS,
+  STORAGE_KEYS,
+} from '../../constants/configs';
+import {
   COPIED,
-} from "../../constants/strings";
-import { DEFAULT_WALLET_ADDRESS, STORAGE_KEYS } from "../../constants/configs";
-import { showAlertBox } from "../../helpers/alerts";
+  ERROR_RETRIEVE_WALLET_ADDRESS,
+  OK,
+  SEND_TOKENS,
+  TOTAL_BALANCE,
+  WALLET_ADDRESS_COPIED,
+} from '../../constants/strings';
+import { showAlertBox } from '../../helpers/alerts';
+import { getLocalDataAsync } from '../../helpers/storage';
+import {
+  getWalletBalanceByWalletAddress,
+} from '../../services/blockchain.service';
 
 function Home() {
   const navigate = useNavigate();
@@ -92,7 +97,7 @@ function Home() {
     }, 2000);
   };
 
-  const handleSendIcon = () => {
+  const handleSend = () => {
     navigate("/send");
   };
 
@@ -126,7 +131,7 @@ function Home() {
     }
   };
 
-  const orangeColor = "#EE7B2F";
+  const orangeColor = "#ff7300";
 
   return (
     <div className="home-container ">
@@ -147,7 +152,7 @@ function Home() {
             />
           )}
         </span>
-        <CopyToClipboard text={walletAddress} onCopy={handleCopyAccount}>
+        {/* <CopyToClipboard text={walletAddress} onCopy={handleCopyAccount}>
           <Tooltip title={isAccountCopied ? "Copied" : "Copy to Clipboard"}>
             <Tag className="total-balance-wallet-address mt-2">
               {getEllipsisTxt(walletAddress, 13)}{" "}
@@ -158,19 +163,11 @@ function Home() {
               )}
             </Tag>
           </Tooltip>
-        </CopyToClipboard>
-        <div className="d-flex justify-content-between mt-4">
-          <div onClick={handleSendIcon}>
-            <div className="total-balance-icons">
-              <div style={{ marginTop: "-2px", marginBottom: "-2px" }}>
-                <SendOutlined
-                  rotate={320}
-                  style={{ fontSize: "18px", cursor: "pointer" }}
-                />
-              </div>
-            </div>
-            <div className="total-balance-action">{SEND}</div>
-          </div>
+        </CopyToClipboard> */}
+        <div className="send-button pt-3">
+          <Button className="primary-button container" onClick={handleSend}>{SEND_TOKENS}</Button>
+        </div>
+        {/* <div className="d-flex justify-content-between mt-4">
           <div>
             <div className="total-balance-icons mx-5">
               <div style={{ marginTop: "-2px", marginBottom: "-2px" }}>
@@ -191,7 +188,7 @@ function Home() {
             </div>
             <div className="total-balance-action">{BUY}</div>
           </div>
-        </div>
+        </div> */}
       </div>
       <RecentActivities />
     </div>

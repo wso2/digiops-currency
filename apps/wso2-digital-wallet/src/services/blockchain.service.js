@@ -4,17 +4,18 @@
 // Dissemination of any information or reproduction of any material contained
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
+import { DateTime } from 'luxon';
+
 import {
-  RPC_ENDPOINT,
   CHAIN_ID,
-  CONTRACT_ADDRESS,
   CONTRACT_ABI,
-  STORAGE_KEYS
-} from "../constants/configs";
-import { DateTime } from "luxon";
-import { getLocalDataAsync } from "../helpers/storage";
-import { getTokenAsync } from "../helpers/auth";
+  CONTRACT_ADDRESS,
+  RPC_ENDPOINT,
+  STORAGE_KEYS,
+} from '../constants/configs';
+import { getTokenAsync } from '../helpers/auth';
+import { getLocalDataAsync } from '../helpers/storage';
 
 export const getRPCProvider = async () => {
   /** we will need this authentication header if we are using a private RPC endpoint with authentication
@@ -110,7 +111,6 @@ export const getRecentTransactions = async (walletAddress) => {
 
   for (const log of events) {
     const parsedLog = contract.interface.parseLog(log);
-
     if (
       parsedLog.args.to.toLowerCase() === walletAddress.toLowerCase() ||
       parsedLog.args.from.toLowerCase() === walletAddress.toLowerCase()

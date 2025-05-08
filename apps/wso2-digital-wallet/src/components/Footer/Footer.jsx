@@ -6,17 +6,21 @@
 // You may not alter or remove any copyright or other notice from copies of this content.
 
 import React from 'react';
+
 import { Layout } from 'antd';
-import { UserOutlined, HistoryOutlined } from "@ant-design/icons";
-import FooterWallet from '../../assets/images/footer-wallet.svg';
-import FooterApps from '../../assets/images/footer-apps.svg';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+
 import {
-  WALLET,
-  APPS,
+  HistoryOutlined,
+  UserOutlined,
+  WalletOutlined,
+} from '@ant-design/icons';
+
+import {
+  HISTORY,
   PROFILE,
-  HISTORY
-} from '../../constants/strings'
+  WALLET,
+} from '../../constants/strings';
 
 const FooterBar = () => {
 
@@ -24,50 +28,38 @@ const FooterBar = () => {
 
   const { Footer } = Layout;
 
-  const handleNavigateApps = () => {
-    navigate('api-key-updater');
-  };
-
   const handleHomeNavigation = () => {
     navigate('/');
-  };
-
-  const handleNavigateProfile = () => {
-    navigate('/profile');
   };
 
   const handleNavigateHistory = () => {
     navigate('/history');
   }
 
+  const handleNavigateProfile = () => {
+    navigate('/profile');
+  };
+
   return (
     <Footer className="text-center" style={{ height: '75px' }}>
       <div className="d-flex justify-content-between">
         <div className="d-flex flex-column">
           <span className="footer-icons" onClick={handleHomeNavigation}>
-            <img src={FooterWallet} alt="Wallet" />
+            <WalletOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
           </span>
           <span className="footer-names">{WALLET}</span>
         </div>
         <div className="d-flex flex-column">
-          <span className="footer-icons mx-2" onClick={handleNavigateApps}>
-            <img src={FooterApps} alt="Apps" />
-          </span>
-          <span className="footer-names">{APPS}</span>
-        </div>
-        <div className="d-flex flex-column">
-          {/* <Dropdown overlay={menu} placement="topCenter"> */}
-          <span className="footer-icons mx-2" onClick={handleNavigateProfile}>
-            <UserOutlined style={{ fontSize: "18px", cursor: "pointer" }} />
-          </span>
-          {/* </Dropdown> */}
-          <span className="footer-names">{PROFILE}</span>
-        </div>
-        <div className="d-flex flex-column">
           <span className="footer-icons" onClick={handleNavigateHistory}>
-            <HistoryOutlined style={{ fontSize: "18px", cursor: "pointer" }} />
+            <HistoryOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
           </span>
           <span className="footer-names">{HISTORY}</span>
+        </div>
+        <div className="d-flex flex-column">
+          <span className="footer-icons mx-2" onClick={handleNavigateProfile}>
+            <UserOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+          </span>
+          <span className="footer-names">{PROFILE}</span>
         </div>
       </div>
     </Footer>

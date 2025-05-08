@@ -5,27 +5,45 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import React, { useState, useEffect } from "react";
-import { Avatar, Button, Tag, Tooltip } from "antd";
-import Identicon from "identicon.js";
-import { SHA256 } from "crypto-js";
-import { CopyOutlined, CheckOutlined } from "@ant-design/icons";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import WalletAddressCopy from "../../components/Home/WalletAddressCopy";
+import './Profile.css';
+
+import React, {
+  useEffect,
+  useState,
+} from 'react';
+
 import {
-  WALLET_PRIVATE_KEY,
-  LOGOUT,
+  Avatar,
+  Button,
+  Tag,
+  Tooltip,
+} from 'antd';
+import { SHA256 } from 'crypto-js';
+import Identicon from 'identicon.js';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useNavigate } from 'react-router-dom';
+
+import {
+  CheckOutlined,
+  CopyOutlined,
+} from '@ant-design/icons';
+
+import WalletAddressCopy from '../../components/Home/WalletAddressCopy';
+import { STORAGE_KEYS } from '../../constants/configs';
+import {
+  COPY_TO_CLIPBOARD,
   ERROR_READING_WALLET_DETAILS,
   ERROR_WHEN_LOGGING_OUT,
-  COPY_TO_CLIPBOARD,
+  LOGOUT,
+  OK,
   WALLET_ADDRESS_COPIED,
-  OK
-} from "../../constants/strings";
-import "./Profile.css";
-import { useNavigate } from "react-router-dom";
-import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
-import { STORAGE_KEYS } from "../../constants/configs";
-import { showAlertBox } from "../../helpers/alerts";
+  WALLET_PRIVATE_KEY,
+} from '../../constants/strings';
+import { showAlertBox } from '../../helpers/alerts';
+import {
+  getLocalDataAsync,
+  saveLocalDataAsync,
+} from '../../helpers/storage';
 
 function Profile() {
   const navigate = useNavigate();
@@ -112,7 +130,7 @@ function Profile() {
         />
       </div>
       <div className="logout-button">
-        <Button className="primary-button container" onClick={handleLogout}>
+        <Button className="default-button container" onClick={handleLogout}>
           {LOGOUT}
         </Button>
       </div>
