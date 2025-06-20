@@ -27,7 +27,7 @@ const WriteFunctionCard: React.FC<FunctionCardProps> = (props) => {
       const hash = await writeContract(config, request);
 
       setResultTrx(hash);
-      toast.success(`Transaction Sunccess!`);
+      toast.success(`Transaction Success!`);
     } catch (error) {
       console.error("Error writing contract:", error);
       toast.error("Error writing contract: " + error);
