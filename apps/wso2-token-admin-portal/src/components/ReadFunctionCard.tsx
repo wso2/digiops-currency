@@ -25,7 +25,7 @@ const ReadFunctionCard: React.FC<FunctionCardProps> = (props) => {
       });
 
       setResult(result);
-      toast.success(`Successfully queried contract: ${result}`);
+      toast.success(`Successfully queried contract`);
     } catch (error) {
       console.error("Error querying contract:", error);
       toast.error("Error querying contract");
