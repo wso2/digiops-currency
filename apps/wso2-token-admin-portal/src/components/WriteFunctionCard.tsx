@@ -30,7 +30,7 @@ const WriteFunctionCard: React.FC<FunctionCardProps> = (props) => {
       toast.success(`Transaction Success!`);
     } catch (error) {
       console.error("Error writing contract:", error);
-      toast.error("Error writing contract: " + error);
+      toast.error("Error writing contract");
     } finally {
       setLoading(false);
     }
