@@ -8,10 +8,5 @@
 import { showAlert } from "../microapp-bridge";
 
 export function showAlertBox(title, message, buttonText) {
-  return new Promise((resolve, reject) => {
-    const callback = () => resolve();
-    const failedToRespondCallback = (err) => reject(err);
-
-    showAlert(title, message, buttonText, callback, failedToRespondCallback);
-  });
+  showAlert(title, message, buttonText, () => {}, () => {});
 }

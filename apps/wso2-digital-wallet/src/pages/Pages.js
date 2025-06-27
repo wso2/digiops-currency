@@ -21,11 +21,7 @@ function Pages() {
       <Route path="/" exact element={<Home />} />
       <Route path="/create-wallet" exact element={<CreateWallet />} />
       <Route path="/send" exact element={<SendAssets />} />
-      <Route
-        path="/confirm-assets-send"
-        exact
-        element={<ConfirmSendAssets />}
-      />
+      <Route path="/confirm-assets-send" exact element={<ConfirmSendAssets />} />
       <Route path="/recover-wallet" exact element={<RecoverWallet />} />
       <Route path="/profile" exact element={<Profile />} />
       <Route path="/history" exact element={<History />} />

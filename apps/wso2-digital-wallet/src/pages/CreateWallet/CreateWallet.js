@@ -59,12 +59,13 @@ function CreateWallet() {
           .then(async () => {
             await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, wallet.address);
             await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, wallet.privateKey);
-            setTimeout(async () => {
-              await showAlertBox(SUCCESS, SUCCESS_WALLET_CREATED, OK);
+            
+            setWalletPhrase(wallet.mnemonic.phrase); //save wallet phrase before phrase is displayed
+            showAlertBox(SUCCESS, SUCCESS_WALLET_CREATED, OK);
+            setTimeout(() => {
               setIsWalletCreated(true);
               setWalletCreateLoading(false);
             }, 5000);
-            setWalletPhrase(wallet.mnemonic.phrase);
           })
           .catch(async (error) => {
             console.log(error);
