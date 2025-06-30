@@ -5,7 +5,7 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import React, {
+import {
   useEffect,
   useState,
 } from 'react';
@@ -35,6 +35,20 @@ function RecentActivities() {
 
   const orangeColor = "#ff7300";
 
+  const checkBridgeReady = () => {
+    return window.nativebridge && window.ReactNativeWebView;
+  };
+
+  const waitForBridge = async (maxWaitTime = 5000) => {
+    const startTime = Date.now();
+    
+    while (!checkBridgeReady() && (Date.now() - startTime) < maxWaitTime) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    return checkBridgeReady();
+  };
+
   const fetchWalletAddress = async () => {
     try {
       const walletAddressResponse = await getLocalDataAsync(
@@ -59,20 +73,24 @@ function RecentActivities() {
   }, [walletAddress]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       if (walletAddress) {
         fetchRecentTransactionsDoInBackground();
       }
-      // Place your function here.
     }, 5000);
 
-    // This is important, as it clears the interval when the component is unmounted.
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
 
   const fetchRecentTransactions = async () => {
     try {
+      const isBridgeReady = await waitForBridge();
+      if (!isBridgeReady) {
+        console.error("Bridge not ready for recent transactions fetch");
+        return;
+      }
+
       setIsRecentTransactionsLoading(true);
       const recentTransactions = await getRecentTransactions(walletAddress);
       setRecentTransactions(recentTransactions);
@@ -85,6 +103,12 @@ function RecentActivities() {
 
   const fetchRecentTransactionsDoInBackground = async () => {
     try {
+      const isBridgeReady = await waitForBridge();
+      if (!isBridgeReady) {
+        console.error("Bridge not ready for background recent transactions fetch");
+        return;
+      }
+
       const recentTransactions = await getRecentTransactions(walletAddress);
       setRecentTransactions(recentTransactions);
     } catch (error) {

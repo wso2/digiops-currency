@@ -8,13 +8,13 @@
 */
 
 .input-container {
-    display: flex;
-    align-items: center;
-  }
+  display: flex;
+  align-items: center;
+}
   
-  .input-label {
-    margin-right: 8px;
-  }
+.input-label {
+  margin-right: 8px;
+}
 
 .recover-wallet-content {
   height: 75vh;

@@ -7,7 +7,7 @@
 
 import './NavBar.css';
 
-import React, {
+import {
   useEffect,
   useState,
 } from 'react';
@@ -21,6 +21,7 @@ import { useThemeSwitcher } from 'react-css-theme-switcher';
 
 import {
   CONNECTED,
+  CONNECTING,
   NOT_CONNECTED,
   WSO2_WALLET,
 } from '../../constants/strings';
@@ -28,23 +29,86 @@ import { getCurrentBlockNumber } from '../../services/blockchain.service.js';
 
 const NavBar = () => {
   const [currentBlockNumber, setCurrentBlockNumber] = useState(null);
-  const { switcher, currentTheme } = useThemeSwitcher();
+  const [connectionStatus, setConnectionStatus] = useState(CONNECTING);
+  const [bridgeReady, setBridgeReady] = useState(false);
+
+  const checkBridgeReady = () => {
+    return window.nativebridge && window.ReactNativeWebView;
+  };
+
+  const waitForBridge = async (maxWaitTime = 5000) => {
+    const startTime = Date.now();
+    
+    while (!checkBridgeReady() && (Date.now() - startTime) < maxWaitTime) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    return checkBridgeReady();
+  };
 
   const getCurrentBlockStatus = async () => {
-    const blockNumber = await getCurrentBlockNumber();
-    if (blockNumber === null) {
-      console.log("Error in fetching block number");
-    } else {
-      setCurrentBlockNumber(blockNumber);
+    setConnectionStatus(CONNECTING);
+
+    try {
+      const isBridgeReady = await waitForBridge();
+      if (!isBridgeReady) {
+        setConnectionStatus(NOT_CONNECTED);
+        setCurrentBlockNumber(null);
+        return;
+      }
+
+      console.log("Fetching current block number...");
+      const blockNumber = await getCurrentBlockNumber();
+      console.log(`Block number fetched: ${blockNumber}`);
+      if (blockNumber === null) {
+        console.log("Error in fetching block number");
+        setConnectionStatus(NOT_CONNECTED);
+        setCurrentBlockNumber(null);
+      } else {
+        setCurrentBlockNumber(blockNumber);
+        setConnectionStatus(CONNECTED);
+      }
+      console.log("current block number: ", blockNumber);
+    } catch (error) {
+      console.error("error fetching block status:", error);
+      setCurrentBlockNumber(null);
+      setConnectionStatus(NOT_CONNECTED);
     }
-    console.log("current block number: ", blockNumber);
   };
 
   useEffect(() => {
-    getCurrentBlockStatus();
+    const initializeWithBridgeCheck = async () => {
+      try {
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        const isBridgeReady = await waitForBridge();
+        setBridgeReady(isBridgeReady);
+        
+        if (isBridgeReady) {
+          await getCurrentBlockStatus();
+        } else {
+          setConnectionStatus(NOT_CONNECTED);
+        }
+      } catch (error) {
+        console.error('Bridge initialization error:', error);
+        setConnectionStatus(NOT_CONNECTED);
+      }
+    };
+
+    initializeWithBridgeCheck();
   }, []);
 
-  // const toggleTheme = async () => {
+  useEffect(() => {
+  if (!bridgeReady) return;
+  
+  const interval = setInterval(async () => {
+    await getCurrentBlockStatus();
+  }, 30000);
+  
+  return () => clearInterval(interval);
+}, [bridgeReady]);
+
+// const toggleTheme = async () => {
   //   if (currentTheme === 'light') {
   //     switcher({ theme: 'dark' });
   //     saveLocalDataAsync(STORAGE_KEYS.THEME_MODE, 'dark')
@@ -53,7 +117,6 @@ const NavBar = () => {
   //     switcher({ theme: 'light' });
   //   }
   // };
-
 
   return (
     <>
@@ -81,7 +144,7 @@ const NavBar = () => {
         ) : (
           <Tag>
             <span className="status-dot status-dot-not-connected" />
-            {NOT_CONNECTED}
+            {connectionStatus === CONNECTING ? CONNECTING : NOT_CONNECTED}
           </Tag>
         )}
       </div>

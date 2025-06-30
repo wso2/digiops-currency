@@ -6,7 +6,7 @@
 // You may not alter or remove any copyright or other notice from copies of this content.
 
 import { Avatar, Button } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./CreateWallet.css";
 import Wso2MainImg from "../../assets/images/wso2_main.png";
 import { ethers } from "ethers";
@@ -25,7 +25,7 @@ import {
 import { STORAGE_KEYS } from "../../constants/configs";
 import { saveLocalDataAsync, getLocalDataAsync } from "../../helpers/storage";
 import { updateUserWalletAddress } from "../../services/wallet.service";
-import { showAlertBox } from "../../helpers/alerts";
+import { showAlertBox, showToast } from "../../helpers/alerts";
 
 function CreateWallet() {
   const [walletCreateLoading, setWalletCreateLoading] = useState(false);
@@ -60,21 +60,22 @@ function CreateWallet() {
             await saveLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS, wallet.address);
             await saveLocalDataAsync(STORAGE_KEYS.PRIVATE_KEY, wallet.privateKey);
             
-            setWalletPhrase(wallet.mnemonic.phrase); //save wallet phrase before phrase is displayed
-            showAlertBox(SUCCESS, SUCCESS_WALLET_CREATED, OK);
+            setWalletPhrase(wallet.mnemonic.phrase);
+            showToast(SUCCESS, SUCCESS_WALLET_CREATED);
+
             setTimeout(() => {
               setIsWalletCreated(true);
               setWalletCreateLoading(false);
-            }, 5000);
+            }, 1000);
           })
           .catch(async (error) => {
             console.log(error);
-            await showAlertBox(ERROR, ERROR_CREATING_WALLET, OK);
+            showAlertBox(ERROR, ERROR_CREATING_WALLET, OK);
             setWalletCreateLoading(false);
           });
       }
     } catch (error) {
-      await showAlertBox(ERROR, ERROR_CREATING_WALLET, OK);
+      showAlertBox(ERROR, ERROR_CREATING_WALLET, OK);
       setIsWalletCreated(false);
       setWalletCreateLoading(false);
     }

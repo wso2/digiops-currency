@@ -8,6 +8,7 @@
 // nav bar
 export const WSO2_WALLET = "WSO2 Wallet";
 export const CONNECTED = "Connected";
+export const CONNECTING = "Connecting";
 export const NOT_CONNECTED = "Not Connected";
 
 // home page

@@ -54,8 +54,28 @@ function SendAssets() {
     }
   };
 
+  const checkBridgeReady = () => {
+    return window.nativebridge && window.ReactNativeWebView;
+  };
+
+  const waitForBridge = async (maxWaitTime = 5000) => {
+    const startTime = Date.now();
+    
+    while (!checkBridgeReady() && (Date.now() - startTime) < maxWaitTime) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    return checkBridgeReady();
+  };
+
   const fetchCurrentTokenBalance = async () => {
     try {
+      const isBridgeReady = await waitForBridge();
+      if (!isBridgeReady) {
+        console.error('Bridge not ready for token balance fetch in SendAssets');
+        return;
+      }
+
       setIsTokenBalanceLoading(true);
       const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
       setTokenBalance(tokenBalance);

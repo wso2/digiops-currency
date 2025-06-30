@@ -7,7 +7,7 @@
 
 import './Home.css';
 
-import React, {
+import {
   useEffect,
   useState,
 } from 'react';
@@ -78,7 +78,7 @@ function Home() {
   }, [walletAddress]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       if (walletAddress !== DEFAULT_WALLET_ADDRESS && walletAddress) {
         fetchCurrentTokenBalanceDoInBackground();
       }
@@ -108,8 +108,28 @@ function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
 
+  const checkBridgeReady = () => {
+    return window.nativebridge && window.ReactNativeWebView;
+  };
+
+  const waitForBridge = async (maxWaitTime = 5000) => {
+    const startTime = Date.now();
+    
+    while (!checkBridgeReady() && (Date.now() - startTime) < maxWaitTime) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    return checkBridgeReady();
+  };
+
   const fetchCurrentTokenBalance = async () => {
     try {
+      const isBridgeReady = await waitForBridge();
+      if (!isBridgeReady) {
+        console.error("Bridge not ready for token balance fetch");
+        return;
+      }
+      
       setIsTokenBalanceLoading(true);
       const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
       setTokenBalance(tokenBalance);
@@ -123,6 +143,12 @@ function Home() {
 
   const fetchCurrentTokenBalanceDoInBackground = async () => {
     try {
+      const isBridgeReady = await waitForBridge();
+      if (!isBridgeReady) {
+        console.error("Bridge not ready for background token balance fetch");
+        return;
+      }
+
       const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
       setTokenBalance(tokenBalance);
     } catch (error) {
