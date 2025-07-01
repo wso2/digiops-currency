@@ -13,13 +13,14 @@ export function showAlertBox(title, message, buttonText) {
 }
 
 export function showToast(type, content, duration = 5) {
-  if (type.toLowerCase() === "success") {
+  const normalizedType = type.toLowerCase();
+  if (normalizedType === "success") {
     message.success(content, duration);
-  } else if (type === "error") {
+  } else if (normalizedType === "error") {
     message.error(content, duration);
-  } else if (type === "info") {
+  } else if (normalizedType === "info") {
     message.info(content, duration);
-  } else if (type === "warning") {
+  } else if (normalizedType === "warning") {
     message.warning(content, duration);
   }
 }
