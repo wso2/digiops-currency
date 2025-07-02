@@ -77,6 +77,9 @@ export const ERROR_CREATING_WALLET =
 export const ERROR_TRANSFERRING_TOKEN =
   "Something went wrong when transferring token";
 
+export const ERROR_BRIDGE_NOT_READY =
+  "Bridge not ready, please try again later";
+
 // Success messages
 export const SUCCESS_TOKEN_TRANSFER = "Token has been transferred successfully";
 export const SUCCESS_WALLET_CREATED = "Wallet has been created successfully";

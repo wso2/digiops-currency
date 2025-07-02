@@ -17,7 +17,8 @@ import {
   ERROR_FETCHING_LOCAL_TX_DETAILS,
   ERROR_RESETTING_TX_VALUES,
   ERROR_SAVING_TX_DETAILS,
-  ERROR_RETRIEVE_WALLET_ADDRESS
+  ERROR_RETRIEVE_WALLET_ADDRESS,
+  ERROR_BRIDGE_NOT_READY
 } from "../../constants/strings";
 import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
 import { STORAGE_KEYS, DEFAULT_WALLET_ADDRESS } from "../../constants/configs";
@@ -72,7 +73,7 @@ function SendAssets() {
     try {
       const isBridgeReady = await waitForBridge();
       if (!isBridgeReady) {
-        console.error('Bridge not ready for token balance fetch in SendAssets');
+        console.error(ERROR_BRIDGE_NOT_READY);
         return;
       }
 

@@ -31,15 +31,14 @@ import {
 import WalletAddressCopy from '../../components/Home/WalletAddressCopy';
 import { STORAGE_KEYS } from '../../constants/configs';
 import {
-  COPY_TO_CLIPBOARD,
   ERROR_READING_WALLET_DETAILS,
   ERROR_WHEN_LOGGING_OUT,
   LOGOUT,
-  OK,
+  SUCCESS,
   WALLET_ADDRESS_COPIED,
   WALLET_PRIVATE_KEY,
 } from '../../constants/strings';
-import { showAlertBox } from '../../helpers/alerts';
+import { showToast } from '../../helpers/alerts';
 import {
   getLocalDataAsync,
   saveLocalDataAsync,
@@ -83,7 +82,7 @@ function Profile() {
   const avatar1Url = generateAvatar("avatar1");
 
   const handleCopyAccount = async () => {
-    showAlertBox(COPY_TO_CLIPBOARD, WALLET_ADDRESS_COPIED, OK);
+    showToast(SUCCESS, WALLET_ADDRESS_COPIED);
     setIsAccountCopied(true);
     setTimeout(() => {
       setIsAccountCopied(false);
