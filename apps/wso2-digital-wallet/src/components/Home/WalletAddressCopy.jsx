@@ -23,7 +23,7 @@ function WalletAddressCopy(props) {
   }, []);
 
   const handleCopyWalletAddress = async () => {
-    await showAlertBox(COPIED, `${topic} ${COPIED}`, OK);
+    showAlertBox(COPIED, `${topic} ${COPIED}`, OK);
     setWalletAddressCopied(true);
     setTimeout(() => {
       setWalletAddressCopied(false);

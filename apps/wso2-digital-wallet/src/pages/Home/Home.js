@@ -90,7 +90,7 @@ function Home() {
   }, [walletAddress]);
 
   const handleCopyAccount = async () => {
-    await showAlertBox(COPIED, WALLET_ADDRESS_COPIED, OK);
+    showAlertBox(COPIED, WALLET_ADDRESS_COPIED, OK);
     setIsAccountCopied(true);
     setTimeout(() => {
       setIsAccountCopied(false);

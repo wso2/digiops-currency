@@ -105,8 +105,6 @@ export default function RecoverWallet() {
     return inputs;
   };
 
-
-
   const handleContinue = () => {
     navigate("/");
   }

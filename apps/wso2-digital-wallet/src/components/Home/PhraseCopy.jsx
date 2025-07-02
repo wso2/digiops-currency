@@ -26,7 +26,7 @@ function WalletAddressCopy(props) {
     const [walletPhraseWords, setWalletPhraseWords] = useState([])
 
     const handleCopyPhrase = async () => {
-        await showAlertBox(COPIED, PHRASE_COPIED, OK);
+        showAlertBox(COPIED, PHRASE_COPIED, OK);
         setPhraseCopied(true)
     };
 

@@ -7,7 +7,7 @@
 
 import './Profile.css';
 
-import React, {
+import {
   useEffect,
   useState,
 } from 'react';
@@ -83,7 +83,7 @@ function Profile() {
   const avatar1Url = generateAvatar("avatar1");
 
   const handleCopyAccount = async () => {
-    await showAlertBox(COPY_TO_CLIPBOARD, WALLET_ADDRESS_COPIED, OK);
+    showAlertBox(COPY_TO_CLIPBOARD, WALLET_ADDRESS_COPIED, OK);
     setIsAccountCopied(true);
     setTimeout(() => {
       setIsAccountCopied(false);
