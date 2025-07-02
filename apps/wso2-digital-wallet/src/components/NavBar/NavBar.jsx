@@ -31,7 +31,6 @@ const NavBar = () => {
   const [currentBlockNumber, setCurrentBlockNumber] = useState(null);
   const [connectionStatus, setConnectionStatus] = useState(CONNECTING);
   const [bridgeReady, setBridgeReady] = useState(false);
-  const [isFetchingInBackground, setIsFetchingInBackground] = useState(false);
 
   const checkBridgeReady = () => {
     return window.nativebridge && window.ReactNativeWebView;
@@ -72,34 +71,6 @@ const NavBar = () => {
     }
   };
 
-  const getCurrentBlockStatusInBackground = async () => {
-    if (isFetchingInBackground) return;
-    
-    setIsFetchingInBackground(true);
-    try {
-      const isBridgeReady = await waitForBridge();
-      if (!isBridgeReady) {
-        setConnectionStatus(NOT_CONNECTED);
-        setCurrentBlockNumber(null);
-        return;
-      }
-
-      const blockNumber = await getCurrentBlockNumber();
-      if (blockNumber === null) {
-        setConnectionStatus(NOT_CONNECTED);
-        setCurrentBlockNumber(null);
-      } else {
-        setCurrentBlockNumber(blockNumber);
-        setConnectionStatus(CONNECTED);
-      }
-    } catch (error) {
-      console.error("error fetching block status:", error);
-      setCurrentBlockNumber(null);
-      setConnectionStatus(NOT_CONNECTED);
-    } finally {
-      setIsFetchingInBackground(false);
-    }
-  };
 
   useEffect(() => {
     const initializeWithBridgeCheck = async () => {
@@ -123,17 +94,6 @@ const NavBar = () => {
     initializeWithBridgeCheck();
   }, []);
 
-  useEffect(() => {
-  if (!bridgeReady) return;
-  
-  const interval = setInterval(async () => {
-    if (!isFetchingInBackground) {
-      await getCurrentBlockStatusInBackground();
-    }
-  }, 30000);
-  
-  return () => clearInterval(interval);
-}, [bridgeReady, isFetchingInBackground]);
 
 // const toggleTheme = async () => {
   //   if (currentTheme === 'light') {
