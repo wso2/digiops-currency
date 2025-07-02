@@ -103,7 +103,7 @@ export const getRecentTransactions = async (walletAddress) => {
   };
 
   const currentBlockNumber = await getCurrentBlockNumber();
-  const startBlockNumber = currentBlockNumber - 10000;
+  const startBlockNumber = currentBlockNumber - 50000; //increase to get more transactions
   filter.fromBlock = startBlockNumber;
   filter.toBlock = currentBlockNumber;
   const events = await provider.getLogs(filter);

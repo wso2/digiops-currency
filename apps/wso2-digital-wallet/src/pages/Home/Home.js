@@ -52,7 +52,7 @@ function Home() {
       const walletAddressResponse = await getLocalDataAsync(
         STORAGE_KEYS.WALLET_ADDRESS
       );
-      if (walletAddressResponse !== walletAddress) {
+      if (walletAddressResponse && walletAddressResponse !== walletAddress) {
         setWalletAddress(walletAddressResponse);
       }
     } catch (error) {
@@ -65,15 +65,21 @@ function Home() {
   const [tokenBalance, setTokenBalance] = useState(0);
   const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
   const [isFetchingInBackground, setIsFetchingInBackground] = useState(false);
+  const [recentActivitiesKey, setRecentActivitiesKey] = useState(0);
+
+  const refreshRecentActivities = () => {
+    setRecentActivitiesKey(prev => prev + 1);
+  };
 
   useEffect(() => {
     fetchWalletAddress();
     // eslint-disable-next-line
-  }, [walletAddress]);
+  }, []);
 
   useEffect(() => {
     if (walletAddress !== DEFAULT_WALLET_ADDRESS && walletAddress) {
       fetchCurrentTokenBalance();
+      refreshRecentActivities();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
@@ -135,6 +141,7 @@ function Home() {
       const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
       setTokenBalance(tokenBalance);
       setIsTokenBalanceLoading(false);
+      refreshRecentActivities();
     } catch (error) {
       console.debug("DEBUG: error while fetching token balance", error);
       setIsTokenBalanceLoading(false);
@@ -222,7 +229,7 @@ function Home() {
           </div>
         </div> */}
       </div>
-      <RecentActivities />
+      <RecentActivities key={recentActivitiesKey}/>
     </div>
   );
 }

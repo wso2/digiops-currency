@@ -57,19 +57,14 @@ const NavBar = () => {
         setCurrentBlockNumber(null);
         return;
       }
-
-      console.log("Fetching current block number...");
       const blockNumber = await getCurrentBlockNumber();
-      console.log(`Block number fetched: ${blockNumber}`);
       if (blockNumber === null) {
-        console.log("Error in fetching block number");
         setConnectionStatus(NOT_CONNECTED);
         setCurrentBlockNumber(null);
       } else {
         setCurrentBlockNumber(blockNumber);
         setConnectionStatus(CONNECTED);
       }
-      console.log("current block number: ", blockNumber);
     } catch (error) {
       console.error("error fetching block status:", error);
       setCurrentBlockNumber(null);
