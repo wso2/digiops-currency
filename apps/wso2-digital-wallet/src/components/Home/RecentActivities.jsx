@@ -21,6 +21,7 @@ import {
 import { STORAGE_KEYS } from '../../constants/configs';
 import {
   ERROR_READING_WALLET_DETAILS,
+  ERROR_BRIDGE_NOT_READY,
   RECENT_ACTIVITIES,
   WSO2_TOKEN,
 } from '../../constants/strings';
@@ -32,6 +33,7 @@ function RecentActivities() {
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [isRecentTransactionsLoading, setIsRecentTransactionsLoading] =
     useState(false);
+  const [isFetchingInBackground, setIsFetchingInBackground] = useState(false);
 
   const orangeColor = "#ff7300";
 
@@ -73,21 +75,21 @@ function RecentActivities() {
   }, [walletAddress]);
 
   useEffect(() => {
-    const interval = setInterval(async () => {
-      if (walletAddress) {
+    const interval = setInterval(() => {
+      if (walletAddress && !isFetchingInBackground) {
         fetchRecentTransactionsDoInBackground();
       }
     }, 5000);
 
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletAddress]);
+  }, [walletAddress, isFetchingInBackground]);
 
   const fetchRecentTransactions = async () => {
     try {
       const isBridgeReady = await waitForBridge();
       if (!isBridgeReady) {
-        console.error("Bridge not ready for recent transactions fetch");
+        console.error(ERROR_BRIDGE_NOT_READY);
         return;
       }
 
@@ -102,10 +104,13 @@ function RecentActivities() {
   };
 
   const fetchRecentTransactionsDoInBackground = async () => {
+    if (isFetchingInBackground) return;
+    
+    setIsFetchingInBackground(true);
     try {
       const isBridgeReady = await waitForBridge();
       if (!isBridgeReady) {
-        console.error("Bridge not ready for background recent transactions fetch");
+        console.error(ERROR_BRIDGE_NOT_READY);
         return;
       }
 
@@ -113,6 +118,8 @@ function RecentActivities() {
       setRecentTransactions(recentTransactions);
     } catch (error) {
       console.error("error while fetching recent transactions", error);
+    } finally {
+      setIsFetchingInBackground(false);
     }
   };
 

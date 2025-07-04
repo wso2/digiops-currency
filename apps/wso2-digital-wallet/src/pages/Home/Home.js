@@ -28,14 +28,14 @@ import {
   STORAGE_KEYS,
 } from '../../constants/configs';
 import {
-  COPIED,
   ERROR_RETRIEVE_WALLET_ADDRESS,
-  OK,
+  ERROR_BRIDGE_NOT_READY,
   SEND_TOKENS,
+  SUCCESS,
   TOTAL_BALANCE,
   WALLET_ADDRESS_COPIED,
 } from '../../constants/strings';
-import { showAlertBox } from '../../helpers/alerts';
+import { showToast } from '../../helpers/alerts';
 import { getLocalDataAsync } from '../../helpers/storage';
 import {
   getWalletBalanceByWalletAddress,
@@ -52,7 +52,7 @@ function Home() {
       const walletAddressResponse = await getLocalDataAsync(
         STORAGE_KEYS.WALLET_ADDRESS
       );
-      if (walletAddressResponse !== walletAddress) {
+      if (walletAddressResponse && walletAddressResponse !== walletAddress) {
         setWalletAddress(walletAddressResponse);
       }
     } catch (error) {
@@ -64,22 +64,29 @@ function Home() {
   const [isAccountCopied, setIsAccountCopied] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(0);
   const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
+  const [isFetchingInBackground, setIsFetchingInBackground] = useState(false);
+  const [recentActivitiesKey, setRecentActivitiesKey] = useState(0);
+
+  const refreshRecentActivities = () => {
+    setRecentActivitiesKey(prev => prev + 1);
+  };
 
   useEffect(() => {
     fetchWalletAddress();
     // eslint-disable-next-line
-  }, [walletAddress]);
+  }, []);
 
   useEffect(() => {
     if (walletAddress !== DEFAULT_WALLET_ADDRESS && walletAddress) {
       fetchCurrentTokenBalance();
+      refreshRecentActivities();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
 
   useEffect(() => {
     const interval = setInterval(async () => {
-      if (walletAddress !== DEFAULT_WALLET_ADDRESS && walletAddress) {
+      if (walletAddress !== DEFAULT_WALLET_ADDRESS && walletAddress && !isFetchingInBackground) {
         fetchCurrentTokenBalanceDoInBackground();
       }
     }, 5000);
@@ -87,10 +94,10 @@ function Home() {
     // This is important, as it clears the interval when the component is unmounted.
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletAddress]);
+  }, [walletAddress, isFetchingInBackground]);
 
   const handleCopyAccount = async () => {
-    await showAlertBox(COPIED, WALLET_ADDRESS_COPIED, OK);
+    showToast(SUCCESS, WALLET_ADDRESS_COPIED);
     setIsAccountCopied(true);
     setTimeout(() => {
       setIsAccountCopied(false);
@@ -126,7 +133,7 @@ function Home() {
     try {
       const isBridgeReady = await waitForBridge();
       if (!isBridgeReady) {
-        console.error("Bridge not ready for token balance fetch");
+        console.error(ERROR_BRIDGE_NOT_READY);
         return;
       }
       
@@ -134,6 +141,7 @@ function Home() {
       const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
       setTokenBalance(tokenBalance);
       setIsTokenBalanceLoading(false);
+      refreshRecentActivities();
     } catch (error) {
       console.debug("DEBUG: error while fetching token balance", error);
       setIsTokenBalanceLoading(false);
@@ -142,10 +150,13 @@ function Home() {
   };
 
   const fetchCurrentTokenBalanceDoInBackground = async () => {
+    if (isFetchingInBackground) return;
+    
+    setIsFetchingInBackground(true);
     try {
       const isBridgeReady = await waitForBridge();
       if (!isBridgeReady) {
-        console.error("Bridge not ready for background token balance fetch");
+        console.error(ERROR_BRIDGE_NOT_READY);
         return;
       }
 
@@ -154,6 +165,8 @@ function Home() {
     } catch (error) {
       setTokenBalance(0);
       console.debug("DEBUG: error while fetching token balance", error);
+    } finally {
+      setIsFetchingInBackground(false);
     }
   };
 
@@ -216,7 +229,7 @@ function Home() {
           </div>
         </div> */}
       </div>
-      <RecentActivities />
+      <RecentActivities key={recentActivitiesKey}/>
     </div>
   );
 }

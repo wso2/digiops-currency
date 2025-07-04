@@ -20,6 +20,7 @@ import {
   ERROR_FETCHING_LOCAL_TX_DETAILS,
   ERROR_RESETTING_TX_VALUES,
   ERROR_TRANSFERRING_TOKEN,
+  ERROR_BRIDGE_NOT_READY,
   OK,
   SUCCESS,
   SUCCESS_TOKEN_TRANSFER
@@ -101,8 +102,8 @@ function ConfirmSendAssets() {
     try {
       const isBridgeReady = await waitForBridge();
       if (!isBridgeReady) {
-        console.error('Bridge not ready for token transfer');
-        await showAlertBox(ERROR, 'Bridge not ready for transfer', OK);
+        console.error(ERROR_BRIDGE_NOT_READY);
+        showAlertBox(ERROR, ERROR_BRIDGE_NOT_READY, OK);
         return;
       }
 
@@ -110,7 +111,7 @@ function ConfirmSendAssets() {
       const receipt = await transferToken(senderAddress, sendAmount);
       if (receipt) {
         await resetInputFields();
-        await showAlertBox(SUCCESS, SUCCESS_TOKEN_TRANSFER, OK);
+        showAlertBox(SUCCESS, SUCCESS_TOKEN_TRANSFER, OK);
         setTimeout(() => {
           navigate("/");
         }, 500);
@@ -118,7 +119,7 @@ function ConfirmSendAssets() {
       setIsTransferLoading(false);
     } catch (error) {
       console.log("error while transferring token", error);
-      await showAlertBox(ERROR, ERROR_TRANSFERRING_TOKEN, OK);
+      showAlertBox(ERROR, ERROR_TRANSFERRING_TOKEN, OK);
       setIsTransferLoading(false);
     }
   };

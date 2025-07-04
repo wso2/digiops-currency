@@ -67,9 +67,6 @@ export default function RecoverWallet() {
         const phrase = wordList.join(' ');
         const wallet = ethers.Wallet.fromMnemonic(phrase);
 
-        // update backend with the recovered wallet address
-        await updateUserWalletAddress(wallet.address);
-
         setWalletAddress(wallet.address);
         setPrivateKey(wallet.privateKey);
 
@@ -107,8 +104,6 @@ export default function RecoverWallet() {
     }
     return inputs;
   };
-
-
 
   const handleContinue = () => {
     navigate("/");

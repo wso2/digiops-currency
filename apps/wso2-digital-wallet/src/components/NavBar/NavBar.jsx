@@ -56,25 +56,21 @@ const NavBar = () => {
         setCurrentBlockNumber(null);
         return;
       }
-
-      console.log("Fetching current block number...");
       const blockNumber = await getCurrentBlockNumber();
-      console.log(`Block number fetched: ${blockNumber}`);
       if (blockNumber === null) {
-        console.log("Error in fetching block number");
         setConnectionStatus(NOT_CONNECTED);
         setCurrentBlockNumber(null);
       } else {
         setCurrentBlockNumber(blockNumber);
         setConnectionStatus(CONNECTED);
       }
-      console.log("current block number: ", blockNumber);
     } catch (error) {
       console.error("error fetching block status:", error);
       setCurrentBlockNumber(null);
       setConnectionStatus(NOT_CONNECTED);
     }
   };
+
 
   useEffect(() => {
     const initializeWithBridgeCheck = async () => {
@@ -98,15 +94,6 @@ const NavBar = () => {
     initializeWithBridgeCheck();
   }, []);
 
-  useEffect(() => {
-  if (!bridgeReady) return;
-  
-  const interval = setInterval(async () => {
-    await getCurrentBlockStatus();
-  }, 30000);
-  
-  return () => clearInterval(interval);
-}, [bridgeReady]);
 
 // const toggleTheme = async () => {
   //   if (currentTheme === 'light') {
