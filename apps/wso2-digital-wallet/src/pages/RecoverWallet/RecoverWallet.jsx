@@ -11,6 +11,7 @@ import { Col, Row } from 'reactstrap';
 import { ethers } from 'ethers';
 import WalletAddressCopy from '../../components/Home/WalletAddressCopy'
 import { useNavigate } from "react-router-dom";
+import { updateUserWalletAddress } from '../../services/wallet.service';
 import './RecoverWallet.css'
 import {
   RECOVER_WALLET,
@@ -65,6 +66,7 @@ export default function RecoverWallet() {
       try {
         const phrase = wordList.join(' ');
         const wallet = ethers.Wallet.fromMnemonic(phrase);
+
         setWalletAddress(wallet.address);
         setPrivateKey(wallet.privateKey);
 
@@ -102,8 +104,6 @@ export default function RecoverWallet() {
     }
     return inputs;
   };
-
-
 
   const handleContinue = () => {
     navigate("/");

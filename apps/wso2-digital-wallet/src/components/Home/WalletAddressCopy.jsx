@@ -9,8 +9,8 @@ import React, { useState, useEffect } from "react";
 import { CopyOutlined, CheckOutlined } from "@ant-design/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Input, Button } from "antd";
-import { showAlertBox } from "../../helpers/alerts";
-import { COPIED, OK } from "../../constants/strings";
+import { showToast } from "../../helpers/alerts";
+import { COPIED, SUCCESS } from "../../constants/strings";
 
 function WalletAddressCopy(props) {
   const { address, topic, buttonText = "Show Private Key" } = props;
@@ -23,7 +23,7 @@ function WalletAddressCopy(props) {
   }, []);
 
   const handleCopyWalletAddress = async () => {
-    await showAlertBox(COPIED, `${topic} ${COPIED}`, OK);
+    showToast(SUCCESS, `${topic} ${COPIED}`);
     setWalletAddressCopied(true);
     setTimeout(() => {
       setWalletAddressCopied(false);

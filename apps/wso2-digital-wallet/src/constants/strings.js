@@ -8,6 +8,7 @@
 // nav bar
 export const WSO2_WALLET = "WSO2 Wallet";
 export const CONNECTED = "Connected";
+export const CONNECTING = "Connecting";
 export const NOT_CONNECTED = "Not Connected";
 
 // home page
@@ -75,6 +76,9 @@ export const ERROR_CREATING_WALLET =
 
 export const ERROR_TRANSFERRING_TOKEN =
   "Something went wrong when transferring token";
+
+export const ERROR_BRIDGE_NOT_READY =
+  "Bridge not ready, please try again later";
 
 // Success messages
 export const SUCCESS_TOKEN_TRANSFER = "Token has been transferred successfully";

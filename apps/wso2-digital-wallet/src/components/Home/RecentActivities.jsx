@@ -5,7 +5,7 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import React, {
+import {
   useEffect,
   useState,
 } from 'react';
@@ -21,6 +21,7 @@ import {
 import { STORAGE_KEYS } from '../../constants/configs';
 import {
   ERROR_READING_WALLET_DETAILS,
+  ERROR_BRIDGE_NOT_READY,
   RECENT_ACTIVITIES,
   WSO2_TOKEN,
 } from '../../constants/strings';
@@ -32,8 +33,23 @@ function RecentActivities() {
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [isRecentTransactionsLoading, setIsRecentTransactionsLoading] =
     useState(false);
+  const [isFetchingInBackground, setIsFetchingInBackground] = useState(false);
 
   const orangeColor = "#ff7300";
+
+  const checkBridgeReady = () => {
+    return window.nativebridge && window.ReactNativeWebView;
+  };
+
+  const waitForBridge = async (maxWaitTime = 5000) => {
+    const startTime = Date.now();
+    
+    while (!checkBridgeReady() && (Date.now() - startTime) < maxWaitTime) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    return checkBridgeReady();
+  };
 
   const fetchWalletAddress = async () => {
     try {
@@ -60,19 +76,23 @@ function RecentActivities() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (walletAddress) {
+      if (walletAddress && !isFetchingInBackground) {
         fetchRecentTransactionsDoInBackground();
       }
-      // Place your function here.
     }, 5000);
 
-    // This is important, as it clears the interval when the component is unmounted.
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletAddress]);
+  }, [walletAddress, isFetchingInBackground]);
 
   const fetchRecentTransactions = async () => {
     try {
+      const isBridgeReady = await waitForBridge();
+      if (!isBridgeReady) {
+        console.error(ERROR_BRIDGE_NOT_READY);
+        return;
+      }
+
       setIsRecentTransactionsLoading(true);
       const recentTransactions = await getRecentTransactions(walletAddress);
       setRecentTransactions(recentTransactions);
@@ -84,11 +104,22 @@ function RecentActivities() {
   };
 
   const fetchRecentTransactionsDoInBackground = async () => {
+    if (isFetchingInBackground) return;
+    
+    setIsFetchingInBackground(true);
     try {
+      const isBridgeReady = await waitForBridge();
+      if (!isBridgeReady) {
+        console.error(ERROR_BRIDGE_NOT_READY);
+        return;
+      }
+
       const recentTransactions = await getRecentTransactions(walletAddress);
       setRecentTransactions(recentTransactions);
     } catch (error) {
       console.error("error while fetching recent transactions", error);
+    } finally {
+      setIsFetchingInBackground(false);
     }
   };
 

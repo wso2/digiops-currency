@@ -6,12 +6,21 @@
 // You may not alter or remove any copyright or other notice from copies of this content.
 
 import { showAlert } from "../microapp-bridge";
+import { message } from "antd";
 
 export function showAlertBox(title, message, buttonText) {
-  return new Promise((resolve, reject) => {
-    const callback = () => resolve();
-    const failedToRespondCallback = (err) => reject(err);
+  showAlert(title, message, buttonText, () => {}, () => {});
+}
 
-    showAlert(title, message, buttonText, callback, failedToRespondCallback);
-  });
+export function showToast(type, content, duration = 5) {
+  const normalizedType = type.toLowerCase();
+  if (normalizedType === "success") {
+    message.success(content, duration);
+  } else if (normalizedType === "error") {
+    message.error(content, duration);
+  } else if (normalizedType === "info") {
+    message.info(content, duration);
+  } else if (normalizedType === "warning") {
+    message.warning(content, duration);
+  }
 }

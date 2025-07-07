@@ -17,7 +17,8 @@ import {
   ERROR_FETCHING_LOCAL_TX_DETAILS,
   ERROR_RESETTING_TX_VALUES,
   ERROR_SAVING_TX_DETAILS,
-  ERROR_RETRIEVE_WALLET_ADDRESS
+  ERROR_RETRIEVE_WALLET_ADDRESS,
+  ERROR_BRIDGE_NOT_READY
 } from "../../constants/strings";
 import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
 import { STORAGE_KEYS, DEFAULT_WALLET_ADDRESS } from "../../constants/configs";
@@ -54,8 +55,28 @@ function SendAssets() {
     }
   };
 
+  const checkBridgeReady = () => {
+    return window.nativebridge && window.ReactNativeWebView;
+  };
+
+  const waitForBridge = async (maxWaitTime = 5000) => {
+    const startTime = Date.now();
+    
+    while (!checkBridgeReady() && (Date.now() - startTime) < maxWaitTime) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    return checkBridgeReady();
+  };
+
   const fetchCurrentTokenBalance = async () => {
     try {
+      const isBridgeReady = await waitForBridge();
+      if (!isBridgeReady) {
+        console.error(ERROR_BRIDGE_NOT_READY);
+        return;
+      }
+
       setIsTokenBalanceLoading(true);
       const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
       setTokenBalance(tokenBalance);

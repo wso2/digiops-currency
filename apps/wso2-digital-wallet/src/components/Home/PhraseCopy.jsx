@@ -14,9 +14,10 @@ import {
     COPIED,
     COPY_TO_CLIPBOARD,
     OK,
-    PHRASE_COPIED
+    PHRASE_COPIED,
+    SUCCESS
 } from '../../constants/strings'
-import { showAlertBox } from "../../helpers/alerts";
+import { showAlertBox, showToast } from "../../helpers/alerts";
 
 function WalletAddressCopy(props) {
 
@@ -26,7 +27,7 @@ function WalletAddressCopy(props) {
     const [walletPhraseWords, setWalletPhraseWords] = useState([])
 
     const handleCopyPhrase = async () => {
-        await showAlertBox(COPIED, PHRASE_COPIED, OK);
+        showToast(SUCCESS, PHRASE_COPIED);
         setPhraseCopied(true)
     };
 

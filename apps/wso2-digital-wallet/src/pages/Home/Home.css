@@ -114,7 +114,7 @@
   }
 
   .recent-activity-container{
-    height: 50vh;
+    height: 100vh;
     overflow: auto;
     padding-bottom: 10vh;
   }
