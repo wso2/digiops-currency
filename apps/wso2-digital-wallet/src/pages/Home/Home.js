@@ -52,7 +52,7 @@ function Home() {
       const walletAddressResponse = await getLocalDataAsync(
         STORAGE_KEYS.WALLET_ADDRESS
       );
-      if (walletAddressResponse && walletAddressResponse !== walletAddress) {
+      if (walletAddressResponse !== walletAddress) {
         setWalletAddress(walletAddressResponse);
       }
     } catch (error) {
