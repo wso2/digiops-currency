@@ -28,6 +28,7 @@ import {
 } from '../../constants/strings';
 import { getLocalDataAsync } from '../../helpers/storage';
 import { getRecentTransactions } from '../../services/blockchain.service';
+import { waitForBridge } from '../../helpers/bridge';
 
 function RecentActivities() {
   const [walletAddress, setWalletAddress] = useState("");
@@ -35,20 +36,6 @@ function RecentActivities() {
   const [isRecentTransactionsLoading, setIsRecentTransactionsLoading] =
     useState(false);
   const [isFetchingInBackground, setIsFetchingInBackground] = useState(false);
-
-  const checkBridgeReady = () => {
-    return window.nativebridge && window.ReactNativeWebView;
-  };
-
-  const waitForBridge = async (maxWaitTime = 5000) => {
-    const startTime = Date.now();
-    
-    while (!checkBridgeReady() && (Date.now() - startTime) < maxWaitTime) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-    
-    return checkBridgeReady();
-  };
 
   const fetchWalletAddress = async () => {
     try {

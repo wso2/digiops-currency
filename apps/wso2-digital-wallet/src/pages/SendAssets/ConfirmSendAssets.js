@@ -27,6 +27,7 @@ import {
 } from "../../constants/strings";
 import { STORAGE_KEYS } from "../../constants/configs";
 import { showAlertBox } from "../../helpers/alerts";
+import { waitForBridge } from "../../helpers/bridge";
 
 function ConfirmSendAssets() {
   const navigate = useNavigate();
@@ -82,20 +83,6 @@ function ConfirmSendAssets() {
     } catch (error) {
       console.log(`${ERROR_RESETTING_TX_VALUES}: ${error}`);
     }
-  };
-
-  const checkBridgeReady = () => {
-    return window.nativebridge && window.ReactNativeWebView;
-  };
-
-  const waitForBridge = async (maxWaitTime = 5000) => {
-    const startTime = Date.now();
-    
-    while (!checkBridgeReady() && (Date.now() - startTime) < maxWaitTime) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-    
-    return checkBridgeReady();
   };
 
   const handleConfirm = async () => {
