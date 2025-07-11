@@ -26,25 +26,12 @@ import {
   WSO2_WALLET,
 } from '../../constants/strings';
 import { getCurrentBlockNumber } from '../../services/blockchain.service.js';
+import { waitForBridge, checkBridgeReady } from '../../helpers/bridge';
 
 const NavBar = () => {
   const [currentBlockNumber, setCurrentBlockNumber] = useState(null);
   const [connectionStatus, setConnectionStatus] = useState(CONNECTING);
   const [bridgeReady, setBridgeReady] = useState(false);
-
-  const checkBridgeReady = () => {
-    return window.nativebridge && window.ReactNativeWebView;
-  };
-
-  const waitForBridge = async (maxWaitTime = 5000) => {
-    const startTime = Date.now();
-    
-    while (!checkBridgeReady() && (Date.now() - startTime) < maxWaitTime) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-    
-    return checkBridgeReady();
-  };
 
   const getCurrentBlockStatus = async () => {
     setConnectionStatus(CONNECTING);
