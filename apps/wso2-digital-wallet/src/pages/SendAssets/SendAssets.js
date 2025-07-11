@@ -43,15 +43,40 @@ function SendAssets() {
   const [tokenBalance, setTokenBalance] = useState(0);
   const [walletAddress, setWalletAddress] = useState(DEFAULT_WALLET_ADDRESS);
 
-  const fetchWalletAddress = async () => {
+  const fetchWalletAddress = async (retryCount = 0) => {
+    const maxRetries = 3;
+    
     try {
+      const isBridgeReady = await waitForBridge();
+      if (!isBridgeReady) {
+        console.error(ERROR_BRIDGE_NOT_READY);
+        messageApi.error(ERROR_BRIDGE_NOT_READY);
+        return;
+      }
       const walletAddressResponse = await getLocalDataAsync(
         STORAGE_KEYS.WALLET_ADDRESS
       );
-      setWalletAddress(walletAddressResponse);
+      if (walletAddressResponse && 
+          walletAddressResponse !== null && 
+          walletAddressResponse !== DEFAULT_WALLET_ADDRESS && 
+          typeof walletAddressResponse === 'string' && 
+          walletAddressResponse.length > 2) {
+        setWalletAddress(walletAddressResponse);
+      } else {
+        if (retryCount < maxRetries) {
+          setTimeout(() => fetchWalletAddress(retryCount + 1), 1000);
+        } else {
+          setWalletAddress(DEFAULT_WALLET_ADDRESS);
+        }
+      }
     } catch (error) {
       console.log(`${ERROR_RETRIEVE_WALLET_ADDRESS} - ${error}`);
-      messageApi.error(ERROR_RETRIEVE_WALLET_ADDRESS);
+      if (retryCount < maxRetries) {
+        setTimeout(() => fetchWalletAddress(retryCount + 1), 1000);
+      } else {
+        messageApi.error(ERROR_RETRIEVE_WALLET_ADDRESS);
+        setWalletAddress(DEFAULT_WALLET_ADDRESS);
+      }
     }
   };
 
@@ -71,9 +96,16 @@ function SendAssets() {
 
   const fetchCurrentTokenBalance = async () => {
     try {
+      if (!walletAddress || walletAddress === DEFAULT_WALLET_ADDRESS) {
+        console.log("No valid wallet address available for balance fetch");
+        setTokenBalance(0);
+        return;
+      }
+
       const isBridgeReady = await waitForBridge();
       if (!isBridgeReady) {
         console.error(ERROR_BRIDGE_NOT_READY);
+        setTokenBalance(0);
         return;
       }
 
@@ -89,7 +121,11 @@ function SendAssets() {
   };
 
   useEffect(() => {
-    fetchWalletAddress();
+    const initializeWallet = async () => {
+      await fetchWalletAddress();
+    };
+    
+    initializeWallet();
     // eslint-disable-next-line
   }, []);
 
