@@ -1,3 +1,7 @@
+:root {
+  --orange-primary: #ff7300;
+}
+
 .main-background {
   background: #717171 !important;
   color: #ffffff !important;
@@ -15,7 +19,7 @@
   color: #ffffff;
 }
 .footer-icons {
-  color: #ff7300;
+  color: var(--orange-primary);
   cursor: pointer;
 }
 .footer-names {
