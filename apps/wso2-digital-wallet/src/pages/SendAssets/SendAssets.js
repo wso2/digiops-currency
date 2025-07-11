@@ -97,7 +97,6 @@ function SendAssets() {
   const fetchCurrentTokenBalance = async () => {
     try {
       if (!walletAddress || walletAddress === DEFAULT_WALLET_ADDRESS) {
-        console.log("No valid wallet address available for balance fetch");
         setTokenBalance(0);
         return;
       }
