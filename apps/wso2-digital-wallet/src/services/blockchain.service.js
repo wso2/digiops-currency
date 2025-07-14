@@ -103,7 +103,7 @@ export const getRecentTransactions = async (walletAddress) => {
   };
 
   const currentBlockNumber = await getCurrentBlockNumber();
-  const startBlockNumber = currentBlockNumber - 50000; //increase to get more transactions
+  const startBlockNumber = currentBlockNumber - 10000;
   filter.fromBlock = startBlockNumber;
   filter.toBlock = currentBlockNumber;
   const events = await provider.getLogs(filter);
@@ -130,4 +130,99 @@ export const getRecentTransactions = async (walletAddress) => {
     }
   }
   return transactions?.reverse();
+};
+
+export const getTokenTransfersByAddress = async (
+  walletAddress,
+  fromBlock = 0,
+  toBlock = 'latest'
+) => {
+  const provider = await getRPCProvider();
+
+  const contract = new ethers.Contract(
+    CONTRACT_ADDRESS,
+    JSON.parse(CONTRACT_ABI),
+    provider
+  );
+
+  const filterFrom = contract.filters.Transfer(walletAddress, null);
+  const filterTo = contract.filters.Transfer(null, walletAddress);
+
+  const [sentLogs, receivedLogs] = await Promise.all([
+    contract.queryFilter(filterFrom, fromBlock, toBlock),
+    contract.queryFilter(filterTo, fromBlock, toBlock),
+  ]);
+
+  const formatLog = async (log) => {
+    const block = await provider.getBlock(log.blockNumber);
+    return {
+      txHash: log.transactionHash,
+      blockNumber: log.blockNumber,
+      from: log.args.from,
+      to: log.args.to,
+      value: ethers.utils.formatUnits(
+        log.args.value,
+        await contract.decimals(),
+      ),
+      timestamp: new Date(block.timestamp * 1000).toISOString(),
+    };
+  };
+
+  const sent = await Promise.all(sentLogs.map(formatLog));
+  const received = await Promise.all(receivedLogs.map(formatLog));
+
+  return {
+    address: walletAddress,
+    sent,
+    received,
+  };
+};
+
+export const getTransactionHistory = async (walletAddress, fromBlock = 0, toBlock = 'latest') => {
+  try {
+    const historyData = await getTokenTransfersByAddress(walletAddress, fromBlock, toBlock);
+    
+    const allTransactions = [];
+    
+    historyData.sent.forEach(tx => {
+      allTransactions.push({
+        direction: 'send',
+        tokenAmount: tx.value,
+        txHash: tx.txHash,
+        blockNumber: tx.blockNumber,
+        from: tx.from,
+        to: tx.to,
+        timestamp: formatTimestamp(tx.timestamp)
+      });
+    });
+    
+    historyData.received.forEach(tx => {
+      allTransactions.push({
+        direction: 'receive',
+        tokenAmount: tx.value,
+        txHash: tx.txHash,
+        blockNumber: tx.blockNumber,
+        from: tx.from,
+        to: tx.to,
+        timestamp: formatTimestamp(tx.timestamp)
+      });
+    });
+    
+    allTransactions.sort((a, b) => b.blockNumber - a.blockNumber);
+    
+    return allTransactions;
+  } catch (error) {
+    console.error('Error getting transaction history:', error);
+    throw error;
+  }
+};
+
+const formatTimestamp = (isoTimestamp) => {
+  try {
+    const dateTime = DateTime.fromISO(isoTimestamp, { zone: 'local' });
+    return dateTime.toFormat("dd LLL yy HH:mm");
+  } catch (error) {
+    console.error('Error formatting timestamp:', error, 'Input:', isoTimestamp);
+    return 'Unknown time';
+  }
 };

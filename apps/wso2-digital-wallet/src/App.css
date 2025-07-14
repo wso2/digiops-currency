@@ -99,6 +99,7 @@
   left: 0;
   bottom: 0;
   width: 100%;
+  z-index: 1000;
 }
 .ant-input-affix-wrapper {
   border: #ff7300 1px solid;
@@ -124,21 +125,33 @@
   left: 0;
   right: 0;
   top: 0;
+  bottom: 0;
 }
 
 .layout-content {
   flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 75px;
   /* display: flex;
   justify-content: center;
   align-items: center; */
 }
 
+.footer-wrapper {
+  position: fixed;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
 @media (max-width: 768px) {
   .footer-wrapper {
     position: fixed;
-    bottom: 20px;
+    bottom: 10px;
     left: 0;
     width: 100%;
+    z-index: 1000;
   }
 }
 

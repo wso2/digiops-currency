@@ -8,9 +8,10 @@
 import {
   useEffect,
   useState,
+  useRef,
 } from 'react';
 
-import { Spin } from 'antd';
+import { Spin, message } from 'antd';
 
 import {
   ArrowDownOutlined,
@@ -26,8 +27,33 @@ import {
   WSO2_TOKEN,
 } from '../../constants/strings';
 import { getLocalDataAsync } from '../../helpers/storage';
-import { getRecentTransactions } from '../../services/blockchain.service';
+import { getTransactionHistory } from '../../services/blockchain.service';
 import { waitForBridge } from '../../helpers/bridge';
+
+const formatWalletAddress = (address) => {
+  if (!address) return '';
+  // return(address);
+  return `${address.slice(0, 8)}...${address.slice(-6)}`;
+};
+
+const copyToClipboard = async (address, direction) => {
+  try {
+    await navigator.clipboard.writeText(address);
+    const action = direction === 'send' ? 'Recipient\'s' : 'Sender\'s';
+    message.success(`${action} wallet address copied to clipboard!`);
+  } catch (err) {
+    // for older browsers
+    const textArea = document.createElement('textarea');
+    textArea.value = address;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    
+    const action = direction === 'send' ? 'Recipient\'s' : 'Sender\'s';
+    message.success(`${action} wallet address copied to clipboard!`);
+  }
+};
 
 function RecentActivities() {
   const [walletAddress, setWalletAddress] = useState("");
@@ -35,7 +61,8 @@ function RecentActivities() {
   const [isRecentTransactionsLoading, setIsRecentTransactionsLoading] =
     useState(false);
   const [isFetchingInBackground, setIsFetchingInBackground] = useState(false);
-
+  
+  const scrollContainerRef = useRef(null);
   const orangeColor = "#ff7300";
 
   const fetchWalletAddress = async () => {
@@ -81,7 +108,7 @@ function RecentActivities() {
       }
 
       setIsRecentTransactionsLoading(true);
-      const recentTransactions = await getRecentTransactions(walletAddress);
+      const recentTransactions = await getTransactionHistory(walletAddress);
       setRecentTransactions(recentTransactions);
       setIsRecentTransactionsLoading(false);
     } catch (error) {
@@ -101,7 +128,7 @@ function RecentActivities() {
         return;
       }
 
-      const recentTransactions = await getRecentTransactions(walletAddress);
+      const recentTransactions = await getTransactionHistory(walletAddress);
       setRecentTransactions(recentTransactions);
     } catch (error) {
       console.error("error while fetching recent transactions", error);
@@ -114,41 +141,56 @@ function RecentActivities() {
     if (transactions.length > 0) {
       return (
         <>
-          {transactions.map((transaction, index) => (
-            <div key={index} className="mt-4">
-              <div className="d-flex justify-content-between">
-                <div className="d-flex">
-                  {transaction.direction === "send" ? (
-                    <ArrowUpOutlined
-                      className="red-text mt-2"
-                      style={{ fontSize: 24 }}
-                    />
-                  ) : (
-                    <ArrowDownOutlined
-                      className="green-text mt-2"
-                      style={{ fontSize: 24 }}
-                    />
-                  )}
-                  <div className="d-flex flex-column mx-3 text-start">
-                    <span className="recent-activity-topic fw-normal">
-                      {transaction.direction === "send" ? "Sent" : "Received"}
-                    </span>
-                    <span className="recent-activity-time">
-                      {transaction.timestamp}
-                    </span>
+          {transactions.map((transaction, index) => {
+            const addressToCopy = transaction.direction === "send" ? transaction.to : transaction.from;
+            
+            return (
+              <div 
+                key={index} 
+                className="transaction-item mt-4" 
+                onClick={() => copyToClipboard(addressToCopy, transaction.direction)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="d-flex justify-content-between w-100">
+                  <div className="d-flex">
+                    {transaction.direction === "send" ? (
+                      <ArrowUpOutlined
+                        className="red-text"
+                        style={{ fontSize: 24 }}
+                      />
+                    ) : (
+                      <ArrowDownOutlined
+                        className="green-text"
+                        style={{ fontSize: 24 }}
+                      />
+                    )}
+                    <div className="d-flex flex-column mx-3 text-start">
+                      <span className="recent-activity-topic fw-normal">
+                        {transaction.direction === "send" ? "Sent" : "Received"}
+                      </span>
+                      <span className="recent-activity-address text-muted">
+                        {transaction.direction === "send" 
+                          ? `${formatWalletAddress(transaction.to)}`
+                          : `${formatWalletAddress(transaction.from)}`
+                        }
+                      </span>
+                      <span className="recent-activity-time">
+                        {transaction.timestamp}
+                      </span>
+                    </div>
                   </div>
+                  <span
+                    className={`recent-activity-value ${
+                      transaction.direction === "send" ? "red-text" : "green-text"
+                    }`}
+                  >
+                    {transaction.direction === "send" ? "-" : "+"}
+                    {transaction.tokenAmount} {WSO2_TOKEN}
+                  </span>
                 </div>
-                <span
-                  className={`recent-activity-value ${
-                    transaction.direction === "send" ? "red-text" : "green-text"
-                  }`}
-                >
-                  {transaction.direction === "send" ? "-" : "+"}
-                  {transaction.tokenAmount} {WSO2_TOKEN}
-                </span>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </>
       );
     } else {
@@ -179,7 +221,10 @@ function RecentActivities() {
             />
           </div>
         ) : (
-          <div className="recent-activity-container">
+          <div 
+            className="recent-activity-container"
+            ref={scrollContainerRef}
+          >
             <TransactionList transactions={recentTransactions} />
           </div>
         )}
