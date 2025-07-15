@@ -19,6 +19,7 @@ import {
 } from '@ant-design/icons';
 
 import { STORAGE_KEYS } from '../../constants/configs';
+import { COLORS } from '../../constants/colors';
 import {
   ERROR_READING_WALLET_DETAILS,
   ERROR_BRIDGE_NOT_READY,
@@ -35,8 +36,6 @@ function RecentActivities() {
   const [isRecentTransactionsLoading, setIsRecentTransactionsLoading] =
     useState(false);
   const [isFetchingInBackground, setIsFetchingInBackground] = useState(false);
-
-  const orangeColor = "#ff7300";
 
   const fetchWalletAddress = async () => {
     try {
@@ -174,7 +173,7 @@ function RecentActivities() {
         {isRecentTransactionsLoading ? (
           <div className="mt-5">
             <Spin
-              indicator={<LoadingOutlined style={{ color: orangeColor }} />}
+              indicator={<LoadingOutlined style={{ color: COLORS.ORANGE_PRIMARY }} />}
               style={{ margin: "10px " }}
             />
           </div>
