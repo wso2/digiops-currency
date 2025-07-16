@@ -21,7 +21,6 @@ import { COLORS } from '../../constants/colors';
 
 const RecentActivities = forwardRef(({ walletAddress: propWalletAddress }, ref) => {
   const [walletAddress, setWalletAddress] = useState(propWalletAddress || "");
-  const orangeColor = "#ff7300";
 
   useEffect(() => {
     if (propWalletAddress) {
