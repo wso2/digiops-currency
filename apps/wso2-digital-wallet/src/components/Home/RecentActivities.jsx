@@ -127,7 +127,7 @@ const RecentActivities = forwardRef(({ walletAddress: propWalletAddress }, ref) 
         {loading && transactions.length === 0 ? (
           <div className="mt-5">
             <Spin
-              indicator={<LoadingOutlined style={{ color: orangeColor }} />}
+              indicator={<LoadingOutlined style={{ color: COLORS.ORANGE_PRIMARY }} />}
               style={{ margin: "10px " }}
             />
           </div>
