@@ -17,6 +17,7 @@ import {
 import { getLocalDataAsync } from '../../helpers/storage';
 import { useTransactionHistory } from '../../hooks/useTransactionHistory';
 import TransactionItem from '../shared/TransactionItem';
+import { COLORS } from '../../constants/colors';
 
 const RecentActivities = forwardRef(({ walletAddress: propWalletAddress }, ref) => {
   const [walletAddress, setWalletAddress] = useState(propWalletAddress || "");
@@ -96,7 +97,7 @@ const RecentActivities = forwardRef(({ walletAddress: propWalletAddress }, ref) 
             >
               {loading && (
                 <Spin
-                  indicator={<LoadingOutlined style={{ color: orangeColor }} />}
+                  indicator={<LoadingOutlined style={{ color: COLORS.ORANGE_PRIMARY }} />}
                   size="small"
                 />
               )}

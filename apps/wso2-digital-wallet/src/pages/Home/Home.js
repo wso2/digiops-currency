@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { LoadingOutlined } from '@ant-design/icons';
 
 import RecentActivities from '../../components/Home/RecentActivities';
+import { COLORS } from '../../constants/colors';
 import {
   DEFAULT_WALLET_ADDRESS,
   STORAGE_KEYS,
@@ -235,8 +236,6 @@ function Home() {
     }
   };
 
-  const orangeColor = "#ff7300";
-
   return (
     <div className="home-container ">
       {contextHolder}
@@ -245,7 +244,7 @@ function Home() {
         <span className="total-balance-value">
           {isTokenBalanceLoading ? (
             <Spin
-              indicator={<LoadingOutlined style={{ color: orangeColor }} />}
+              indicator={<LoadingOutlined style={{ color: COLORS.ORANGE_PRIMARY }} />}
               style={{ margin: "10px " }}
             />
           ) : (
