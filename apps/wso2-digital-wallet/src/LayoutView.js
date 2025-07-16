@@ -19,16 +19,28 @@ function LayoutView() {
   const location = useLocation();
 
   const [isShowNavBar, setIsShowNavBar] = useState(false);
+  const [isShowFooter, setIsShowFooter] = useState(false);
 
   useEffect(() => {
     if (
       location.pathname === "/create-wallet" ||
       location.pathname === "/wallet-phrase" ||
-      location.pathname === "/recover-wallet"
+      location.pathname === "/recover-wallet" ||
+      location.pathname === "/history"
     ) {
       setIsShowNavBar(false);
     } else {
       setIsShowNavBar(true);
+    }
+
+    if (
+      location.pathname === "/create-wallet" ||
+      location.pathname === "/wallet-phrase" ||
+      location.pathname === "/recover-wallet"
+    ) {
+      setIsShowFooter(false);
+    } else {
+      setIsShowFooter(true);
     }
   }, [location]);
 
@@ -48,7 +60,7 @@ function LayoutView() {
             </Content>
           </Layout>
         </Layout>
-        {isShowNavBar ? (
+        {isShowFooter ? (
           <div className="footer-wrapper">
             <FooterBar className="footer-bar" />
           </div>
