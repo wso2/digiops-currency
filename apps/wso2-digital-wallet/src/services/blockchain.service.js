@@ -18,9 +18,6 @@ import { getTokenAsync } from '../helpers/auth';
 import { getLocalDataAsync } from '../helpers/storage';
 
 export const getRPCProvider = async () => {
-  /** we will need this authentication header if we are using a private RPC endpoint with authentication
-   * get the API key form the local storage
-   */
   const accessToken = await getTokenAsync();
   const headers = {
     Authorization: `Bearer ${accessToken}`
@@ -56,21 +53,25 @@ export const getCurrentBlockNumber = async (retryCount = 0) => {
 };
 
 export const getWalletBalanceByWalletAddress = async (walletAddress) => {
-  const provider = await getRPCProvider();
-  //create ERC20 contract instance
-  const contract = new ethers.Contract(
-    CONTRACT_ADDRESS,
-    JSON.parse(CONTRACT_ABI),
-    provider
-  );
-  const balance = await contract.balanceOf(walletAddress);
+  try {
+    const provider = await getRPCProvider();
+    
+    // Create ERC20 contract instance
+    const contract = new ethers.Contract(
+      CONTRACT_ADDRESS,
+      JSON.parse(CONTRACT_ABI),
+      provider
+    );
 
-  //check contract decimals
-  const decimals = await contract.decimals();
-
-  //format the balance
-  const formattedBalance = ethers.utils.formatUnits(balance, decimals);
-  return formattedBalance;
+    const balance = await contract.balanceOf(walletAddress);
+    const decimals = await contract.decimals();
+    const formattedBalance = ethers.utils.formatUnits(balance, decimals);
+    
+    return formattedBalance;
+  } catch (error) {
+    console.error('Balance fetch error:', error);
+    throw error;
+  }
 };
 
 export const transferToken = async (senderWalletAddress, transferAmount) => {
@@ -135,7 +136,9 @@ export const getRecentTransactions = async (walletAddress) => {
 export const getTokenTransfersByAddress = async (
   walletAddress,
   fromBlock = 0,
-  toBlock = 'latest'
+  toBlock = 'latest',
+  limit = 20,
+  offset = 0
 ) => {
   const provider = await getRPCProvider();
 
@@ -153,8 +156,15 @@ export const getTokenTransfersByAddress = async (
     contract.queryFilter(filterTo, fromBlock, toBlock),
   ]);
 
+  const allLogs = [...sentLogs, ...receivedLogs]
+    .sort((a, b) => b.blockNumber - a.blockNumber);
+
+  const paginatedLogs = allLogs.slice(offset, offset + limit);
+  
   const formatLog = async (log) => {
     const block = await provider.getBlock(log.blockNumber);
+    const isSent = sentLogs.some(sentLog => sentLog.transactionHash === log.transactionHash);
+    
     return {
       txHash: log.transactionHash,
       blockNumber: log.blockNumber,
@@ -164,53 +174,27 @@ export const getTokenTransfersByAddress = async (
         log.args.value,
         await contract.decimals(),
       ),
-      timestamp: new Date(block.timestamp * 1000).toISOString(),
+      timestamp: formatTimestamp(new Date(block.timestamp * 1000).toISOString()),
+      direction: isSent ? 'send' : 'receive'
     };
   };
 
-  const sent = await Promise.all(sentLogs.map(formatLog));
-  const received = await Promise.all(receivedLogs.map(formatLog));
+  const transactions = await Promise.all(paginatedLogs.map(formatLog));
 
   return {
     address: walletAddress,
-    sent,
-    received,
+    transactions,
+    totalCount: allLogs.length,
+    hasMore: offset + limit < allLogs.length,
+    currentPage: Math.floor(offset / limit) + 1,
+    totalPages: Math.ceil(allLogs.length / limit)
   };
 };
 
-export const getTransactionHistory = async (walletAddress, fromBlock = 0, toBlock = 'latest') => {
+export const getTransactionHistory = async (walletAddress, fromBlock = 0, toBlock = 'latest', limit = 20, offset = 0) => {
   try {
-    const historyData = await getTokenTransfersByAddress(walletAddress, fromBlock, toBlock);
-    
-    const allTransactions = [];
-    
-    historyData.sent.forEach(tx => {
-      allTransactions.push({
-        direction: 'send',
-        tokenAmount: tx.value,
-        txHash: tx.txHash,
-        blockNumber: tx.blockNumber,
-        from: tx.from,
-        to: tx.to,
-        timestamp: formatTimestamp(tx.timestamp)
-      });
-    });
-    
-    historyData.received.forEach(tx => {
-      allTransactions.push({
-        direction: 'receive',
-        tokenAmount: tx.value,
-        txHash: tx.txHash,
-        blockNumber: tx.blockNumber,
-        from: tx.from,
-        to: tx.to,
-        timestamp: formatTimestamp(tx.timestamp)
-      });
-    });
-    
-    allTransactions.sort((a, b) => b.blockNumber - a.blockNumber);
-    
-    return allTransactions;
+    const result = await getTokenTransfersByAddress(walletAddress, fromBlock, toBlock, limit, offset);
+    return result;
   } catch (error) {
     console.error('Error getting transaction history:', error);
     throw error;
