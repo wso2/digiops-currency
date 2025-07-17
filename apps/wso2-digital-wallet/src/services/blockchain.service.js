@@ -18,9 +18,6 @@ import { getTokenAsync } from '../helpers/auth';
 import { getLocalDataAsync } from '../helpers/storage';
 
 export const getRPCProvider = async () => {
-  /** we will need this authentication header if we are using a private RPC endpoint with authentication
-   * get the API key form the local storage
-   */
   const accessToken = await getTokenAsync();
   const headers = {
     Authorization: `Bearer ${accessToken}`
@@ -56,21 +53,25 @@ export const getCurrentBlockNumber = async (retryCount = 0) => {
 };
 
 export const getWalletBalanceByWalletAddress = async (walletAddress) => {
-  const provider = await getRPCProvider();
-  //create ERC20 contract instance
-  const contract = new ethers.Contract(
-    CONTRACT_ADDRESS,
-    JSON.parse(CONTRACT_ABI),
-    provider
-  );
-  const balance = await contract.balanceOf(walletAddress);
+  try {
+    const provider = await getRPCProvider();
+    
+    // Create ERC20 contract instance
+    const contract = new ethers.Contract(
+      CONTRACT_ADDRESS,
+      JSON.parse(CONTRACT_ABI),
+      provider
+    );
 
-  //check contract decimals
-  const decimals = await contract.decimals();
-
-  //format the balance
-  const formattedBalance = ethers.utils.formatUnits(balance, decimals);
-  return formattedBalance;
+    const balance = await contract.balanceOf(walletAddress);
+    const decimals = await contract.decimals();
+    const formattedBalance = ethers.utils.formatUnits(balance, decimals);
+    
+    return formattedBalance;
+  } catch (error) {
+    console.error('Balance fetch error:', error);
+    throw error;
+  }
 };
 
 export const transferToken = async (senderWalletAddress, transferAmount) => {
@@ -103,7 +104,7 @@ export const getRecentTransactions = async (walletAddress) => {
   };
 
   const currentBlockNumber = await getCurrentBlockNumber();
-  const startBlockNumber = currentBlockNumber - 50000; //increase to get more transactions
+  const startBlockNumber = currentBlockNumber - 10000;
   filter.fromBlock = startBlockNumber;
   filter.toBlock = currentBlockNumber;
   const events = await provider.getLogs(filter);
@@ -130,4 +131,82 @@ export const getRecentTransactions = async (walletAddress) => {
     }
   }
   return transactions?.reverse();
+};
+
+export const getTokenTransfersByAddress = async (
+  walletAddress,
+  fromBlock = 0,
+  toBlock = 'latest',
+  limit = 20,
+  offset = 0
+) => {
+  const provider = await getRPCProvider();
+
+  const contract = new ethers.Contract(
+    CONTRACT_ADDRESS,
+    JSON.parse(CONTRACT_ABI),
+    provider
+  );
+
+  const filterFrom = contract.filters.Transfer(walletAddress, null);
+  const filterTo = contract.filters.Transfer(null, walletAddress);
+
+  const [sentLogs, receivedLogs] = await Promise.all([
+    contract.queryFilter(filterFrom, fromBlock, toBlock),
+    contract.queryFilter(filterTo, fromBlock, toBlock),
+  ]);
+
+  const allLogs = [...sentLogs, ...receivedLogs]
+    .sort((a, b) => b.blockNumber - a.blockNumber);
+
+  const paginatedLogs = allLogs.slice(offset, offset + limit);
+  
+  const formatLog = async (log) => {
+    const block = await provider.getBlock(log.blockNumber);
+    const isSent = sentLogs.some(sentLog => sentLog.transactionHash === log.transactionHash);
+    
+    return {
+      txHash: log.transactionHash,
+      blockNumber: log.blockNumber,
+      from: log.args.from,
+      to: log.args.to,
+      value: ethers.utils.formatUnits(
+        log.args.value,
+        await contract.decimals(),
+      ),
+      timestamp: formatTimestamp(new Date(block.timestamp * 1000).toISOString()),
+      direction: isSent ? 'send' : 'receive'
+    };
+  };
+
+  const transactions = await Promise.all(paginatedLogs.map(formatLog));
+
+  return {
+    address: walletAddress,
+    transactions,
+    totalCount: allLogs.length,
+    hasMore: offset + limit < allLogs.length,
+    currentPage: Math.floor(offset / limit) + 1,
+    totalPages: Math.ceil(allLogs.length / limit)
+  };
+};
+
+export const getTransactionHistory = async (walletAddress, fromBlock = 0, toBlock = 'latest', limit = 20, offset = 0) => {
+  try {
+    const result = await getTokenTransfersByAddress(walletAddress, fromBlock, toBlock, limit, offset);
+    return result;
+  } catch (error) {
+    console.error('Error getting transaction history:', error);
+    throw error;
+  }
+};
+
+const formatTimestamp = (isoTimestamp) => {
+  try {
+    const dateTime = DateTime.fromISO(isoTimestamp, { zone: 'local' });
+    return dateTime.toFormat("dd LLL yy HH:mm");
+  } catch (error) {
+    console.error('Error formatting timestamp:', error, 'Input:', isoTimestamp);
+    return 'Unknown time';
+  }
 };

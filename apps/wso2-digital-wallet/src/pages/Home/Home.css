@@ -79,8 +79,18 @@
     font-size: 16px;
     font-weight: 600;
 }
+.recent-activity-address {
+    font-size: 11px;
+    color: #6c757d;
+    margin: 2px 0;
+    text-align: left;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    letter-spacing: 0.5px;
+    word-break: break-all;
+    line-height: 1.2;
+}
 .recent-activity-time {
-    font-size: 10px;
+    font-size: 11px;
     text-align: left;
 }
 .recent-activity-value {
@@ -113,7 +123,252 @@
   }
 
   .recent-activity-container{
-    height: 100vh;
-    overflow: auto;
-    padding-bottom: 10vh;
+    max-height: calc(100vh - 400px);
+    overflow-y: auto;
+    padding-bottom: 20px;
+    padding-right: 10px; /* Add right padding for scrollbar space */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
   }
+
+  .history-page .recent-activity-container{
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+    padding-bottom: 20px;
+    padding-right: 10px; /* Add right padding for scrollbar space */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    position: absolute;
+    top: 80px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+  }
+
+  .home-container {
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  .history-page {
+    overflow: hidden;
+    position: fixed;
+    top: 0; /* Remove NavBar offset since navbar is hidden */
+    left: 0;
+    right: 0;
+    bottom: 0; /* Remove gap - let content extend to footer */
+    width: 100vw;
+    background-color: #f3f5f6;
+    z-index: 999;
+  }
+
+  .recent-activities-widget {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .recent-activities-widget-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+  }
+
+  .history-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 10px 5px 80px 5px; /* Remove left and right padding to extend to corners */
+    box-sizing: border-box;
+  }
+
+  .history-page .transaction-history-widget h4 {
+    margin-top: 0;
+    margin-bottom: 1.5rem; /* Clean bottom margin for spacing to filter buttons */
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--ant-color-text, #000);
+  }
+
+.transaction-item {
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+    margin: 0;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    min-height: 60px;
+    position: relative;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.transaction-item:hover {
+    background-color: #f8f9fa;
+}
+
+.transaction-item:active {
+    background-color: #e9ecef;
+    transform: none; /* Prevent any transform on active state */
+}
+
+.transaction-item .anticon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    pointer-events: none; /* Prevent icon from being the click target */
+}
+
+/* Transaction History Component Styles */
+.transaction-history-widget {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+.transaction-history-widget-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  height: 100%;
+  position: relative;
+  padding: 20px;
+}
+
+.transaction-history-container {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 20px;
+  padding-right: 10px; /* Add right padding for scrollbar space */
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+}
+
+/* History page specific styling for transaction history */
+.history-page .transaction-history-container {
+  height: calc(100vh - 300px);
+  max-height: none;
+}
+
+.history-page .transaction-history-widget {
+  height: calc(100vh - 80px);
+  margin-top: 0;
+  flex: 1;
+}
+
+.history-page .transaction-history-widget-inner {
+  height: 100%;
+  padding: 20px 20px 5px 20px; /* Reduce bottom padding from 20px to 5px */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Filter button styling */
+.ant-btn-group .ant-btn {
+  margin: 0 2px;
+}
+
+/* Search input styling */
+.transaction-search {
+  margin-bottom: 10px;
+}
+
+/* Filter button styling for history page */
+.history-filter-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.history-filter-button.active {
+  background-color: #ff7300;
+  border-color: #ff7300;
+  color: white;
+}
+
+.history-filter-count {
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+}
+
+.history-filter-count.active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.history-filter-count.inactive {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Override Ant Design button focus/active states for filter buttons */
+.history-filter-button:focus,
+.history-filter-button:active,
+.history-filter-button:hover,
+.history-filter-button.ant-btn:focus,
+.history-filter-button.ant-btn:active,
+.history-filter-button.ant-btn:hover {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.history-filter-button.active:focus,
+.history-filter-button.active:active,
+.history-filter-button.active:hover,
+.history-filter-button.active.ant-btn:focus,
+.history-filter-button.active.ant-btn:active,
+.history-filter-button.active.ant-btn:hover {
+  background-color: #ff7300 !important;
+  border-color: #ff7300 !important;
+  color: white !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.history-filter-button:not(.active):focus,
+.history-filter-button:not(.active):active,
+.history-filter-button:not(.active):hover {
+  background-color: #f5f5f5 !important;
+  border-color: #d9d9d9 !important;
+  color: rgba(0, 0, 0, 0.88) !important;
+}
+
+/* Statistics styling */
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+
+.text-small {
+  font-size: 12px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .transaction-history-widget-inner {
+    padding: 15px;
+  }
+  
+  .history-page .transaction-history-container {
+    height: calc(100vh - 280px);
+  }
+}

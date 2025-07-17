@@ -5,149 +5,103 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import {
-  useEffect,
-  useState,
-} from 'react';
-
+import { useEffect, useState, memo, forwardRef, useImperativeHandle } from 'react';
 import { Spin } from 'antd';
-
-import {
-  ArrowDownOutlined,
-  ArrowUpOutlined,
-  LoadingOutlined,
-} from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import { STORAGE_KEYS } from '../../constants/configs';
-import { COLORS } from '../../constants/colors';
 import {
   ERROR_READING_WALLET_DETAILS,
-  ERROR_BRIDGE_NOT_READY,
   RECENT_ACTIVITIES,
-  WSO2_TOKEN,
 } from '../../constants/strings';
 import { getLocalDataAsync } from '../../helpers/storage';
-import { getRecentTransactions } from '../../services/blockchain.service';
-import { waitForBridge } from '../../helpers/bridge';
+import { useTransactionHistory } from '../../hooks/useTransactionHistory';
+import TransactionItem from '../shared/TransactionItem';
+import { COLORS } from '../../constants/colors';
 
-function RecentActivities() {
-  const [walletAddress, setWalletAddress] = useState("");
-  const [recentTransactions, setRecentTransactions] = useState([]);
-  const [isRecentTransactionsLoading, setIsRecentTransactionsLoading] =
-    useState(false);
-  const [isFetchingInBackground, setIsFetchingInBackground] = useState(false);
-
-  const fetchWalletAddress = async () => {
-    try {
-      const walletAddressResponse = await getLocalDataAsync(
-        STORAGE_KEYS.WALLET_ADDRESS
-      );
-      setWalletAddress(walletAddressResponse);
-    } catch (error) {
-      console.error(`${ERROR_READING_WALLET_DETAILS}: ${error}`);
-      setWalletAddress("");
-    }
-  };
+const RecentActivities = forwardRef(({ walletAddress: propWalletAddress }, ref) => {
+  const [walletAddress, setWalletAddress] = useState(propWalletAddress || "");
 
   useEffect(() => {
-    fetchWalletAddress();
-  }, []);
+    if (propWalletAddress) {
+      setWalletAddress(propWalletAddress);
+    } else {
+      const fetchWalletAddress = async () => {
+        try {
+          const address = await getLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS);
+          setWalletAddress(address || "");
+        } catch (error) {
+          console.error('RecentActivities: Error fetching wallet address:', error);
+        }
+      };
+      fetchWalletAddress();
+    }
+  }, [propWalletAddress]);
+
+  const {
+    transactions,
+    loading,
+    hasMore,
+    sentinelRef,
+    refresh,
+    totalCount,
+    currentCount,
+    loadMore,
+    setupObserver
+  } = useTransactionHistory({
+    walletAddress,
+    pageSize: 5,
+    autoRefresh: false,
+    refreshInterval: 30000
+  });
+
+  useImperativeHandle(ref, () => ({
+    refreshTransactions: () => {
+      refresh();
+    }
+  }), [refresh]);
 
   useEffect(() => {
-    if (walletAddress) {
-      fetchRecentTransactions();
+    if (walletAddress && walletAddress !== "") {
+      refresh();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletAddress]);
+  }, [walletAddress, refresh]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (walletAddress && !isFetchingInBackground) {
-        fetchRecentTransactionsDoInBackground();
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletAddress, isFetchingInBackground]);
-
-  const fetchRecentTransactions = async () => {
-    try {
-      const isBridgeReady = await waitForBridge();
-      if (!isBridgeReady) {
-        console.error(ERROR_BRIDGE_NOT_READY);
-        return;
-      }
-
-      setIsRecentTransactionsLoading(true);
-      const recentTransactions = await getRecentTransactions(walletAddress);
-      setRecentTransactions(recentTransactions);
-      setIsRecentTransactionsLoading(false);
-    } catch (error) {
-      setIsRecentTransactionsLoading(false);
-      console.error("error while fetching recent transactions", error);
+    if (transactions.length > 0 && hasMore && !loading) {
+      setTimeout(() => {
+        setupObserver();
+      }, 100);
     }
-  };
-
-  const fetchRecentTransactionsDoInBackground = async () => {
-    if (isFetchingInBackground) return;
-    
-    setIsFetchingInBackground(true);
-    try {
-      const isBridgeReady = await waitForBridge();
-      if (!isBridgeReady) {
-        console.error(ERROR_BRIDGE_NOT_READY);
-        return;
-      }
-
-      const recentTransactions = await getRecentTransactions(walletAddress);
-      setRecentTransactions(recentTransactions);
-    } catch (error) {
-      console.error("error while fetching recent transactions", error);
-    } finally {
-      setIsFetchingInBackground(false);
-    }
-  };
+  }, [transactions.length, hasMore, loading, setupObserver]);
 
   function TransactionList({ transactions }) {
     if (transactions.length > 0) {
       return (
         <>
           {transactions.map((transaction, index) => (
-            <div key={index} className="mt-4">
-              <div className="d-flex justify-content-between">
-                <div className="d-flex">
-                  {transaction.direction === "send" ? (
-                    <ArrowUpOutlined
-                      className="red-text mt-2"
-                      style={{ fontSize: 24 }}
-                    />
-                  ) : (
-                    <ArrowDownOutlined
-                      className="green-text mt-2"
-                      style={{ fontSize: 24 }}
-                    />
-                  )}
-                  <div className="d-flex flex-column mx-3 text-start">
-                    <span className="recent-activity-topic fw-normal">
-                      {transaction.direction === "send" ? "Sent" : "Received"}
-                    </span>
-                    <span className="recent-activity-time">
-                      {transaction.timestamp}
-                    </span>
-                  </div>
-                </div>
-                <span
-                  className={`recent-activity-value ${
-                    transaction.direction === "send" ? "red-text" : "green-text"
-                  }`}
-                >
-                  {transaction.direction === "send" ? "-" : "+"}
-                  {transaction.tokenAmount} {WSO2_TOKEN}
-                </span>
-              </div>
-            </div>
+            <TransactionItem 
+              key={`${transaction.txHash}-${index}`} 
+              transaction={transaction} 
+              index={index} 
+            />
           ))}
+          
+          {/* Sentinel element for intersection observer */}
+          {hasMore && (
+            <div 
+              ref={sentinelRef} 
+              className="mt-4 d-flex justify-content-center"
+              style={{ minHeight: '40px' }}
+            >
+              {loading && (
+                <Spin
+                  indicator={<LoadingOutlined style={{ color: COLORS.ORANGE_PRIMARY }} />}
+                  size="small"
+                />
+              )}
+            </div>
+          )}
         </>
       );
     } else {
@@ -160,7 +114,7 @@ function RecentActivities() {
   }
 
   return (
-    <div className=" recent-activities-widget">
+    <div className="recent-activities-widget">
       <div className="recent-activities-widget-inner">
         <div className="mt-1">
           <div className="d-flex justify-content-between">
@@ -170,7 +124,7 @@ function RecentActivities() {
           </div>
         </div>
 
-        {isRecentTransactionsLoading ? (
+        {loading && transactions.length === 0 ? (
           <div className="mt-5">
             <Spin
               indicator={<LoadingOutlined style={{ color: COLORS.ORANGE_PRIMARY }} />}
@@ -179,12 +133,14 @@ function RecentActivities() {
           </div>
         ) : (
           <div className="recent-activity-container">
-            <TransactionList transactions={recentTransactions} />
+            <TransactionList transactions={transactions} />
           </div>
         )}
       </div>
     </div>
   );
-}
+});
 
-export default RecentActivities;
+RecentActivities.displayName = 'RecentActivities';
+
+export default memo(RecentActivities);

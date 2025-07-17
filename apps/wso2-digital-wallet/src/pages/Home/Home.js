@@ -10,6 +10,7 @@ import './Home.css';
 import {
   useEffect,
   useState,
+  useRef,
 } from 'react';
 
 import {
@@ -46,6 +47,7 @@ import { waitForBridge } from '../../helpers/bridge';
 function Home() {
   const navigate = useNavigate();
   const [walletAddress, setWalletAddress] = useState(DEFAULT_WALLET_ADDRESS);
+  const recentActivitiesRef = useRef();
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -64,39 +66,145 @@ function Home() {
   };
 
   const [isAccountCopied, setIsAccountCopied] = useState(false);
-  const [tokenBalance, setTokenBalance] = useState(0);
+  const [tokenBalance, setTokenBalance] = useState("0");
   const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
-  const [isFetchingInBackground, setIsFetchingInBackground] = useState(false);
-  const [recentActivitiesKey, setRecentActivitiesKey] = useState(0);
-
-  const refreshRecentActivities = () => {
-    setRecentActivitiesKey(prev => prev + 1);
-  };
+  const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
+  const fetchingRef = useRef(false);
+  const retryCountRef = useRef(0);
+  const maxRetries = 3;
 
   useEffect(() => {
+    setIsInitialLoadComplete(false);
+    setIsTokenBalanceLoading(false);
+    fetchingRef.current = false;
+    retryCountRef.current = 0;
+    
     fetchWalletAddress();
-    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    if (walletAddress !== DEFAULT_WALLET_ADDRESS && walletAddress) {
-      fetchCurrentTokenBalance();
-      refreshRecentActivities();
+    if (walletAddress && 
+        walletAddress !== DEFAULT_WALLET_ADDRESS && 
+        walletAddress !== "0x" && 
+        walletAddress.length === 42) {
+      
+      loadInitialData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
 
   useEffect(() => {
-    const interval = setInterval(async () => {
-      if (walletAddress !== DEFAULT_WALLET_ADDRESS && walletAddress && !isFetchingInBackground) {
-        fetchCurrentTokenBalanceDoInBackground();
-      }
-    }, 5000);
+    if (!isInitialLoadComplete) return;
 
-    // This is important, as it clears the interval when the component is unmounted.
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletAddress, isFetchingInBackground]);
+    const interval = setInterval(() => {
+      if (!fetchingRef.current) {
+        fetchTokenBalanceQuietly();
+      }
+    }, 60000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isInitialLoadComplete, walletAddress]);
+
+  const loadInitialData = async () => {
+    if (fetchingRef.current) {
+      return;
+    }
+    
+    if (retryCountRef.current >= maxRetries) {
+      setIsInitialLoadComplete(true);
+      return;
+    }
+    
+    retryCountRef.current += 1;
+    
+    try {
+      fetchingRef.current = true;
+      setIsTokenBalanceLoading(true);
+
+      let isBridgeReady = false;
+      let bridgeRetries = 0;
+      const maxBridgeRetries = 5;
+      
+      while (!isBridgeReady && bridgeRetries < maxBridgeRetries) {
+        isBridgeReady = await waitForBridge(3000);
+        if (!isBridgeReady) {
+          bridgeRetries++;
+          if (bridgeRetries < maxBridgeRetries) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+          }
+        }
+      }
+      
+      if (!isBridgeReady) {
+        console.error(ERROR_BRIDGE_NOT_READY + " - Max retries exceeded");
+        if (retryCountRef.current >= maxRetries) {
+          setIsInitialLoadComplete(true);
+        }
+        return;
+      }
+
+      const timeouts = [5000, 8000, 12000];
+      const currentTimeout = timeouts[Math.min(retryCountRef.current - 1, timeouts.length - 1)];
+      
+      const balancePromise = getWalletBalanceByWalletAddress(walletAddress);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Balance fetch timeout')), currentTimeout)
+      );
+      
+      const tokenBalance = await Promise.race([balancePromise, timeoutPromise]);
+      
+      if (tokenBalance === null || tokenBalance === undefined || isNaN(parseFloat(tokenBalance))) {
+        throw new Error('Invalid balance response');
+      }
+      
+      setTokenBalance(tokenBalance);
+      setIsInitialLoadComplete(true);
+      retryCountRef.current = 0;
+      
+      setTimeout(() => {
+        recentActivitiesRef.current?.refreshTransactions();
+      }, 200);
+      
+    } catch (error) {
+      console.error("Error during initial data load:", error);
+      
+      const shouldRetry = retryCountRef.current < maxRetries && (
+        error.message.includes('timeout') ||
+        error.message.includes('Invalid balance') ||
+        error.message.includes('network') ||
+        error.message.includes('bridge')
+      );
+      
+      if (!shouldRetry) {
+        setIsInitialLoadComplete(true);
+      }
+    } finally {
+      setIsTokenBalanceLoading(false);
+      fetchingRef.current = false;
+    }
+  };
+
+  const fetchTokenBalanceQuietly = async () => {
+    if (fetchingRef.current) return;
+    
+    try {
+      fetchingRef.current = true;
+
+      const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
+      
+      if (tokenBalance !== null && tokenBalance !== undefined) {
+        const numBalance = parseFloat(tokenBalance);
+        if (!isNaN(numBalance)) {
+          setTokenBalance(tokenBalance);
+        }
+      }
+    } catch (error) {
+      console.error("Background balance fetch error:", error);
+    } finally {
+      fetchingRef.current = false;
+    }
+  };
 
   const handleCopyAccount = async () => {
     showToast(SUCCESS, WALLET_ADDRESS_COPIED);
@@ -117,44 +225,14 @@ function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
 
-  const fetchCurrentTokenBalance = async () => {
-    try {
-      const isBridgeReady = await waitForBridge();
-      if (!isBridgeReady) {
-        console.error(ERROR_BRIDGE_NOT_READY);
-        return;
+  const refreshAllData = async () => {
+    if (!fetchingRef.current && isInitialLoadComplete) {
+      try {
+        await fetchTokenBalanceQuietly();
+        recentActivitiesRef.current?.refreshTransactions();
+      } catch (error) {
+        console.error("Error refreshing data:", error);
       }
-      
-      setIsTokenBalanceLoading(true);
-      const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
-      setTokenBalance(tokenBalance);
-      setIsTokenBalanceLoading(false);
-      refreshRecentActivities();
-    } catch (error) {
-      console.debug("DEBUG: error while fetching token balance", error);
-      setIsTokenBalanceLoading(false);
-      setTokenBalance(0);
-    }
-  };
-
-  const fetchCurrentTokenBalanceDoInBackground = async () => {
-    if (isFetchingInBackground) return;
-    
-    setIsFetchingInBackground(true);
-    try {
-      const isBridgeReady = await waitForBridge();
-      if (!isBridgeReady) {
-        console.error(ERROR_BRIDGE_NOT_READY);
-        return;
-      }
-
-      const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
-      setTokenBalance(tokenBalance);
-    } catch (error) {
-      setTokenBalance(0);
-      console.debug("DEBUG: error while fetching token balance", error);
-    } finally {
-      setIsFetchingInBackground(false);
     }
   };
 
@@ -174,6 +252,8 @@ function Home() {
               value={tokenBalance}
               displayType={"text"}
               thousandSeparator={true}
+              decimalScale={6}
+              fixedDecimalScale={false}
             />
           )}
         </span>
@@ -215,7 +295,7 @@ function Home() {
           </div>
         </div> */}
       </div>
-      <RecentActivities key={recentActivitiesKey}/>
+      <RecentActivities ref={recentActivitiesRef} walletAddress={walletAddress} />
     </div>
   );
 }
