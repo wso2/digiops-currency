@@ -5,6 +5,7 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 import wallet_service.database;
+import wallet_service.transactions;
 import wallet_service.types;
 
 import ballerina/http;
@@ -34,7 +35,28 @@ service http:InterceptableService / on new http:Listener(9091) {
             log:printInfo(string `Wallet ${walletAddress} already exists`);
             return http:CONFLICT;
         }
-        check database:insertUserWallet(userWallet);
+
+        transaction {
+            boolean isFirstWallet = check database:isUserFirstWallet(userWallet.userEmail);
+            if isFirstWallet {
+                boolean coinsAllocated = check transactions:allocateInitialCoins(walletAddress);
+                if !coinsAllocated {
+                    log:printError(string `Failed to allocate initial coins to wallet ${walletAddress}`);
+                    check error("Failed to allocate initial coins to wallet");
+                }
+                userWallet.initialCoinsAllocated = transactions:initialCoins;
+                log:printInfo(string `Successfully allocated ${transactions:initialCoins} coins to wallet ${walletAddress}`);
+            } else {
+                userWallet.initialCoinsAllocated = 0.0;
+            }
+
+            check database:insertUserWallet(userWallet);
+            check commit;
+        } on fail error e {
+            log:printError(string `Transaction failed for wallet ${walletAddress}`, e);
+            return e;
+        }
+
         return http:OK;
     }
 }
