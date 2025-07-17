@@ -43,7 +43,7 @@ public isolated function isUserFirstWallet(string userEmail) returns boolean|sql
     if result is sql:NoRowsError {
         return true;
     }
-    else if result is sql:Error {
+    if result is sql:Error {
         log:printError("Error while checking user wallet count", result);
         return result;
     }
