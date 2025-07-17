@@ -27,16 +27,16 @@ service http:InterceptableService / on new http:Listener(9091) {
     resource function post user\-wallet(http:RequestContext ctx, string walletAddress)
         returns http:Ok|http:Conflict|error {
 
-        types:UserWallet userWallet = {
-            userEmail: check ctx.getWithType(EMAIL),
-            walletAddress
-        };
         if check database:isUserWalletExists(walletAddress) {
             log:printInfo(string `Wallet ${walletAddress} already exists`);
             return http:CONFLICT;
         }
 
         transaction {
+            types:UserWallet userWallet = {
+                userEmail: check ctx.getWithType(EMAIL),
+                walletAddress
+            };
             boolean isFirstWallet = check database:isUserFirstWallet(userWallet.userEmail);
             if isFirstWallet {
                 boolean coinsAllocated = check transactions:allocateInitialCoins(walletAddress);
