@@ -13,6 +13,7 @@ CREATE TABLE user_wallet (
     wallet_address VARCHAR(255) NOT NULL,
     user_email VARCHAR(255) NOT NULL,
     default_wallet BOOLEAN DEFAULT false,
+    initial_coins_allocated DECIMAL(10,10) DEFAULT 0.0,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (wallet_address)
 );
@@ -36,4 +37,3 @@ BEGIN
 END;
 //
 DELIMITER ;
-
