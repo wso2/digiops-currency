@@ -23,7 +23,9 @@ public isolated function allocateInitialCoins(string walletAddress) returns bool
     http:Response response = check transactionServiceClient->post("/blockchain/transfer-token", transferPayload);
     
     if response.statusCode != 200 {
-        return error("Transaction failed with status: " + response.statusCode.toString());
+        string errorMessage = string `Error while transfering coins`;
+        log:printError(string `${errorMessage} : ${(check response.getJsonPayload()).toString()}!`);
+        return error(errorMessage);
     }
     
     log:printInfo(string `Successfully allocated coins to wallet ${walletAddress}`);
