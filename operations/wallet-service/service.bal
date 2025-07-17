@@ -53,7 +53,7 @@ service http:InterceptableService / on new http:Listener(9091) {
             check database:insertUserWallet(userWallet);
             check commit;
         } on fail error e {
-            log:printError(string `Transaction failed for wallet ${walletAddress}`, e);
+            log:printError(string `Wallet creation failed for wallet ${walletAddress}`, e);
             return e;
         }
 
