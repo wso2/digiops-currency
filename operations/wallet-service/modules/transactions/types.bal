@@ -15,7 +15,7 @@ type Oauth2Config record {|
     string clientSecret;
 |};
 
-# Token transfer request payload
+# Token transfer request payload.
 public type TokenTransferRequest record {|
     # Recipient wallet address
     string recipientWalletAddress;
