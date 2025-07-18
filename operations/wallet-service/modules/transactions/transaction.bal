@@ -20,7 +20,7 @@ public isolated function allocateInitialCoins(string walletAddress) returns bool
         amount: initialCoins
     };
     
-    http:Response response = check transactionServiceClient->post("/blockchain/transfer-token", transferPayload);
+    http:Response response = check transactionServiceClient->post("/api/v1/blockchain/transfer-token", transferPayload);
     
     if response.statusCode != 200 {
         string errorMessage = string `Error while transfering coins`;
