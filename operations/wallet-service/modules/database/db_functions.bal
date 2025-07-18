@@ -33,3 +33,19 @@ public isolated function insertUserWallet(types:UserWallet userWallet) returns s
         return result;
     }
 }
+
+# Check if this is the user's first wallet.
+#
+# + userEmail - User email
+# + return - True if this is the first wallet, false if user already has wallets, error if error occurred
+public isolated function isUserFirstWallet(string userEmail) returns boolean|sql:Error {
+    record {int wallet_count;}|sql:Error result = dbClient->queryRow(getUserWalletCountQuery(userEmail));
+    if result is sql:NoRowsError {
+        return true;
+    } else if result is sql:Error {
+        log:printError("Error while checking user wallet count", result);
+        return result;
+    } else {
+        return result.wallet_count == 0;
+    }
+}

@@ -5,6 +5,7 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 import wallet_service.database;
+import wallet_service.transactions;
 import wallet_service.types;
 
 import ballerina/http;
@@ -26,15 +27,36 @@ service http:InterceptableService / on new http:Listener(9091) {
     resource function post user\-wallet(http:RequestContext ctx, string walletAddress)
         returns http:Ok|http:Conflict|error {
 
-        types:UserWallet userWallet = {
-            userEmail: check ctx.getWithType(EMAIL),
-            walletAddress
-        };
         if check database:isUserWalletExists(walletAddress) {
             log:printInfo(string `Wallet ${walletAddress} already exists`);
             return http:CONFLICT;
         }
-        check database:insertUserWallet(userWallet);
+
+        transaction {
+            types:UserWallet userWallet = {
+                userEmail: check ctx.getWithType(EMAIL),
+                walletAddress
+            };
+            boolean isFirstWallet = check database:isUserFirstWallet(userWallet.userEmail);
+            if isFirstWallet {
+                userWallet.initialCoinsAllocated = transactions:initialCoins;
+                check database:insertUserWallet(userWallet);
+                boolean coinsAllocated = check transactions:allocateInitialCoins(walletAddress);
+                if !coinsAllocated {
+                    log:printError(string `Failed to allocate initial coins to wallet ${walletAddress}`);
+                    check error("Failed to allocate initial coins to wallet");
+                }
+                log:printInfo(string `Successfully allocated ${transactions:initialCoins} coins to wallet ${walletAddress}`);
+            } else {
+                userWallet.initialCoinsAllocated = 0.0;
+                check database:insertUserWallet(userWallet);
+            }
+            check commit;
+        } on fail error e {
+            log:printError(string `Wallet creation failed for wallet ${walletAddress}`, e);
+            return e;
+        }
+
         return http:OK;
     }
 }

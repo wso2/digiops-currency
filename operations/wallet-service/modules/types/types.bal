@@ -14,4 +14,7 @@ public type UserWallet record {|
     # Wallet address
     @sql:Column {name: "wallet_address"}
     string walletAddress;
+    # Initial coins allocated amount
+    @sql:Column {name: "initial_coins_allocated"}
+    decimal initialCoinsAllocated?;
 |};

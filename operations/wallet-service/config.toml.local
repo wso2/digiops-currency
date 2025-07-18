@@ -4,3 +4,12 @@ user = ""
 password = ""
 port = 3306
 database = ""
+
+[wallet_service.transactions]
+baseUrl = ""
+initialCoins = 
+
+[wallet_service.transactions.authConfig]
+tokenUrl = ""
+clientId = ""
+clientSecret = ""
