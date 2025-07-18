@@ -39,18 +39,18 @@ service http:InterceptableService / on new http:Listener(9091) {
             };
             boolean isFirstWallet = check database:isUserFirstWallet(userWallet.userEmail);
             if isFirstWallet {
+                userWallet.initialCoinsAllocated = transactions:initialCoins;
+                check database:insertUserWallet(userWallet);
                 boolean coinsAllocated = check transactions:allocateInitialCoins(walletAddress);
                 if !coinsAllocated {
                     log:printError(string `Failed to allocate initial coins to wallet ${walletAddress}`);
                     check error("Failed to allocate initial coins to wallet");
                 }
-                userWallet.initialCoinsAllocated = transactions:initialCoins;
                 log:printInfo(string `Successfully allocated ${transactions:initialCoins} coins to wallet ${walletAddress}`);
             } else {
                 userWallet.initialCoinsAllocated = 0.0;
+                check database:insertUserWallet(userWallet);
             }
-
-            check database:insertUserWallet(userWallet);
             check commit;
         } on fail error e {
             log:printError(string `Wallet creation failed for wallet ${walletAddress}`, e);
