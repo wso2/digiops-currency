@@ -41,7 +41,7 @@ const FooterBar = () => {
   };
 
   return (
-    <Footer className="text-center" style={{ height: '75px' }}>
+    <Footer className="text-center" style={{ height: '75px', position: 'fixed', bottom: 0, width: '100%' }}>
       <div className="d-flex justify-content-between">
         <div className="d-flex flex-column">
           <span className="footer-icons" onClick={handleHomeNavigation}>
