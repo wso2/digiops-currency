@@ -69,3 +69,10 @@
     border-radius: 5px;
     font-size: 12px;
   }
+  
+  .ant-input,
+  .ant-input-affix-wrapper,
+  .ant-input::placeholder {
+    text-align: left !important;
+  }
+  

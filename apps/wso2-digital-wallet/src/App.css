@@ -111,10 +111,8 @@
 .ant-input-group-addon {
   border: var(--orange-primary) 1px solid !important;
 }
-/* Set the color of the scrollbar track and thumb */
 ::-webkit-scrollbar {
   width: 2px;
-  background-color: var(--orange-primary);
 }
 
 /* Set the border radius of the scrollbar thumb */

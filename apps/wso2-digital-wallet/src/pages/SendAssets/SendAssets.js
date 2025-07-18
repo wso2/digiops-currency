@@ -216,9 +216,6 @@ function SendAssets() {
         <Input
           prefix={<SearchOutlined />}
           placeholder="Search, public address (0x)"
-          addonAfter={
-            <ScanOutlined style={{ color: "#ffff", fontSize: "18px" }} />
-          }
           value={sendWalletAddress}
           onChange={handleWalletAddressInputChange}
           size="large"

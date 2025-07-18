@@ -107,92 +107,75 @@ function Home() {
   }, [isInitialLoadComplete, walletAddress]);
 
   const loadInitialData = async () => {
-    if (fetchingRef.current) {
-      return;
-    }
-    
-    if (retryCountRef.current >= maxRetries) {
-      setIsInitialLoadComplete(true);
-      return;
-    }
-    
-    retryCountRef.current += 1;
-    
-    try {
-      fetchingRef.current = true;
-      setIsTokenBalanceLoading(true);
-
-      let isBridgeReady = false;
-      let bridgeRetries = 0;
-      const maxBridgeRetries = 5;
-      
-      while (!isBridgeReady && bridgeRetries < maxBridgeRetries) {
-        isBridgeReady = await waitForBridge(3000);
-        if (!isBridgeReady) {
-          bridgeRetries++;
-          if (bridgeRetries < maxBridgeRetries) {
+    if (fetchingRef.current) return;
+    fetchingRef.current = true;
+    setIsTokenBalanceLoading(true);
+    let attempt = 0;
+    let delay = 1000;
+    const maxAttempts = 5;
+    let lastError = null;
+    while (attempt < maxAttempts) {
+      try {
+        let isBridgeReady = false;
+        let bridgeRetries = 0;
+        const maxBridgeRetries = 5;
+        while (!isBridgeReady && bridgeRetries < maxBridgeRetries) {
+          isBridgeReady = await waitForBridge(3000);
+          if (!isBridgeReady) {
+            bridgeRetries++;
             await new Promise(resolve => setTimeout(resolve, 500));
           }
         }
-      }
-      
-      if (!isBridgeReady) {
-        console.error(ERROR_BRIDGE_NOT_READY + " - Max retries exceeded");
-        if (retryCountRef.current >= maxRetries) {
-          setIsInitialLoadComplete(true);
+        if (!isBridgeReady) {
+          throw new Error("Bridge not ready after retries");
         }
-        return;
-      }
-
-      const timeouts = [5000, 8000, 12000];
-      const currentTimeout = timeouts[Math.min(retryCountRef.current - 1, timeouts.length - 1)];
-      
-      const balancePromise = getWalletBalanceByWalletAddress(walletAddress);
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Balance fetch timeout')), currentTimeout)
-      );
-      
-      const tokenBalance = await Promise.race([balancePromise, timeoutPromise]);
-      
-      if (tokenBalance === null || tokenBalance === undefined || isNaN(parseFloat(tokenBalance))) {
-        throw new Error('Invalid balance response');
-      }
-      
-      setTokenBalance(tokenBalance);
-      setIsInitialLoadComplete(true);
-      retryCountRef.current = 0;
-      
-      setTimeout(() => {
-        recentActivitiesRef.current?.refreshTransactions();
-      }, 200);
-      
-    } catch (error) {
-      console.error("Error during initial data load:", error);
-      
-      const shouldRetry = retryCountRef.current < maxRetries && (
-        error.message.includes('timeout') ||
-        error.message.includes('Invalid balance') ||
-        error.message.includes('network') ||
-        error.message.includes('bridge')
-      );
-      
-      if (!shouldRetry) {
+        let providerReady = false;
+        try {
+          const { getRPCProvider } = await import('../../services/blockchain.service');
+          const provider = await getRPCProvider();
+          await provider.getBlockNumber();
+          providerReady = true;
+        } catch (e) {
+          providerReady = false;
+        }
+        if (!providerReady) {
+          throw new Error("Provider not ready");
+        }
+        const timeouts = [5000, 8000, 12000, 16000, 20000];
+        const currentTimeout = timeouts[Math.min(attempt, timeouts.length - 1)];
+        let tokenBalance = await getWalletBalanceByWalletAddress(walletAddress, { timeout: currentTimeout });
+        if (tokenBalance === null || tokenBalance === undefined || isNaN(parseFloat(tokenBalance))) {
+          throw new Error('Invalid balance response');
+        }
+        setTokenBalance(tokenBalance);
         setIsInitialLoadComplete(true);
+        retryCountRef.current = 0;
+        setTimeout(() => {
+          recentActivitiesRef.current?.refreshTransactions();
+        }, 200);
+        fetchingRef.current = false;
+        setIsTokenBalanceLoading(false);
+        return;
+      } catch (error) {
+        lastError = error;
+        attempt++;
+        if (attempt < maxAttempts) {
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2; // exponential backoff
+        }
       }
-    } finally {
-      setIsTokenBalanceLoading(false);
-      fetchingRef.current = false;
     }
+    setIsInitialLoadComplete(true);
+    setIsTokenBalanceLoading(false);
+    fetchingRef.current = false;
+    console.error("Balance fetch failed after retries:", lastError);
   };
 
   const fetchTokenBalanceQuietly = async () => {
     if (fetchingRef.current) return;
-    
     try {
       fetchingRef.current = true;
-
-      const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
-      
+      const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress, { timeout: 8000 });
       if (tokenBalance !== null && tokenBalance !== undefined) {
         const numBalance = parseFloat(tokenBalance);
         if (!isNaN(numBalance)) {

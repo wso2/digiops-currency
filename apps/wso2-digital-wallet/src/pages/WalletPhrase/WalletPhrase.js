@@ -6,7 +6,7 @@
 // You may not alter or remove any copyright or other notice from copies of this content.
 
 import React, { useState, useEffect } from "react";
-import { Row, Col, Alert, Button, message } from "antd";
+import { Row, Col, Alert, Button, message, Modal } from "antd";
 import { LeftOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import "./WalletPhrase.css";
 import WalletAddressCopy from "../../components/Home/WalletAddressCopy";
@@ -20,8 +20,10 @@ import {
   WALLET_PRIVATE_KEY,
   ERROR_READING_WALLET_DETAILS,
   WALLET_SECURE_TIPS,
-  SHOW_WALLET_ADDRESS
+  SHOW_WALLET_ADDRESS,
+  CONFIRM_RECOVERY_PHRASE
 } from "../../constants/strings";
+import { COLORS } from "../../constants/colors";
 import { STORAGE_KEYS } from "../../constants/configs";
 import { getLocalDataAsync } from "../../helpers/storage";
 
@@ -55,7 +57,25 @@ function WalletPhrase(props) {
   }, []);
 
   const handleContinue = () => {
-    navigate("/");
+    Modal.confirm({
+      title: "Backing Up Recovery Phrase",
+      content: (
+        <div>
+          <p>{CONFIRM_RECOVERY_PHRASE}</p>
+        </div>
+      ),
+      okText: "Yes, I have saved it",
+      cancelText: "Go Back",
+      okButtonProps: {
+        style: {
+          backgroundColor: COLORS.ORANGE_PRIMARY, borderColor: COLORS.ORANGE_PRIMARY, color: "#fff"
+        }
+      },
+      onOk() {
+        navigate("/");
+      },
+      centered: true,
+    });
   };
 
   const handleClick = () => {
