@@ -53,6 +53,8 @@ export const WALLET_SECURE_TIPS = [
   "Write down and store in multiple secret places"
 ];
 
+export const CONFIRM_RECOVERY_PHRASE = "Have you securely stored your recovery phrase? This phrase is required to restore access to your wallet. It cannot be recovered if lost, and losing it may result in permanent loss of access to your wallet.";
+
 export const OK = "Ok";
 export const ERROR = "Error";
 export const SUCCESS = "Success";
