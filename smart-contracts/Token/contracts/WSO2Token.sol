@@ -109,6 +109,7 @@ contract WSO2 is IERC20, Ownable {
     }
 
     function mintTokens(uint256 _tokenAmount) external onlyOwner {
+        require(_tokenAmount > 0, "Token amount must be greater than zero");
         _balances[msg.sender] += _tokenAmount;
         _totalSupply += _tokenAmount;
         emit Transfer(address(0), msg.sender, _tokenAmount);
