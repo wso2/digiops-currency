@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 // Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
 //
 // This software is the property of WSO2 LLC. and its suppliers, if any.
@@ -20,12 +20,8 @@ contract WSO2 is IERC20, Ownable {
 
     mapping(address => uint256) _balances;
     mapping(address => mapping(address => uint256)) _allowances;
-    mapping(address => bool) public isAuthorized;
-
-    event AddAuthorizedWallet(address holder, bool status);
 
     constructor(uint256 _supply) {
-        isAuthorized[msg.sender] = true;
         _totalSupply = _supply * 10 ** _decimals;
         _balances[msg.sender] = _totalSupply;
         emit Transfer(address(0), msg.sender, _totalSupply);
@@ -112,15 +108,8 @@ contract WSO2 is IERC20, Ownable {
         return true;
     }
 
-    function setAuthorizedWallets(
-        address _wallet,
-        bool _status
-    ) external onlyOwner {
-        isAuthorized[_wallet] = _status;
-    }
-
-    function mintTokens(uint256 _tokenAmount) external {
-        require(isAuthorized[msg.sender], "Not authorized to mint");
+    function mintTokens(uint256 _tokenAmount) external onlyOwner {
+        require(_tokenAmount > 0, "Token amount must be greater than zero");
         _balances[msg.sender] += _tokenAmount;
         _totalSupply += _tokenAmount;
         emit Transfer(address(0), msg.sender, _tokenAmount);
