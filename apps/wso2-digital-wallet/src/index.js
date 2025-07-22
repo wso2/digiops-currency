@@ -11,6 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { ThemeSwitcherProvider } from 'react-css-theme-switcher';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -26,11 +27,14 @@ const init = async () => {
   
   // Set light theme as default
   const themeState = "light";
+  const queryClient = new QueryClient();
 
   ReactDOM.render(
     <React.StrictMode>
       <ThemeSwitcherProvider themeMap={themes} defaultTheme={themeState}>
-        <App />
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
       </ThemeSwitcherProvider>
     </React.StrictMode>,
     document.getElementById("root")

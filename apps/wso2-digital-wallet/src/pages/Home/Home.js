@@ -30,19 +30,19 @@ import {
   STORAGE_KEYS,
 } from '../../constants/configs';
 import {
+  ERROR,
   ERROR_RETRIEVE_WALLET_ADDRESS,
   ERROR_BRIDGE_NOT_READY,
   SEND_TOKENS,
   SUCCESS,
   TOTAL_BALANCE,
   WALLET_ADDRESS_COPIED,
+  OK
 } from '../../constants/strings';
-import { showToast } from '../../helpers/alerts';
+import { showToast, showAlertBox } from '../../helpers/alerts';
 import { getLocalDataAsync } from '../../helpers/storage';
-import {
-  getWalletBalanceByWalletAddress,
-} from '../../services/blockchain.service';
 import { waitForBridge } from '../../helpers/bridge';
+import { useWalletBalance } from '../../services/query-hooks';
 
 function Home() {
   const navigate = useNavigate();
@@ -53,6 +53,13 @@ function Home() {
 
   const fetchWalletAddress = async () => {
     try {
+      const isBridgeReady = await waitForBridge();
+      if (!isBridgeReady) {
+        console.error(ERROR_BRIDGE_NOT_READY);
+        showAlertBox(ERROR, ERROR_BRIDGE_NOT_READY, OK);
+        return;
+      }
+
       const walletAddressResponse = await getLocalDataAsync(
         STORAGE_KEYS.WALLET_ADDRESS
       );
@@ -66,19 +73,9 @@ function Home() {
   };
 
   const [isAccountCopied, setIsAccountCopied] = useState(false);
-  const [tokenBalance, setTokenBalance] = useState("0");
-  const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
-  const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
-  const fetchingRef = useRef(false);
-  const retryCountRef = useRef(0);
-  const maxRetries = 3;
+  const { data: tokenBalance, isLoading: isTokenBalanceLoading, refetch } = useWalletBalance(walletAddress);
 
   useEffect(() => {
-    setIsInitialLoadComplete(false);
-    setIsTokenBalanceLoading(false);
-    fetchingRef.current = false;
-    retryCountRef.current = 0;
-    
     fetchWalletAddress();
   }, []);
 
@@ -87,124 +84,9 @@ function Home() {
         walletAddress !== DEFAULT_WALLET_ADDRESS && 
         walletAddress !== "0x" && 
         walletAddress.length === 42) {
-      
-      loadInitialData();
+      refetch();
     }
-  }, [walletAddress]);
-
-  useEffect(() => {
-    if (!isInitialLoadComplete) return;
-
-    const interval = setInterval(() => {
-      if (!fetchingRef.current) {
-        fetchTokenBalanceQuietly();
-      }
-    }, 60000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [isInitialLoadComplete, walletAddress]);
-
-  const loadInitialData = async () => {
-    if (fetchingRef.current) {
-      return;
-    }
-    
-    if (retryCountRef.current >= maxRetries) {
-      setIsInitialLoadComplete(true);
-      return;
-    }
-    
-    retryCountRef.current += 1;
-    
-    try {
-      fetchingRef.current = true;
-      setIsTokenBalanceLoading(true);
-
-      let isBridgeReady = false;
-      let bridgeRetries = 0;
-      const maxBridgeRetries = 5;
-      
-      while (!isBridgeReady && bridgeRetries < maxBridgeRetries) {
-        isBridgeReady = await waitForBridge(3000);
-        if (!isBridgeReady) {
-          bridgeRetries++;
-          if (bridgeRetries < maxBridgeRetries) {
-            await new Promise(resolve => setTimeout(resolve, 500));
-          }
-        }
-      }
-      
-      if (!isBridgeReady) {
-        console.error(ERROR_BRIDGE_NOT_READY + " - Max retries exceeded");
-        if (retryCountRef.current >= maxRetries) {
-          setIsInitialLoadComplete(true);
-        }
-        return;
-      }
-
-      const timeouts = [5000, 8000, 12000];
-      const currentTimeout = timeouts[Math.min(retryCountRef.current - 1, timeouts.length - 1)];
-      
-      const balancePromise = getWalletBalanceByWalletAddress(walletAddress);
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Balance fetch timeout')), currentTimeout)
-      );
-      
-      const tokenBalance = await Promise.race([balancePromise, timeoutPromise]);
-      
-      if (tokenBalance === null || tokenBalance === undefined || isNaN(parseFloat(tokenBalance))) {
-        throw new Error('Invalid balance response');
-      }
-      
-      setTokenBalance(tokenBalance);
-      setIsInitialLoadComplete(true);
-      retryCountRef.current = 0;
-      
-      setTimeout(() => {
-        recentActivitiesRef.current?.refreshTransactions();
-      }, 200);
-      
-    } catch (error) {
-      console.error("Error during initial data load:", error);
-      
-      const shouldRetry = retryCountRef.current < maxRetries && (
-        error.message.includes('timeout') ||
-        error.message.includes('Invalid balance') ||
-        error.message.includes('network') ||
-        error.message.includes('bridge')
-      );
-      
-      if (!shouldRetry) {
-        setIsInitialLoadComplete(true);
-      }
-    } finally {
-      setIsTokenBalanceLoading(false);
-      fetchingRef.current = false;
-    }
-  };
-
-  const fetchTokenBalanceQuietly = async () => {
-    if (fetchingRef.current) return;
-    
-    try {
-      fetchingRef.current = true;
-
-      const tokenBalance = await getWalletBalanceByWalletAddress(walletAddress);
-      
-      if (tokenBalance !== null && tokenBalance !== undefined) {
-        const numBalance = parseFloat(tokenBalance);
-        if (!isNaN(numBalance)) {
-          setTokenBalance(tokenBalance);
-        }
-      }
-    } catch (error) {
-      console.error("Background balance fetch error:", error);
-    } finally {
-      fetchingRef.current = false;
-    }
-  };
+  }, [walletAddress, refetch]);
 
   const handleCopyAccount = async () => {
     showToast(SUCCESS, WALLET_ADDRESS_COPIED);
@@ -226,14 +108,8 @@ function Home() {
   }, [walletAddress]);
 
   const refreshAllData = async () => {
-    if (!fetchingRef.current && isInitialLoadComplete) {
-      try {
-        await fetchTokenBalanceQuietly();
-        recentActivitiesRef.current?.refreshTransactions();
-      } catch (error) {
-        console.error("Error refreshing data:", error);
-      }
-    }
+    await refetch();
+    recentActivitiesRef.current?.refreshTransactions();
   };
 
   return (
@@ -248,13 +124,19 @@ function Home() {
               style={{ margin: "10px " }}
             />
           ) : (
-            <NumericFormat
-              value={tokenBalance}
-              displayType={"text"}
-              thousandSeparator={true}
-              decimalScale={6}
-              fixedDecimalScale={false}
-            />
+            typeof tokenBalance === 'undefined' ? (
+              <span style={{ color: 'red', fontSize: 16 }}>
+                Error loading balance. <Button size="small" onClick={refetch}>Retry</Button>
+              </span>
+            ) : (
+              <NumericFormat
+                value={tokenBalance}
+                displayType={"text"}
+                thousandSeparator={true}
+                decimalScale={6}
+                fixedDecimalScale={false}
+              />
+            )
           )}
         </span>
         {/* <CopyToClipboard text={walletAddress} onCopy={handleCopyAccount}>

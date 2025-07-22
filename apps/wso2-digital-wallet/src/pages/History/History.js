@@ -5,13 +5,20 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import TransactionHistory from "../../components/History/TransactionHistory";
+import { STORAGE_KEYS } from '../../constants/configs';
+import { getLocalDataAsync } from '../../helpers/storage';
 
 function History() {
+  const [walletAddress, setWalletAddress] = useState("");
   useEffect(() => {
     document.body.classList.add('history-active');
-    
+    const fetchWalletAddress = async () => {
+      const address = await getLocalDataAsync(STORAGE_KEYS.WALLET_ADDRESS);
+      setWalletAddress(address || "");
+    };
+    fetchWalletAddress();
     return () => {
       document.body.classList.remove('history-active');
     };
@@ -20,7 +27,7 @@ function History() {
   return (
     <div className="history-page">
       <div className="history-content">
-        <TransactionHistory />
+        <TransactionHistory walletAddress={walletAddress} />
       </div>
     </div>
   );

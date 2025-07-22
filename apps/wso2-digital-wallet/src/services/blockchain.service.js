@@ -52,26 +52,37 @@ export const getCurrentBlockNumber = async (retryCount = 0) => {
   }
 };
 
-export const getWalletBalanceByWalletAddress = async (walletAddress) => {
+export const getWalletBalanceByWalletAddress = async (walletAddress, { timeout = 10000 } = {}) => {
+// Cache decimals in memory for the session
+let cachedDecimals = null;
+const fetchBalance = async () => {
   try {
     const provider = await getRPCProvider();
-    
     // Create ERC20 contract instance
     const contract = new ethers.Contract(
       CONTRACT_ADDRESS,
       JSON.parse(CONTRACT_ABI),
       provider
     );
-
     const balance = await contract.balanceOf(walletAddress);
-    const decimals = await contract.decimals();
+    let decimals;
+    if (cachedDecimals === null) {
+      decimals = await contract.decimals();
+      cachedDecimals = decimals;
+    } else {
+      decimals = cachedDecimals;
+    }
     const formattedBalance = ethers.utils.formatUnits(balance, decimals);
-    
     return formattedBalance;
   } catch (error) {
     console.error('Balance fetch error:', error);
     throw error;
   }
+};
+  return Promise.race([
+    fetchBalance(),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Balance fetch timeout')), timeout))
+  ]);
 };
 
 export const transferToken = async (senderWalletAddress, transferAmount) => {
