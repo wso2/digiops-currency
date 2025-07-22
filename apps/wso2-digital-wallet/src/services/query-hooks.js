@@ -14,9 +14,9 @@ export function useWalletBalance(walletAddress, options = {}) {
     queryKey: ['walletBalance', walletAddress],
     queryFn: () => getWalletBalanceByWalletAddress(walletAddress, { timeout: 5000 }),
     enabled: isValidAddress,
-    staleTime: 30_000, // 30 seconds
-    retry: 2, // Retry up to 2 times on failure
-    retryDelay: attemptIndex => 1000 * (attemptIndex + 1), // 1s, then 2s
+    staleTime: 30_000, // Data is considered fresh for 30 seconds; avoids refetching if still fresh
+    retry: 2,
+    retryDelay: attemptIndex => 1000 * (attemptIndex + 1), // Wait 1s, then 2s between retries
     ...options,
   });
 }
@@ -25,7 +25,7 @@ export function useBlockNumber(options = {}) {
   return useQuery({
     queryKey: ['blockNumber'],
     queryFn: getCurrentBlockNumber,
-    staleTime: 10_000, // 10 seconds
+    staleTime: 10_000, // Data is considered fresh for 10 seconds
     ...options,
   });
 }

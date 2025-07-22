@@ -30,14 +30,18 @@ import {
   STORAGE_KEYS,
 } from '../../constants/configs';
 import {
+  ERROR,
   ERROR_RETRIEVE_WALLET_ADDRESS,
+  ERROR_BRIDGE_NOT_READY,
   SEND_TOKENS,
   SUCCESS,
   TOTAL_BALANCE,
   WALLET_ADDRESS_COPIED,
+  OK
 } from '../../constants/strings';
-import { showToast } from '../../helpers/alerts';
+import { showToast, showAlertBox } from '../../helpers/alerts';
 import { getLocalDataAsync } from '../../helpers/storage';
+import { waitForBridge } from '../../helpers/bridge';
 import { useWalletBalance } from '../../services/query-hooks';
 
 function Home() {
@@ -49,6 +53,13 @@ function Home() {
 
   const fetchWalletAddress = async () => {
     try {
+      const isBridgeReady = await waitForBridge();
+      if (!isBridgeReady) {
+        console.error(ERROR_BRIDGE_NOT_READY);
+        showAlertBox(ERROR, ERROR_BRIDGE_NOT_READY, OK);
+        return;
+      }
+
       const walletAddressResponse = await getLocalDataAsync(
         STORAGE_KEYS.WALLET_ADDRESS
       );

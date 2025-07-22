@@ -26,8 +26,8 @@ export function useTransactionHistory({ walletAddress, pageSize = 20, filter = '
       return { ...result, totalCount: result.transactions.length };
     },
     enabled: !!walletAddress && walletAddress !== '0x' && walletAddress.length === 42,
-    staleTime: 1000 * 60, // 1 minute
-    cacheTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60, // Data is considered fresh for 1 minute
+    cacheTime: 1000 * 60 * 5, // Unused data stays in cache for 5 minutes before garbage collection
   });
 
   const allTransactions = data?.transactions || [];

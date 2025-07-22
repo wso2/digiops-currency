@@ -13,7 +13,7 @@ export function useWalletTransactionHistory(walletAddress, { pageSize = 20, offs
     queryKey: ['walletTransactionHistory', walletAddress, pageSize, offset],
     queryFn: () => getTransactionHistory(walletAddress, 0, 'latest', pageSize, offset),
     enabled: !!walletAddress && enabled,
-    staleTime: 60_000, // 1 minute
-    refetchInterval: false,
+    staleTime: 60_000, // Data is considered fresh for 1 minute
+    refetchInterval: false, // No automatic polling/refetching
   });
 }
