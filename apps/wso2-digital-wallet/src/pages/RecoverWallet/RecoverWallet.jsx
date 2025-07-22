@@ -11,7 +11,6 @@ import { Col, Row } from 'reactstrap';
 import { ethers } from 'ethers';
 import WalletAddressCopy from '../../components/Home/WalletAddressCopy'
 import { useNavigate } from "react-router-dom";
-import { updateUserWalletAddress } from '../../services/wallet.service';
 import './RecoverWallet.css'
 import {
   RECOVER_WALLET,

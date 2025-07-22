@@ -8,14 +8,18 @@
 import "./App.css";
 import { HashRouter as Router } from "react-router-dom";
 import LayoutView from "./LayoutView";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
+  const queryClient = new QueryClient();
   return (
-    <Router>
-      <div className="App">
-        <LayoutView />
-      </div>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <div className="App">
+          <LayoutView />
+        </div>
+      </Router>
+    </QueryClientProvider>
   );
 }
 

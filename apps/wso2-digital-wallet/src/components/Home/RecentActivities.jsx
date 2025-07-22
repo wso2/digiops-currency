@@ -5,8 +5,8 @@
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
 
-import { useEffect, useState, memo, forwardRef, useImperativeHandle } from 'react';
-import { Spin } from 'antd';
+import { useEffect, useState, memo, forwardRef, useImperativeHandle, useRef } from 'react';
+import { Spin, Pagination } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
 import { STORAGE_KEYS } from '../../constants/configs';
@@ -38,22 +38,24 @@ const RecentActivities = forwardRef(({ walletAddress: propWalletAddress }, ref) 
     }
   }, [propWalletAddress]);
 
+  const [page, setPage] = useState(1);
   const {
     transactions,
     loading,
-    hasMore,
-    sentinelRef,
     refresh,
     totalCount,
-    currentCount,
-    loadMore,
-    setupObserver
+    totalPages,
+    page: currentPage,
+    pageSize
   } = useTransactionHistory({
     walletAddress,
     pageSize: 5,
-    autoRefresh: false,
-    refreshInterval: 30000
+    page
   });
+
+  useEffect(() => {
+    setPage(1);
+  }, [walletAddress]);
 
   useImperativeHandle(ref, () => ({
     refreshTransactions: () => {
@@ -65,15 +67,8 @@ const RecentActivities = forwardRef(({ walletAddress: propWalletAddress }, ref) 
     if (walletAddress && walletAddress !== "") {
       refresh();
     }
-  }, [walletAddress, refresh]);
-
-  useEffect(() => {
-    if (transactions.length > 0 && hasMore && !loading) {
-      setTimeout(() => {
-        setupObserver();
-      }, 100);
-    }
-  }, [transactions.length, hasMore, loading, setupObserver]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [walletAddress]);
 
   function TransactionList({ transactions }) {
     if (transactions.length > 0) {
@@ -86,22 +81,6 @@ const RecentActivities = forwardRef(({ walletAddress: propWalletAddress }, ref) 
               index={index} 
             />
           ))}
-          
-          {/* Sentinel element for intersection observer */}
-          {hasMore && (
-            <div 
-              ref={sentinelRef} 
-              className="mt-4 d-flex justify-content-center"
-              style={{ minHeight: '40px' }}
-            >
-              {loading && (
-                <Spin
-                  indicator={<LoadingOutlined style={{ color: COLORS.ORANGE_PRIMARY }} />}
-                  size="small"
-                />
-              )}
-            </div>
-          )}
         </>
       );
     } else {
@@ -132,9 +111,21 @@ const RecentActivities = forwardRef(({ walletAddress: propWalletAddress }, ref) 
             />
           </div>
         ) : (
-          <div className="recent-activity-container">
-            <TransactionList transactions={transactions} />
-          </div>
+          <>
+            <div className="recent-activity-container">
+              <TransactionList transactions={transactions} />
+            </div>
+            <div className="d-flex justify-content-center mt-4">
+              <Pagination
+                current={page}
+                pageSize={5}
+                total={totalCount}
+                onChange={setPage}
+                showSizeChanger={false}
+                hideOnSinglePage
+              />
+            </div>
+          </>
         )}
       </div>
     </div>
