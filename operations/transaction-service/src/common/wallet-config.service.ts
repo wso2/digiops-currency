@@ -6,7 +6,7 @@
 // You may not alter or remove any copyright or other notice from copies of this content.
 
 import { Injectable, Logger } from '@nestjs/common';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 
 export interface WalletConfig {
@@ -17,24 +17,20 @@ export interface WalletConfig {
 @Injectable()
 export class WalletConfigService {
   private readonly logger = new Logger(WalletConfigService.name);
-  private walletConfigs: Record<string, WalletConfig> = {};
-
-  constructor() {
-    this.loadConfig();
-  }
-
-  private loadConfig() {
-    try {
-      const configPath = resolve(__dirname, '../config/wallet-config.json');
-      const data = readFileSync(configPath, 'utf-8');
-      this.walletConfigs = JSON.parse(data);
-      this.logger.log('Wallet config loaded successfully');
-    } catch (error) {
-      this.logger.error('Failed to load wallet config', error);
-    }
-  }
-
   getWalletConfig(clientId: string): WalletConfig | undefined {
-    return this.walletConfigs[clientId];
+    try {
+      const configPath = resolve(__dirname, '../config/wallets', `wallet-config-${clientId}.json`);
+      if (!existsSync(configPath)) {
+        this.logger.warn(`Wallet config file not found for clientId: ${clientId}`);
+        return undefined;
+      }
+      const data = readFileSync(configPath, 'utf-8');
+      const config = JSON.parse(data);
+      this.logger.log(`Wallet config loaded for clientId: ${clientId}`);
+      return config;
+    } catch (error) {
+      this.logger.error(`Failed to load wallet config for clientId: ${clientId}`, error);
+      return undefined;
+    }
   }
 }

@@ -18,29 +18,23 @@ The transactional-api is designed to interact with a smart contract deployed on 
    - `RPC_URL`: The RPC endpoint for your blockchain node.
    - `MAIN_CONTRACT_ADDRESS`: The deployed contract address for the main token contract.
 
-### Wallet Configuration (Multi-Tenant)
+### Wallet Configuration (Per-Client File)
 
-To support multiple clients, wallet credentials are managed in a JSON config file:
+To support multiple clients, each client should have their own wallet config file:
 
-1. Navigate to `src/config/` and locate `wallet-config.example.json`.
-2. Copy it to `wallet-config.json`:
+1. Navigate to `src/config/wallets/`.
+2. Copy `wallet-config-<clientId>.example.json` to a new file named after your clientId:
    ```bash
-   cp src/config/wallet-config.example.json src/config/wallet-config.json
+   cp src/config/wallets/wallet-config-<clientId>.example.json src/config/wallets/wallet-config-<clientId>.json
    ```
-3. Edit `wallet-config.json` and add your client wallet credentials. Example:
+3. Edit `wallet-config-<clientId>.json` and add your wallet credentials. Example:
    ```json
    {
-     "clientIdA": {
-       "WALLET_ADDRESS": "<address-for-client-A>",
-       "WALLET_PRIVATE_KEY": "<private-key-for-client-A>"
-     },
-     "clientIdB": {
-       "WALLET_ADDRESS": "<address-for-client-B>",
-       "WALLET_PRIVATE_KEY": "<private-key-for-client-B>"
-     }
+     "WALLET_ADDRESS": "<address-for-this-client>",
+     "WALLET_PRIVATE_KEY": "<private-key-for-this-client>"
    }
    ```
-   - Each `clientId` should match the `clientId` claim in the JWT sent by that client.
+   - The filename must be `wallet-config-<clientId>.json` where `<clientId>` matches the `clientId` in the JWT sent by that client.
 
 ### Blockchain Configuration
 

@@ -1,0 +1,4 @@
+{
+  "WALLET_ADDRESS": "<address-for-this-client>",
+  "WALLET_PRIVATE_KEY": "<private-key-for-this-client>"
+}

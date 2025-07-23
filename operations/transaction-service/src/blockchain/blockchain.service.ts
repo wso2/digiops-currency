@@ -39,7 +39,7 @@ export class BlockchainService {
   getMasterWalletTokenBalance = async (clientId: string) => {
     const walletConfig = this.walletConfigService.getWalletConfig(clientId);
     if (!walletConfig) {
-      throw new Error('Invalid clientId or wallet config not found');
+      throw new Error(`Wallet config not found for clientId: ${clientId}`);
     }
     const provider = await this.getWeb3Provider();
     const contract = new ethers.Contract(
@@ -96,7 +96,7 @@ export class BlockchainService {
   transferTokens = async (clientId: string, recipientWalletAddress: string, amount: number) => {
     const walletConfig = this.walletConfigService.getWalletConfig(clientId);
     if (!walletConfig) {
-      throw new Error('Invalid clientId or wallet config not found');
+      throw new Error(`Wallet config not found for clientId: ${clientId}`);
     }
     const provider = await this.getWeb3Provider();
     const wallet = new ethers.Wallet(walletConfig.WALLET_PRIVATE_KEY);
