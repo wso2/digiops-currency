@@ -1,0 +1,10 @@
+{
+  "clientIdA": {
+    "WALLET_ADDRESS": "",
+    "WALLET_PRIVATE_KEY": ""
+  },
+  "clientIdB": {
+    "WALLET_ADDRESS": "",
+    "WALLET_PRIVATE_KEY": ""
+  }
+}

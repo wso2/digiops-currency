@@ -10,8 +10,9 @@ import { BlockchainService } from './blockchain.service';
 import { BlockchainController } from './blockchain.controller';
 import { HttpResponseService } from 'src/common/http-response.service';
 import { ConfigService } from '@nestjs/config';
+import { WalletConfigService } from '../common/wallet-config.service';
 @Module({
   controllers: [BlockchainController],
-  providers: [BlockchainService, HttpResponseService, ConfigService],
+  providers: [BlockchainService, HttpResponseService, ConfigService, WalletConfigService],
 })
 export class BlockchainModule {}

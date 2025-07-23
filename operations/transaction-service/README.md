@@ -9,11 +9,38 @@ The transactional-api is designed to interact with a smart contract deployed on 
 ### Environment Setup
 
 1. Navigate to the root directory of the project.
-2. Locate the .env.example file.
-3. Rename the .env.example file to .env.
-4. Edit the .env file and provide the appropriate values for the following variables:
-   `MASTER_WALLET_ADDRESS`: This should be set to the address of the master wallet.
-   `MASTER_WALLET_PRIVATE_KEY`: This is the private key corresponding to the master wallet. Ensure this value is kept confidential.
+2. Locate the `.env.example` file.
+3. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+4. Edit the `.env` file and provide the appropriate values for the following variables:
+   - `RPC_URL`: The RPC endpoint for your blockchain node.
+   - `MAIN_CONTRACT_ADDRESS`: The deployed contract address for the main token contract.
+
+### Wallet Configuration (Multi-Tenant)
+
+To support multiple clients, wallet credentials are managed in a JSON config file:
+
+1. Navigate to `src/config/` and locate `wallet-config.example.json`.
+2. Copy it to `wallet-config.json`:
+   ```bash
+   cp src/config/wallet-config.example.json src/config/wallet-config.json
+   ```
+3. Edit `wallet-config.json` and add your client wallet credentials. Example:
+   ```json
+   {
+     "clientIdA": {
+       "WALLET_ADDRESS": "<address-for-client-A>",
+       "WALLET_PRIVATE_KEY": "<private-key-for-client-A>"
+     },
+     "clientIdB": {
+       "WALLET_ADDRESS": "<address-for-client-B>",
+       "WALLET_PRIVATE_KEY": "<private-key-for-client-B>"
+     }
+   }
+   ```
+   - Each `clientId` should match the `clientId` claim in the JWT sent by that client.
 
 ### Blockchain Configuration
 
