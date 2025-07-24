@@ -42,16 +42,17 @@ export class BlockchainService {
       throw new Error(`Wallet config not found for clientId: ${clientId}`);
     }
     const provider = await this.getWeb3Provider();
+    const contractAddress = walletConfig.contractAddress || blockchainConfigs.contractAddress;
     const contract = new ethers.Contract(
-      blockchainConfigs.contractAddress,
+      contractAddress,
       blockchainConfigs.contractAbi,
       provider,
     );
     const decimals = await contract.decimals();
-    const balance = await contract.balanceOf(walletConfig.WALLET_ADDRESS);
+    const balance = await contract.balanceOf(walletConfig.walletAddress);
     const formattedValue = ethers.utils.formatUnits(balance, decimals);
     return {
-      masterWalletAddress: walletConfig.WALLET_ADDRESS,
+      masterWalletAddress: walletConfig.walletAddress,
       balance: formattedValue,
       tokenBalanceUnFormatted: balance.toString(),
       decimals: decimals,
@@ -99,10 +100,16 @@ export class BlockchainService {
       throw new Error(`Wallet config not found for clientId: ${clientId}`);
     }
     const provider = await this.getWeb3Provider();
-    const wallet = new ethers.Wallet(walletConfig.WALLET_PRIVATE_KEY);
+    const envVar = `WALLET_PRIVATE_KEY_${clientId.toUpperCase()}`;
+    const privateKey = process.env[envVar];
+    if (!privateKey) {
+      throw new Error(`Private key not set in env for clientId: ${clientId}`);
+    }
+    const wallet = new ethers.Wallet(privateKey);
     const signer = wallet.connect(provider);
+    const contractAddress = walletConfig.contractAddress || blockchainConfigs.contractAddress;
     const contract = new ethers.Contract(
-      blockchainConfigs.contractAddress,
+      contractAddress,
       blockchainConfigs.contractAbi,
       signer,
     );

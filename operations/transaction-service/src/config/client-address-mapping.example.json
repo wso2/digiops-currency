@@ -1,0 +1,12 @@
+{
+  "clientIdA": {
+      "walletAddress": "<address-for-this-client>",
+      "useCase": "<usecase-for-this-client>",
+      "contractAddress": "<optional-contract-address-for-this-client>"
+  },
+  "clientIdB": {
+      "walletAddress": "<address-for-this-client>",
+      "useCase": "<usecase-for-this-client>",
+      "contractAddress": "<optional-contract-address-for-this-client>"
+  }
+}

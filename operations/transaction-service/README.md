@@ -15,26 +15,31 @@ The transactional-api is designed to interact with a smart contract deployed on 
    cp .env.example .env
    ```
 4. Edit the `.env` file and provide the appropriate values for the following variables:
+   - `WALLET_PRIVATE_KEY_<CLIENTID>`: The private key of the wallet for Client ID.
    - `RPC_URL`: The RPC endpoint for your blockchain node.
    - `MAIN_CONTRACT_ADDRESS`: The deployed contract address for the main token contract.
 
-### Wallet Configuration (Per-Client File)
 
-To support multiple clients, each client should have their own wallet config file:
+### Wallet & Contract Configuration (Per-Client)
 
-1. Navigate to `src/config/wallets/`.
-2. Copy `wallet-config-<clientId>.example.json` to a new file named after your clientId:
-   ```bash
-   cp src/config/wallets/wallet-config-<clientId>.example.json src/config/wallets/wallet-config-<clientId>.json
-   ```
-3. Edit `wallet-config-<clientId>.json` and add your wallet credentials. Example:
-   ```json
-   {
-     "WALLET_ADDRESS": "<address-for-this-client>",
-     "WALLET_PRIVATE_KEY": "<private-key-for-this-client>"
-   }
-   ```
-   - The filename must be `wallet-config-<clientId>.json` where `<clientId>` matches the `clientId` in the JWT sent by that client.
+Each client must have a single entry in `src/config/client-address-mapping.json`:
+
+```json
+{
+  "clientIdA": {
+    "walletAddress": "<address-for-this-client>",
+    "useCase": "<usecase-for-this-client>",
+    "contractAddress": "<optional-contract-address>"
+  },
+  ...
+}
+```
+- If `contractAddress` is omitted, the service will use the `MAIN_CONTRACT_ADDRESS` from the `.env` file by default.
+- The `walletAddress` is public and used for blockchain operations.
+
+**Private Key Secret:**
+- Each client must set an environment variable named `WALLET_PRIVATE_KEY_<CLIENTID>` (e.g., `WALLET_PRIVATE_KEY_CLIENTIDA`) with their private key. This should be set as a secret.
+- The service will load the private key from this environment variable at runtime.
 
 ### Blockchain Configuration
 
