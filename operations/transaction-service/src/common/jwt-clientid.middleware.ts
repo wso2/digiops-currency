@@ -12,7 +12,7 @@ import { decode } from 'jsonwebtoken';
 @Injectable()
 export class JwtClientIdMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    const jwtHeader = req.headers['x-jwt-assertion'] || req.headers['X-JWT-Assertion'];
+    const jwtHeader = req.headers['x-jwt-assertion'];
     if (!jwtHeader) {
       throw new UnauthorizedException('x-jwt-assertion header missing');
     }
