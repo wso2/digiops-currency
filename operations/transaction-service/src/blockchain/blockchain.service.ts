@@ -28,10 +28,7 @@ export class BlockchainService {
         Authorization: 'Bearer ' + '',
       },
     };
-    const provider = new ethers.providers.StaticJsonRpcProvider(
-      connection,
-      blockchainConfigs.chainID,
-    );
+    const provider = new ethers.JsonRpcProvider(connection.url, blockchainConfigs.chainID);
 
     return provider;
   };
@@ -53,7 +50,7 @@ export class BlockchainService {
     );
     const decimals = await contract.decimals();
     const balance = await contract.balanceOf(walletConfig.PUBLIC_WALLET_ADDRESS);
-    const formattedValue = ethers.utils.formatUnits(balance, decimals);
+    const formattedValue = ethers.formatUnits(balance, decimals);
     return {
       masterWalletAddress: walletConfig.PUBLIC_WALLET_ADDRESS,
       balance: formattedValue,
@@ -71,7 +68,7 @@ export class BlockchainService {
     );
     const decimals = await contract.decimals();
     const balance = await contract.balanceOf(walletAddress);
-    const formattedValue = ethers.utils.formatUnits(balance, decimals);
+    const formattedValue = ethers.formatUnits(balance, decimals);
 
     return {
       balance: formattedValue,
@@ -84,9 +81,7 @@ export class BlockchainService {
     const provider = await this.getWeb3Provider();
     const txDetails = await provider.getTransaction(txHash);
 
-    const contractInterface = new ethers.utils.Interface(
-      blockchainConfigs.contractAbi,
-    );
+    const contractInterface = new ethers.Interface(blockchainConfigs.contractAbi);
     const decodedData = contractInterface.parseTransaction({
       data: txDetails.data,
     });
@@ -120,7 +115,7 @@ export class BlockchainService {
       signer,
     );
     const decimals = await contract.decimals();
-    const transferAmount = ethers.utils.parseUnits(amount.toString(), decimals);
+    const transferAmount = ethers.parseUnits(amount.toString(), decimals);
     const options = {
       gasPrice: '0',
     };
