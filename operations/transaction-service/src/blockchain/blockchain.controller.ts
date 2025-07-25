@@ -10,6 +10,7 @@ import {
   Get,
   Controller,
   HttpStatus,
+  Req,
   Res,
   Param,
   Post,
@@ -49,9 +50,10 @@ export class BlockchainController {
   })
   @ApiResponse({ status: 400, description: 'Bad request.' })
   @ApiResponse({ status: 500, description: 'Server Error.' })
-  async getMasterWalletBalance(@Res() response) {
+  async getMasterWalletBalance(@Req() req, @Res() response) {
     try {
-      const result = await this.blockchainService.getMasterWalletTokenBalance();
+      const clientId = (req as any).clientId;
+      const result = await this.blockchainService.getMasterWalletTokenBalance(clientId);
       return response
         .status(HttpStatus.OK)
         .json(
@@ -138,10 +140,13 @@ export class BlockchainController {
   @ApiResponse({ status: 500, description: 'Server Error.' })
   async transferTokens(
     @Body() transferTokenDto: TransferTokenDto,
+    @Req() req,
     @Res() response,
   ) {
     try {
+      const clientId = (req as any).clientId;
       const result = await this.blockchainService.transferTokens(
+        clientId,
         transferTokenDto.recipientWalletAddress,
         transferTokenDto.amount,
       );

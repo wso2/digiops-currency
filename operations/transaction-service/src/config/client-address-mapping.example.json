@@ -1,0 +1,12 @@
+{
+  "CLIENT_ID_A": {
+      "PUBLIC_WALLET_ADDRESS": "<address-for-this-client>",
+      "USE_CASE": "<usecase-for-this-client>",
+      "CONTRACT_ADDRESS": "<optional-contract-address-for-this-client>"
+  },
+  "CLIENT_ID_B": {
+      "PUBLIC_WALLET_ADDRESS": "<address-for-this-client>",
+      "USE_CASE": "<usecase-for-this-client>",
+      "CONTRACT_ADDRESS": "<optional-contract-address-for-this-client>"
+  }
+}

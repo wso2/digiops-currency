@@ -8,13 +8,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ethers } from 'ethers';
 import { blockchainConfigs } from '../config/blockchain.config';
-import { ConfigService } from '@nestjs/config';
+import { WalletConfigService } from '../common/wallet-config.service';
 
 @Injectable()
 export class BlockchainService {
   private readonly logger = new Logger(BlockchainService.name);
 
-  constructor(private configService: ConfigService) {}
+  constructor(private walletConfigService: WalletConfigService) {}
 
   getWeb3Provider = async () => {
     /** Depending on choreo configurations you may need to use authentication header
@@ -36,23 +36,26 @@ export class BlockchainService {
     return provider;
   };
 
-  getMasterWalletTokenBalance = async () => {
+  getMasterWalletTokenBalance = async (clientId: string) => {
+    if (!/^[a-zA-Z0-9]+$/.test(clientId)) {
+      throw new Error(`Invalid clientId: ${clientId}. Only alphanumeric characters are allowed.`);
+    }
+    const walletConfig = this.walletConfigService.getWalletConfig(clientId);
+    if (!walletConfig) {
+      throw new Error(`Wallet config not found for clientId: ${clientId}`);
+    }
     const provider = await this.getWeb3Provider();
+    const contractAddress = walletConfig.CONTRACT_ADDRESS || blockchainConfigs.contractAddress;
     const contract = new ethers.Contract(
-      blockchainConfigs.contractAddress,
+      contractAddress,
       blockchainConfigs.contractAbi,
       provider,
     );
     const decimals = await contract.decimals();
-    const balance = await contract.balanceOf(
-      this.configService.get('MASTER_WALLET_ADDRESS'),
-    );
-
-    // convert hex value to decimal format
+    const balance = await contract.balanceOf(walletConfig.PUBLIC_WALLET_ADDRESS);
     const formattedValue = ethers.utils.formatUnits(balance, decimals);
-
     return {
-      masterWalletAddress: this.configService.get('MASTER_WALLET_ADDRESS'),
+      masterWalletAddress: walletConfig.PUBLIC_WALLET_ADDRESS,
       balance: formattedValue,
       tokenBalanceUnFormatted: balance.toString(),
       decimals: decimals,
@@ -94,23 +97,29 @@ export class BlockchainService {
     };
   };
 
-  transferTokens = async (recipientWalletAddress: string, amount: number) => {
+  transferTokens = async (clientId: string, recipientWalletAddress: string, amount: number) => {
+    if (!/^[a-zA-Z0-9]+$/.test(clientId)) {
+      throw new Error(`Invalid clientId: ${clientId}. Only alphanumeric characters are allowed.`);
+    }
+    const walletConfig = this.walletConfigService.getWalletConfig(clientId);
+    if (!walletConfig) {
+      throw new Error(`Wallet config not found for clientId: ${clientId}`);
+    }
     const provider = await this.getWeb3Provider();
-
-    // Create a wallet instance from a private key
-    const wallet = new ethers.Wallet(
-      this.configService.get('MASTER_WALLET_PRIVATE_KEY'),
-    );
+    const envVar = `WALLET_PRIVATE_KEY_${clientId.toUpperCase()}`;
+    const privateKey = process.env[envVar];
+    if (!privateKey) {
+      throw new Error(`Private key not set in env for clientId: ${clientId}`);
+    }
+    const wallet = new ethers.Wallet(privateKey);
     const signer = wallet.connect(provider);
-
+    const contractAddress = walletConfig.CONTRACT_ADDRESS || blockchainConfigs.contractAddress;
     const contract = new ethers.Contract(
-      blockchainConfigs.contractAddress,
+      contractAddress,
       blockchainConfigs.contractAbi,
       signer,
     );
-
     const decimals = await contract.decimals();
-
     const transferAmount = ethers.utils.parseUnits(amount.toString(), decimals);
     const options = {
       gasPrice: '0',
@@ -121,10 +130,8 @@ export class BlockchainService {
       options,
     );
     this.logger.log(`Transaction hash: ${tx.hash}`);
-
     const receipt = await tx.wait();
     this.logger.log(`Transaction was mined in block: ${receipt.blockNumber}`);
-
     return {
       txHash: tx.hash,
       status: receipt.status,

@@ -9,11 +9,37 @@ The transactional-api is designed to interact with a smart contract deployed on 
 ### Environment Setup
 
 1. Navigate to the root directory of the project.
-2. Locate the .env.example file.
-3. Rename the .env.example file to .env.
-4. Edit the .env file and provide the appropriate values for the following variables:
-   `MASTER_WALLET_ADDRESS`: This should be set to the address of the master wallet.
-   `MASTER_WALLET_PRIVATE_KEY`: This is the private key corresponding to the master wallet. Ensure this value is kept confidential.
+2. Locate the `.env.example` file.
+3. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+4. Edit the `.env` file and provide the appropriate values for the following variables:
+   - `WALLET_PRIVATE_KEY_<CLIENT_ID>`: The private key of the wallet for Client ID.
+   - `RPC_URL`: The RPC endpoint for your blockchain node.
+   - `MAIN_CONTRACT_ADDRESS`: The deployed contract address for the main token contract.
+
+
+### Wallet & Contract Configuration (Per-Client)
+
+Each client must have a single entry in `src/config/client-address-mapping.json`:
+
+```json
+{
+  "CLIENT_ID_A": {
+    "PUBLIC_WALLET_ADDRESS": "<address-for-this-client>",
+    "USE_CASE": "<usecase-for-this-client>",
+    "CONTRACT_ADDRESS": "<optional-contract-address>"
+  },
+  ...
+}
+```
+- If `contractAddress` is omitted, the service will use the `MAIN_CONTRACT_ADDRESS` from the `.env` file by default.
+- The `walletAddress` is public and used for blockchain operations.
+
+**Private Key Secret:**
+- Each client must set an environment variable named `WALLET_PRIVATE_KEY_<CLIENT_ID>` (e.g., `WALLET_PRIVATE_KEY_CLIENT_ID_A`) with their private key. This should be set as a secret.
+- The service will load the private key from this environment variable at runtime.
 
 ### Blockchain Configuration
 
