@@ -26,10 +26,10 @@ Each client must have a single entry in `src/config/client-address-mapping.json`
 
 ```json
 {
-  "clientIdA": {
-    "walletAddress": "<address-for-this-client>",
-    "useCase": "<usecase-for-this-client>",
-    "contractAddress": "<optional-contract-address>"
+  "CLIENT_ID_A": {
+    "PUBLIC_WALLET_ADDRESS": "<address-for-this-client>",
+    "USE_CASE": "<usecase-for-this-client>",
+    "CONTRACT_ADDRESS": "<optional-contract-address>"
   },
   ...
 }
@@ -38,7 +38,7 @@ Each client must have a single entry in `src/config/client-address-mapping.json`
 - The `walletAddress` is public and used for blockchain operations.
 
 **Private Key Secret:**
-- Each client must set an environment variable named `WALLET_PRIVATE_KEY_<CLIENTID>` (e.g., `WALLET_PRIVATE_KEY_CLIENTIDA`) with their private key. This should be set as a secret.
+- Each client must set an environment variable named `WALLET_PRIVATE_KEY_<CLIENT_ID>` (e.g., `WALLET_PRIVATE_KEY_CLIENT_ID_A`) with their private key. This should be set as a secret.
 - The service will load the private key from this environment variable at runtime.
 
 ### Blockchain Configuration

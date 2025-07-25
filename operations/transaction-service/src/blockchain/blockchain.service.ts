@@ -45,17 +45,17 @@ export class BlockchainService {
       throw new Error(`Wallet config not found for clientId: ${clientId}`);
     }
     const provider = await this.getWeb3Provider();
-    const contractAddress = walletConfig.contractAddress || blockchainConfigs.contractAddress;
+    const contractAddress = walletConfig.CONTRACT_ADDRESS || blockchainConfigs.contractAddress;
     const contract = new ethers.Contract(
       contractAddress,
       blockchainConfigs.contractAbi,
       provider,
     );
     const decimals = await contract.decimals();
-    const balance = await contract.balanceOf(walletConfig.walletAddress);
+    const balance = await contract.balanceOf(walletConfig.PUBLIC_WALLET_ADDRESS);
     const formattedValue = ethers.utils.formatUnits(balance, decimals);
     return {
-      masterWalletAddress: walletConfig.walletAddress,
+      masterWalletAddress: walletConfig.PUBLIC_WALLET_ADDRESS,
       balance: formattedValue,
       tokenBalanceUnFormatted: balance.toString(),
       decimals: decimals,
@@ -113,7 +113,7 @@ export class BlockchainService {
     }
     const wallet = new ethers.Wallet(privateKey);
     const signer = wallet.connect(provider);
-    const contractAddress = walletConfig.contractAddress || blockchainConfigs.contractAddress;
+    const contractAddress = walletConfig.CONTRACT_ADDRESS || blockchainConfigs.contractAddress;
     const contract = new ethers.Contract(
       contractAddress,
       blockchainConfigs.contractAbi,

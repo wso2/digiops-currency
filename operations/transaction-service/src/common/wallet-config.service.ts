@@ -10,9 +10,9 @@ import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 
 export interface WalletConfig {
-  walletAddress: string;
-  useCase: string;
-  contractAddress?: string;
+  PUBLIC_WALLET_ADDRESS: string;
+  USE_CASE: string;
+  CONTRACT_ADDRESS?: string;
 }
 
 @Injectable()
