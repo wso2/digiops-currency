@@ -15,7 +15,7 @@ The transactional-api is designed to interact with a smart contract deployed on 
    cp .env.example .env
    ```
 4. Edit the `.env` file and provide the appropriate values for the following variables:
-   - `WALLET_PRIVATE_KEY_<CLIENTID>`: The private key of the wallet for Client ID.
+   - `WALLET_PRIVATE_KEY_<CLIENT_ID>`: The private key of the wallet for Client ID.
    - `RPC_URL`: The RPC endpoint for your blockchain node.
    - `MAIN_CONTRACT_ADDRESS`: The deployed contract address for the main token contract.
 
