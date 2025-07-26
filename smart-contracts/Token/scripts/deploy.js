@@ -15,7 +15,7 @@ async function main() {
 
   // We get the contract to deploy
   const WSO2Token = await hre.ethers.getContractFactory("WSO2");
-  const wsoTokenContract = await WSO2Token.deploy("1000000000", {
+  const wsoTokenContract = await WSO2Token.deploy("1000000", {
     gasPrice: 0,
     gasLimit: 5000000
   });
