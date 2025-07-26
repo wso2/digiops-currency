@@ -34,9 +34,6 @@ export class BlockchainService {
   };
 
   getMasterWalletTokenBalance = async (clientId: string) => {
-    if (!/^[a-zA-Z0-9]+$/.test(clientId)) {
-      throw new Error(`Invalid clientId: ${clientId}. Only alphanumeric characters are allowed.`);
-    }
     const walletConfig = this.walletConfigService.getWalletConfig(clientId);
     if (!walletConfig) {
       throw new Error(`Wallet config not found for clientId: ${clientId}`);
@@ -93,15 +90,12 @@ export class BlockchainService {
   };
 
   transferTokens = async (clientId: string, recipientWalletAddress: string, amount: number) => {
-    if (!/^[a-zA-Z0-9]+$/.test(clientId)) {
-      throw new Error(`Invalid clientId: ${clientId}. Only alphanumeric characters are allowed.`);
-    }
     const walletConfig = this.walletConfigService.getWalletConfig(clientId);
     if (!walletConfig) {
       throw new Error(`Wallet config not found for clientId: ${clientId}`);
     }
     const provider = await this.getWeb3Provider();
-    const envVar = `WALLET_PRIVATE_KEY_${clientId.toUpperCase()}`;
+    const envVar = `WALLET_PRIVATE_KEY_${clientId}`;
     const privateKey = process.env[envVar];
     if (!privateKey) {
       throw new Error(`Private key not set in env for clientId: ${clientId}`);

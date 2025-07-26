@@ -18,10 +18,14 @@ export class JwtClientIdMiddleware implements NestMiddleware {
     }
     const token = jwtHeader as string;
     const payload = decode(token) as any;
-    if (!payload || !payload.clientId) {
-      throw new UnauthorizedException('clientId missing in JWT');
+    if (!payload) {
+      throw new UnauthorizedException('Invalid JWT token');
     }
-    (req as any).clientId = payload.clientId;
+    const clientId = payload?.client_id || payload?.sub;
+    if (!clientId) {
+      throw new UnauthorizedException('client_id or sub missing in JWT payload');
+    }
+    (req as any).clientId = clientId;
     next();
   }
 }
