@@ -46,7 +46,7 @@ export class BlockchainService {
       provider,
     );
     const decimals = Number(await contract.decimals());
-    const balance = BigInt(await contract.balanceOf(walletConfig.PUBLIC_WALLET_ADDRESS));
+    const balance = await contract.balanceOf(walletConfig.PUBLIC_WALLET_ADDRESS);
     const formattedValue = ethers.formatUnits(balance, decimals);
     return {
       masterWalletAddress: walletConfig.PUBLIC_WALLET_ADDRESS,
@@ -64,7 +64,7 @@ export class BlockchainService {
       provider,
     );
     const decimals = Number(await contract.decimals());
-    const balance = BigInt(await contract.balanceOf(walletAddress));
+    const balance = await contract.balanceOf(walletAddress);
     const formattedValue = ethers.formatUnits(balance, decimals);
 
     return {
