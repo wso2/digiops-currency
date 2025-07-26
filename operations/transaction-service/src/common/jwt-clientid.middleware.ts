@@ -12,15 +12,18 @@ import { decode } from 'jsonwebtoken';
 @Injectable()
 export class JwtClientIdMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    const authHeader = req.headers['authorization'];
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Authorization header missing or malformed');
+    const jwtHeader = req.headers['x-jwt-assertion'];
+    if (!jwtHeader) {
+      throw new UnauthorizedException('x-jwt-assertion header missing');
     }
-    const token = authHeader.split(' ')[1];
+    const token = jwtHeader as string;
     const payload = decode(token) as any;
+    if (!payload) {
+      throw new UnauthorizedException('Invalid JWT token');
+    }
     const clientId = payload?.client_id || payload?.sub;
     if (!clientId) {
-      throw new UnauthorizedException('client_id or sub missing in access token');
+      throw new UnauthorizedException('client_id or sub missing in JWT payload');
     }
     (req as any).clientId = clientId;
     next();
