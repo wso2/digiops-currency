@@ -45,12 +45,12 @@ export class BlockchainService {
       blockchainConfigs.contractAbi,
       provider,
     );
-    const decimals = await contract.decimals();
-    const balance = await contract.balanceOf(walletConfig.PUBLIC_WALLET_ADDRESS);
+    const decimals = Number(await contract.decimals());
+    const balance = BigInt(await contract.balanceOf(walletConfig.PUBLIC_WALLET_ADDRESS));
     const formattedValue = ethers.formatUnits(balance, decimals);
     return {
       masterWalletAddress: walletConfig.PUBLIC_WALLET_ADDRESS,
-      balance: formattedValue,
+      balance: formattedValue.toString(),
       tokenBalanceUnFormatted: balance.toString(),
       decimals: decimals,
     };
@@ -63,12 +63,12 @@ export class BlockchainService {
       blockchainConfigs.contractAbi,
       provider,
     );
-    const decimals = await contract.decimals();
-    const balance = await contract.balanceOf(walletAddress);
+    const decimals = Number(await contract.decimals());
+    const balance = BigInt(await contract.balanceOf(walletAddress));
     const formattedValue = ethers.formatUnits(balance, decimals);
 
     return {
-      balance: formattedValue,
+      balance: formattedValue.toString(),
       tokenBalanceUnFormatted: balance.toString(),
       decimals: decimals,
     };
