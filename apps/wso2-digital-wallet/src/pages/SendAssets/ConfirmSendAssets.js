@@ -26,7 +26,7 @@ import {
   SUCCESS_TOKEN_TRANSFER
 } from "../../constants/strings";
 import { STORAGE_KEYS } from "../../constants/configs";
-import { showAlertBox } from "../../helpers/alerts";
+import { showToast, showAlertBox } from "../../helpers/alerts";
 import { waitForBridge } from "../../helpers/bridge";
 
 function ConfirmSendAssets() {
@@ -98,7 +98,7 @@ function ConfirmSendAssets() {
       const receipt = await transferToken(senderAddress, sendAmount);
       if (receipt) {
         await resetInputFields();
-        showAlertBox(SUCCESS, SUCCESS_TOKEN_TRANSFER, OK);
+        showToast(SUCCESS, SUCCESS_TOKEN_TRANSFER);
         setTimeout(() => {
           navigate("/");
         }, 500);
