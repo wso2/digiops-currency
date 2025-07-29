@@ -66,9 +66,14 @@ function WalletPhrase(props) {
       ),
       okText: "Yes, I have saved it",
       cancelText: "Go Back",
-      okButtonProps: {
+      cancelButtonProps: {
         style: {
           backgroundColor: COLORS.ORANGE_PRIMARY, borderColor: COLORS.ORANGE_PRIMARY, color: "#fff"
+        }
+      },
+      okButtonProps: {
+        style: {
+          backgroundColor: "#fff", borderColor: "#333", borderWidth: ".1px", color: "#000"
         }
       },
       onOk() {
@@ -92,7 +97,7 @@ function WalletPhrase(props) {
       </Row>
 
       <div className="create-wallet-content container">
-        <div className="mt-5">
+        <div className="mt-4">
           <Alert
             message={RECOVERY_PHRASE_WARNING_TEXT}
             type="error"
@@ -107,7 +112,7 @@ function WalletPhrase(props) {
             iconStyle={{ marginRight: "100px" }}
           />
         </div>
-        <div className="mt-3">
+        {/* <div className="mt-3">
           <Alert
             message={
               <span className="custom-alert-message">
@@ -128,7 +133,7 @@ function WalletPhrase(props) {
             }}
             type="success"
           />
-        </div>
+        </div> */}
         <div className="mt-3">
           <WalletAddressCopy
             address={walletAddress}
@@ -145,7 +150,7 @@ function WalletPhrase(props) {
         <div className="mt-3">
           <PhraseCopy phrase={walletPhrase} />
         </div>
-        <div className="mt-5 mb-5">
+        <div className="mt-4 mb-1">
           <Button
             block
             disabled={walletPrivateKey === "" || walletAddress === ""}
