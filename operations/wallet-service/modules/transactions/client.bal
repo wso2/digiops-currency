@@ -19,6 +19,6 @@ final http:Client transactionServiceClient = check new (baseUrl, {
     },
     httpVersion: http:HTTP_1_1,
     http1Settings: {
-        keepAlive: http:KEEPALIVE_AUTO
+        keepAlive: http:KEEPALIVE_NEVER
     }
 });
