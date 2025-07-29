@@ -85,13 +85,7 @@ function WalletPhrase(props) {
   return (
     <div className="wallet-phrase">
       {contextHolder}
-      <Row justify="space-between" align="middle">
-        <Col flex="none">
-          <LeftOutlined
-            style={{ fontSize: "18px", cursor: "pointer", marginTop: "5px" }}
-            onClick={handleClick}
-          />
-        </Col>
+      <Row justify="center" align="middle">
         <Col flex="auto">
           <span className="recovery-phrase-header">{RECOVERY_PHRASE}</span>
         </Col>
