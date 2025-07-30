@@ -49,3 +49,13 @@ public isolated function isUserFirstWallet(string userEmail) returns boolean|sql
         return result.wallet_count == 0;
     }
 }
+
+# Get all wallet addresses for a user with default flag
+public isolated function getWalletAddressesForUser(string userEmail) returns WalletAddressInfo[]|sql:Error {
+    WalletAddressInfo[]|sql:Error result = dbClient->query(getWalletAddressesForUserQuery(userEmail));
+    if result is sql:Error {
+        log:printError("Error while fetching wallet addresses for user", result);
+        return result;
+    }
+    return result;
+}

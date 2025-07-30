@@ -18,3 +18,13 @@ public type UserWallet record {|
     @sql:Column {name: "initial_coins_allocated"}
     decimal initialCoinsAllocated?;
 |};
+
+# Wallet address information for user.
+public type WalletAddressInfo record {| 
+    # Wallet address
+    @sql:Column {name: "wallet_address"}
+    string walletAddress;
+    # Default wallet flag
+    @sql:Column {name: "default_wallet"}
+    boolean defaultWallet;
+|};

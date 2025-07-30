@@ -59,4 +59,22 @@ service http:InterceptableService / on new http:Listener(9091) {
 
         return http:OK;
     }
+
+    # Get all wallet addresses.
+    #
+    # + ctx - Request context
+    # + return - List of wallet addresses and default flag
+    resource function get user\-wallets(http:RequestContext ctx) 
+        returns http:Ok|http:NotFound|error {
+
+        string email = check ctx.getWithType(EMAIL);
+        WalletAddressInfo[]|error walletList = database:getWalletAddressesForUser(email);
+        
+        if walletList is error {
+            log:printError(string `Failed to fetch wallet addresses for user ${email}`, walletList);
+            return http:NOT_FOUND;
+        }
+
+        return http:ok(walletList);
+    }
 }
