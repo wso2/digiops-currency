@@ -27,4 +27,7 @@ public type WalletAddressInfo record {|
     # Default wallet flag
     @sql:Column {name: "default_wallet"}
     boolean defaultWallet;
+    # Created timestamp
+    @sql:Column {name: "created_on"}
+    string createdOn;
 |};
