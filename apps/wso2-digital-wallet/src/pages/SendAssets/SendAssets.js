@@ -31,7 +31,7 @@ function SendAssets() {
   const [messageApi, contextHolder] = message.useMessage();
 
   const [sendWalletAddress, setSendWalletAddress] = useState("");
-  const [sendAmount, setSendAmount] = useState(0);
+  const [sendAmount, setSendAmount] = useState("");
   const [isValidWalletAddress, setIsValidWalletAddress] = useState(false);
   const [isShowErrorMsg, setIsShowErrorMsg] = useState(false);
   const [walletValidationErrorMsg, setWalletValidationErrorMsg] = useState("");
@@ -262,9 +262,13 @@ function SendAssets() {
                     className="send-coin-input"
                     placeholder="Enter value"
                     suffix="WSO2"
-                    type="number"
                     value={sendAmount}
-                    onChange={(e) => setSendAmount(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d*(\.\d*)?$/.test(value)) {
+                        setSendAmount(value);
+                      }
+                    }}
                   />
                 </Input.Group>
                 {/* <span className="send-coin-balance">$0.00 USD</span> */}

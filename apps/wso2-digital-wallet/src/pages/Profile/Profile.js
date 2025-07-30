@@ -104,23 +104,26 @@ function Profile() {
       <div className="d-flex justify-content-center mt-4">
         <Avatar size={80} src={avatar1Url} />
       </div>
-      <div className="d-flex justify-content-center mt-2">
-        <CopyToClipboard text={walletAddress} onCopy={handleCopyAccount}>
-          <Tooltip title={isAccountCopied ? "Copied" : "Copy to Clipboard"}>
-            <Tag className="total-balance-wallet-address mt-2 d-flex">
-              {walletAddress}
-              <div>
-                {!isAccountCopied ? (
-                  <div>
-                    <CopyOutlined style={{ marginLeft: "5px" }} />
-                  </div>
-                ) : (
-                  <CheckOutlined style={{ marginLeft: "5px" }} />
-                )}
-              </div>
-            </Tag>
-          </Tooltip>
-        </CopyToClipboard>
+      <div className="mt-4">
+        <div className="profile-title">Public Wallet Address</div>
+        <div className="d-flex justify-content-center mt-1">
+          <CopyToClipboard text={walletAddress} onCopy={handleCopyAccount}>
+            <Tooltip title={isAccountCopied ? "Copied" : "Copy to Clipboard"}>
+              <Tag className="total-balance-wallet-address mt-2 d-flex">
+                {walletAddress}
+                <div>
+                  {!isAccountCopied ? (
+                    <div>
+                      <CopyOutlined style={{ marginLeft: "5px" }} />
+                    </div>
+                  ) : (
+                    <CheckOutlined style={{ marginLeft: "5px" }} />
+                  )}
+                </div>
+              </Tag>
+            </Tooltip>
+          </CopyToClipboard>
+        </div>
       </div>
       <div className="mt-5">
         <WalletAddressCopy

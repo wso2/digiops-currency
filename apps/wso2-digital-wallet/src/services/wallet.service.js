@@ -30,3 +30,28 @@ export const updateUserWalletAddress = async (walletAddress) => {
     throw error;
   }
 };
+
+export const getUserWalletAddresses = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/user-wallets`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${await getTokenAsync()}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      const errorMessage = errorData.message || "Unknown error";
+      throw new Error(
+        `Failed to fetch wallet addresses: ${response.status} - ${errorMessage}`
+      );
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error while fetching wallet addresses: ", error);
+    throw error;
+  }
+};

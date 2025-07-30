@@ -8,8 +8,15 @@
 */
 
 .logout-button {
-    position: fixed;
-    bottom: 95px;
-    left: 25px;
-    right: 25px;
-  }
+  position: fixed;
+  bottom: 95px;
+  left: 25px;
+  right: 25px;
+}
+
+.profile-title {
+  font-size: .8rem;
+  font-weight: 600;
+  color: #333;
+  display: block;
+}
