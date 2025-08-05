@@ -68,7 +68,7 @@ service http:InterceptableService / on new http:Listener(9091) {
         returns http:Ok|http:NotFound|error {
 
         string email = check ctx.getWithType(EMAIL);
-        types:WalletAddressInfo[]|error walletList = database:getWalletAddressesForUser(email);
+        types:WalletAddressInfo[]|error walletList = database:getWalletAddressesByEmail(email);
         
         if walletList is error {
             log:printError(string `Failed to fetch wallet addresses for user ${email}`, walletList);

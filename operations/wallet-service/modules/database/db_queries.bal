@@ -18,7 +18,7 @@ isolated function getUserWalletQuery(string walletAddress) returns sql:Parameter
     WHERE
         wallet_address = ${walletAddress}`;
 
-isolated function getWalletAddressesForUserQuery(string userEmail) returns sql:ParameterizedQuery =>
+isolated function getWalletAddressesByEmailQuery(string userEmail) returns sql:ParameterizedQuery =>
     `SELECT
         wallet_address,
         default_wallet,
