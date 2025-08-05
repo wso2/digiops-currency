@@ -40,23 +40,18 @@ export default function RecoverWallet() {
   const [loading, setLoading] = useState(false);
 
   const handleInputChange = (index, value) => {
+    let newWordList = [...wordList];
     if (value && value.trim().split(' ').length === PASS_PHRASE_LENGTH) {
       const words = value.trim().split(' ');
-      const newWordList = [...wordList];
       for (let i = 0; i < Math.min(words.length, 12); i++) {
         newWordList[i] = words[i];
-        if (words.length === 12) {
-          setContinueRecover(true)
-        } else {
-          setContinueRecover(false)
-        }
       }
-      setWordList(newWordList);
     } else {
-      const newWordList = [...wordList];
       newWordList[index] = value;
-      setWordList(newWordList);
     }
+    setWordList(newWordList);
+    const allWordsFilled = newWordList.filter(word => word && word.trim()).length === PASS_PHRASE_LENGTH;
+    setContinueRecover(allWordsFilled);
   };
 
   const handleRecover = () => {
