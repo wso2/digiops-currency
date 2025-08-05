@@ -60,7 +60,7 @@ service http:InterceptableService / on new http:Listener(9091) {
         return http:OK;
     }
 
-    # Get all wallet addresses.
+    # Get user wallets.
     #
     # + ctx - Request context
     # + return - List of wallet addresses and default flag
