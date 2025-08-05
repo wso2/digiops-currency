@@ -8,7 +8,7 @@
 import React from 'react';
 
 import { Layout } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import {
   HistoryOutlined,
@@ -21,12 +21,21 @@ import {
   PROFILE,
   WALLET,
 } from '../../constants/strings';
+import { COLORS } from '../../constants/colors';
 
 const FooterBar = () => {
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { Footer } = Layout;
+  
+  const activeColor = COLORS.ORANGE_PRIMARY;
+  const inactiveColor = COLORS.GRAY_MEDIUM;
+
+  const getIconColor = (path) => {
+    return location.pathname === path ? activeColor : inactiveColor;
+  };
 
   const handleHomeNavigation = () => {
     navigate('/');
@@ -45,21 +54,21 @@ const FooterBar = () => {
       <div className="d-flex justify-content-between">
         <div className="d-flex flex-column">
           <span className="footer-icons" onClick={handleHomeNavigation}>
-            <WalletOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+            <WalletOutlined style={{ fontSize: "20px", cursor: "pointer", color: getIconColor('/') }} />
           </span>
-          <span className="footer-names">{WALLET}</span>
+          <span className="footer-names" style={{ color: getIconColor('/') }}>{WALLET}</span>
         </div>
         <div className="d-flex flex-column">
           <span className="footer-icons" onClick={handleNavigateHistory}>
-            <HistoryOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+            <HistoryOutlined style={{ fontSize: "20px", cursor: "pointer", color: getIconColor('/history') }} />
           </span>
-          <span className="footer-names">{HISTORY}</span>
+          <span className="footer-names" style={{ color: getIconColor('/history') }}>{HISTORY}</span>
         </div>
         <div className="d-flex flex-column">
           <span className="footer-icons mx-2" onClick={handleNavigateProfile}>
-            <UserOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+            <UserOutlined style={{ fontSize: "20px", cursor: "pointer", color: getIconColor('/profile') }} />
           </span>
-          <span className="footer-names">{PROFILE}</span>
+          <span className="footer-names" style={{ color: getIconColor('/profile') }}>{PROFILE}</span>
         </div>
       </div>
     </Footer>

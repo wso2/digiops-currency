@@ -142,7 +142,7 @@ function Profile() {
             <div style={{ marginTop: '15px', fontWeight: 600, wordBreak: 'break-all', marginBottom: '8px', fontSize: '0.85rem' }}>
               {selectedWallet.walletAddress}
             </div>
-            <div style={{ fontSize: '12px', color: '#888', marginBottom: '12px' }}>
+            <div style={{ fontSize: '12px', color: COLORS.GRAY_LIGHT, marginBottom: '12px' }}>
               Created on: {new Date(selectedWallet.createdOn).toLocaleString()}
             </div>
             <div style={{ marginBottom: '12px' }}>
@@ -158,9 +158,9 @@ function Profile() {
                 disabled={selectedWallet.defaultWallet}
                 style={{
                   minWidth: '160px',
-                  backgroundColor: selectedWallet.defaultWallet ? '#d9d9d9' : '#ff7300',
-                  color: selectedWallet.defaultWallet ? '#888' : '#fff',
-                  border: selectedWallet.defaultWallet ? '1px solid #d9d9d9' : undefined
+                  backgroundColor: selectedWallet.defaultWallet ? COLORS.GRAY_LIGHT : COLORS.ORANGE_PRIMARY,
+                  color: selectedWallet.defaultWallet ? COLORS.GRAY_MEDIUM : COLORS.WHITE,
+                  border: selectedWallet.defaultWallet ? `1px solid ${COLORS.GRAY_LIGHT}` : undefined
                 }}
               >
                 Set as Primary
@@ -217,7 +217,7 @@ function Profile() {
         ) : (
           <div className="wallet-list mt-2">
             {userWallets.map((wallet, idx) => (
-                <div key={wallet.walletAddress + idx} className="wallet-list-item mb-3 p-3" style={{ border: '1px solid #eee', borderRadius: '8px', position: 'relative', cursor: 'pointer' }}
+                <div key={wallet.walletAddress + idx} className="wallet-list-item mb-3 p-3" style={{ border: `1px solid ${COLORS.BORDER_LIGHT}`, borderRadius: '8px', position: 'relative', cursor: 'pointer' }}
                   onClick={() => { setSelectedWallet(wallet); setIsWalletModalOpen(true); }}>
                 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -229,7 +229,7 @@ function Profile() {
                   )}
                 </div>
 
-                <div className="wallet-created-on" style={{ fontSize: '11px', color: '#888', marginTop: '4px', textAlign: 'left' }}>
+                <div className="wallet-created-on" style={{ fontSize: '11px', color: COLORS.GRAY_MEDIUM, marginTop: '4px', textAlign: 'left' }}>
                   Created on: {new Date(wallet.createdOn).toLocaleString()}
                 </div>
               </div>
