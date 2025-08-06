@@ -46,3 +46,14 @@ isolated function getUserWalletCountQuery(string userEmail) returns sql:Paramete
         user_wallet
     WHERE
         user_email = ${userEmail}`;
+
+isolated function setWalletAsPrimaryQuery(string userEmail, string walletAddress) returns sql:ParameterizedQuery =>
+    `UPDATE
+        user_wallet
+    SET
+        default_wallet = CASE 
+            WHEN wallet_address = ${walletAddress} THEN true 
+            ELSE false 
+        END
+    WHERE
+        user_email = ${userEmail}`;

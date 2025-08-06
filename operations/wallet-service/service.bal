@@ -76,4 +76,23 @@ service http:InterceptableService / on new http:Listener(9091) {
 
         return walletList;
     }
+
+    # Set wallet as primary.
+    #
+    # + ctx - Request context
+    # + walletAddress - Wallet address to set as primary
+    # + return - http:OK if wallet set as primary successfully, http:NotFound if wallet not found
+    resource function put user\-wallet\-primary(http:RequestContext ctx, string walletAddress)
+        returns http:Ok|http:NotFound|error {
+
+        string email = check ctx.getWithType(EMAIL);
+        
+        error? result = database:setWalletAsPrimary(email, walletAddress);
+        
+        if result is error {
+            log:printError(string `Failed to set wallet ${walletAddress} as primary for user ${email}`, result);
+            return result;
+        }
+        return http:OK;
+    }
 }

@@ -55,3 +55,27 @@ export const getUserWalletAddresses = async () => {
     throw error;
   }
 };
+
+export const setWalletAsPrimary = async (walletAddress) => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/user-wallet-primary?walletAddress=${walletAddress}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${await getTokenAsync()}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      const errorMessage = errorData.message || "Unknown error";
+      throw new Error(
+        `Failed to set wallet as primary: ${response.status} - ${errorMessage}`
+      );
+    }
+  } catch (error) {
+    console.error("Error while setting wallet as primary: ", error);
+    throw error;
+  }
+};

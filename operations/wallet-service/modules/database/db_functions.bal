@@ -61,3 +61,17 @@ public isolated function getWalletAddressesByEmail(string userEmail) returns typ
     return from types:WalletAddressInfo wallet in walletListStream
         select wallet;
 }
+
+# Set a wallet as primary for a user.
+#
+# + userEmail - The email address of the user
+# + walletAddress - The wallet address to set as primary
+# + return - Error if error occurred, otherwise nothing
+public isolated function setWalletAsPrimary(string userEmail, string walletAddress) returns sql:Error? {
+    sql:ExecutionResult|sql:Error result = dbClient->execute(setWalletAsPrimaryQuery(userEmail, walletAddress));
+    if result is sql:Error {
+        log:printError(string `Error while setting wallet ${walletAddress} as primary for user ${userEmail}`, result);
+        return result;
+    }
+    return ();
+}
