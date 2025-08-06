@@ -91,7 +91,7 @@ service http:InterceptableService / on new http:Listener(9091) {
         
         if result is error {
             log:printError(string `Failed to set wallet ${walletAddress} as primary for user ${email}`, result);
-            return result;
+            return error("Failed to set wallet as primary.");
         }
         return http:OK;
     }
