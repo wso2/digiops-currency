@@ -6,7 +6,6 @@
 // You may not alter or remove any copyright or other notice from copies of this content.
 import wallet_service.types;
 
-import ballerina/log;
 import ballerina/sql;
 
 # Check if wallet already exists or not.
@@ -16,7 +15,6 @@ import ballerina/sql;
 public isolated function isUserWalletExists(string walletAddress) returns boolean|sql:Error {
     types:UserWallet|sql:Error walletResponse = dbClient->queryRow(getUserWalletQuery(walletAddress));
     if walletResponse is sql:Error && walletResponse !is sql:NoRowsError {
-        log:printError("Error while checking user wallet", walletResponse, info = walletResponse.toString());
         return walletResponse;
     }
     return walletResponse is types:UserWallet;
@@ -31,7 +29,6 @@ public isolated function isUserFirstWallet(string userEmail) returns boolean|sql
     if result is sql:NoRowsError {
         return true;
     } else if result is sql:Error {
-        log:printError("Error while checking user wallet count", result);
         return result;
     } else {
         return result.wallet_count == 0;
@@ -45,12 +42,8 @@ public isolated function isUserFirstWallet(string userEmail) returns boolean|sql
 public isolated function getUserWallet(string walletAddress) returns types:UserWallet|error? {
     types:UserWallet|sql:Error walletResponse = dbClient->queryRow(getUserWalletQuery(walletAddress));
     
-    if walletResponse is sql:Error {
-        if walletResponse is sql:NoRowsError {
-            return null;
-        }
-        log:printError("Error while getting user wallet", walletResponse, info = walletResponse.toString());
-        return walletResponse;
+    if walletResponse is sql:NoRowsError {
+        return null;
     }
     return walletResponse;
 }
@@ -74,7 +67,6 @@ public isolated function getWalletAddressesByEmail(string userEmail) returns typ
 public isolated function insertUserWallet(types:UserWallet userWallet) returns sql:Error? {
     sql:ExecutionResult|sql:Error result = dbClient->execute(insertUserWalletQuery(userWallet));
     if result is error {
-        log:printError("Error while inserting user wallet", result);
         return result;
     }
 }
@@ -87,7 +79,6 @@ public isolated function insertUserWallet(types:UserWallet userWallet) returns s
 public isolated function setWalletAsPrimary(string userEmail, string walletAddress) returns sql:Error? {
     sql:ExecutionResult|sql:Error result = dbClient->execute(setWalletAsPrimaryQuery(userEmail, walletAddress));
     if result is sql:Error {
-        log:printError(string `Error while setting wallet ${walletAddress} as primary for user ${userEmail}`, result);
         return result;
     }
 }

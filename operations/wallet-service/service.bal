@@ -92,6 +92,7 @@ service http:InterceptableService / on new http:Listener(9091) {
         types:UserWallet|error? walletDetails = database:getUserWallet(walletAddress);
         
         if walletDetails is error {
+            log:printError(string `Error getting wallet details for ${walletAddress}`, walletDetails);
             return error("Failed to get wallet details.");
         } else if walletDetails is () {
             log:printWarn(string `Wallet ${walletAddress} not found`);
