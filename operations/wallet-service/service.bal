@@ -71,7 +71,7 @@ service http:InterceptableService / on new http:Listener(9091) {
         
         if walletList is error {
             log:printError(string `Failed to fetch wallet addresses for user ${email}`, walletList);
-            return walletList;
+            return error("Failed to fetch user wallets.");
         }
 
         return walletList;
