@@ -104,14 +104,14 @@ function Profile() {
 
   const generateAvatar = (seed) => {
     const options = {
-      size: 80 // Adjust the size of the identicon image
+      size: 80
     };
     const hash = SHA256(seed).toString();
     const data = new Identicon(hash.slice(0, 15), options).toString();
     return "data:image/png;base64," + data;
   };
 
-  const avatar1Url = generateAvatar("avatar1");
+  const avatarUrl = generateAvatar(walletAddress || "default");
 
   const handleCopyAccount = async () => {
     showToast(SUCCESS, WALLET_ADDRESS_COPIED);
@@ -184,7 +184,7 @@ function Profile() {
                 style={{
                   minWidth: '160px',
                   backgroundColor: selectedWallet.defaultWallet ? COLORS.GRAY_LIGHT : COLORS.ORANGE_PRIMARY,
-                  color: selectedWallet.defaultWallet ? COLORS.GRAY_MEDIUM : COLORS.WHITE,
+                  color: selectedWallet.defaultWallet ? COLORS.GRAY_DARK : COLORS.WHITE,
                   border: selectedWallet.defaultWallet ? `1px solid ${COLORS.GRAY_LIGHT}` : undefined
                 }}
               >
@@ -198,7 +198,7 @@ function Profile() {
         <h4>Profile</h4>
       </div>
       {/* <div className="d-flex justify-content-center mt-4">
-        <Avatar size={80} src={avatar1Url} />
+        <Avatar size={80} src={avatarUrl} />
       </div> */}
       <div className="mt-4">
         <div className="profile-title">Public Wallet Address</div>
