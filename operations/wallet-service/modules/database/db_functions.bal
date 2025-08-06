@@ -41,7 +41,6 @@ public isolated function isUserFirstWallet(string userEmail) returns boolean|sql
 # + return - UserWallet details if found, null if not found, error if database error occurred
 public isolated function getUserWallet(string walletAddress) returns types:UserWallet|error? {
     types:UserWallet|sql:Error walletResponse = dbClient->queryRow(getUserWalletQuery(walletAddress));
-    
     if walletResponse is sql:NoRowsError {
         return null;
     }
