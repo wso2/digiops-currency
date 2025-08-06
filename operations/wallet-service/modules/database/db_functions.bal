@@ -49,3 +49,15 @@ public isolated function isUserFirstWallet(string userEmail) returns boolean|sql
         return result.wallet_count == 0;
     }
 }
+
+# Get all wallet addresses for a user with default flag.
+#
+# + userEmail - The email address of the user whose wallets are listed.
+# + return - An array of WalletAddressInfo records, or a sql:Error if the query fails.
+public isolated function getWalletAddressesByEmail(string userEmail) returns types:WalletAddressInfo[]|sql:Error {
+    
+    stream<types:WalletAddressInfo, sql:Error?> walletListStream = dbClient->query(getWalletAddressesByEmailQuery(userEmail));
+    
+    return from types:WalletAddressInfo wallet in walletListStream
+        select wallet;
+}

@@ -86,7 +86,7 @@ const RecentActivities = forwardRef(({ walletAddress: propWalletAddress }, ref) 
     } else {
       return (
         <div className="mt-5">
-          <p className="text-muted">no recent activities</p>
+          <p className="text-muted">No recent activities.</p>
         </div>
       );
     }

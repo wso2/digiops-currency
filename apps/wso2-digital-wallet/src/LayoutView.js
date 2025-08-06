@@ -26,7 +26,8 @@ function LayoutView() {
       location.pathname === "/create-wallet" ||
       location.pathname === "/wallet-phrase" ||
       location.pathname === "/recover-wallet" ||
-      location.pathname === "/history"
+      location.pathname === "/history" ||
+      location.pathname === "/profile"
     ) {
       setIsShowNavBar(false);
     } else {

@@ -9,14 +9,73 @@
 
 .logout-button {
   position: fixed;
-  bottom: 95px;
+  bottom: 85px;
   left: 25px;
   right: 25px;
 }
 
+.default-button {
+  border-width: .5px !important;
+}
+
 .profile-title {
-  font-size: .8rem;
+  font-size: .73rem;
   font-weight: 600;
   color: #333;
   display: block;
+  text-align: left !important;
+}
+
+.wallet-list-title {
+  text-align: left !important;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #333;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.wallet-list {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 5px;
+  padding-bottom: 10px;
+}
+
+.wallet-list-item {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  padding: 1rem;
+  transition: box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+.wallet-list-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.wallet-list-item .wallet-address {
+  text-align: left;
+  word-break: break-all;
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.wallet-list-item .wallet-created-on {
+  text-align: left;
+  display: block;
+}
+
+h4 {
+  margin-top: 30px;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ant-color-text, #000);
 }

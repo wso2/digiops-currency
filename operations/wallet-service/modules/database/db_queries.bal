@@ -18,6 +18,16 @@ isolated function getUserWalletQuery(string walletAddress) returns sql:Parameter
     WHERE
         wallet_address = ${walletAddress}`;
 
+isolated function getWalletAddressesByEmailQuery(string userEmail) returns sql:ParameterizedQuery =>
+    `SELECT
+        wallet_address,
+        default_wallet,
+        created_on
+    FROM
+        user_wallet
+    WHERE
+        user_email = ${userEmail}`;
+
 isolated function insertUserWalletQuery(types:UserWallet userWallet) returns sql:ParameterizedQuery =>
     `INSERT INTO user_wallet (
         user_email,
