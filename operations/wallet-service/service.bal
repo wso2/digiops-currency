@@ -20,6 +20,7 @@ service http:InterceptableService / on new http:Listener(9091) {
     public function createInterceptors() returns JwtInterceptor => new JwtInterceptor();
 
     # Add user wallet.
+    # TODO: Refactor to POST /wallets with walletAddress in request body
     #
     # + ctx - Request context
     # + walletAddress - Wallet address
@@ -61,6 +62,7 @@ service http:InterceptableService / on new http:Listener(9091) {
     }
 
     # Get user wallets.
+    # TODO: Refactor to GET /wallets
     #
     # + ctx - Request context
     # + return - List of wallet addresses and default flag
@@ -81,11 +83,23 @@ service http:InterceptableService / on new http:Listener(9091) {
     #
     # + ctx - Request context
     # + walletAddress - Wallet address to set as primary
-    # + return - http:OK if wallet set as primary successfully, http:NotFound if wallet not found
-    resource function put user\-wallet\-primary(http:RequestContext ctx, string walletAddress)
-        returns http:Ok|http:NotFound|error {
+    # + return - http:OK if wallet set as primary successfully, http:NotFound if wallet not found, http:Forbidden if wallet doesn't belong to user
+    resource function post wallets/[string walletAddress]/set\-primary(http:RequestContext ctx)
+        returns http:Ok|http:NotFound|http:Forbidden|error {
 
         string email = check ctx.getWithType(EMAIL);
+        
+        types:UserWallet|error? walletDetails = database:getUserWallet(walletAddress);
+        
+        if walletDetails is () {
+            log:printInfo(string `Wallet ${walletAddress} not found`);
+            return http:NOT_FOUND;
+        } else if walletDetails is error {
+            return error("Failed to get wallet details.");
+        } else if walletDetails.userEmail != email {
+            log:printInfo(string `Wallet ${walletAddress} does not belong to user ${email}.`);
+            return http:FORBIDDEN;
+        }
         
         error? result = database:setWalletAsPrimary(email, walletAddress);
         

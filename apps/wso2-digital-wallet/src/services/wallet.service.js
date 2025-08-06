@@ -59,9 +59,9 @@ export const getUserWalletAddresses = async () => {
 export const setWalletAsPrimary = async (walletAddress) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/user-wallet-primary?walletAddress=${walletAddress}`,
+      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/wallets/${walletAddress}/set-primary`,
       {
-        method: "PUT",
+        method: "POST",
         headers: {
           Authorization: `Bearer ${await getTokenAsync()}`,
         },
