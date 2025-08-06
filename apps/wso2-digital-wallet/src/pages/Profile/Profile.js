@@ -127,7 +127,7 @@ function Profile() {
     setIsSettingPrimary(true);
     try {
       await setWalletAsPrimary(selectedWallet.walletAddress);
-      showToast(SUCCESS, "Wallet set as primary successfully");
+      showToast(SUCCESS, "Successfully set as primary wallet");
       
       await fetchUserWallets();
       
