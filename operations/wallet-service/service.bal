@@ -82,30 +82,30 @@ service http:InterceptableService / on new http:Listener(9091) {
     # Set wallet as primary.
     #
     # + ctx - Request context
-    # + walletAddress - Wallet address to set as primary
+    # + address - Wallet address to set as primary
     # + return - http:OK if wallet set as primary successfully, http:NotFound if wallet not found, http:Forbidden if wallet doesn't belong to user
-    resource function post wallets/[string walletAddress]/set\-primary(http:RequestContext ctx)
+    resource function post wallets/[string address]/set\-primary(http:RequestContext ctx)
         returns http:Ok|http:NotFound|http:Forbidden|error {
 
         string email = check ctx.getWithType(EMAIL);
         
-        types:UserWallet|error? walletDetails = database:getUserWallet(walletAddress);
+        types:UserWallet|error? walletDetails = database:getUserWallet(address);
         
         if walletDetails is error {
-            log:printError(string `Error getting wallet details for ${walletAddress}`, walletDetails);
+            log:printError(string `Error getting wallet details for ${address}`, walletDetails);
             return error("Failed to get wallet details.");
         } else if walletDetails is () {
-            log:printWarn(string `Wallet ${walletAddress} not found`);
+            log:printWarn(string `Wallet ${address} not found`);
             return http:NOT_FOUND;
         } else if walletDetails.userEmail != email {
-            log:printWarn(string `Wallet ${walletAddress} does not belong to user ${email}.`);
+            log:printWarn(string `Wallet ${address} does not belong to user ${email}.`);
             return http:FORBIDDEN;
         }
         
-        error? result = database:setWalletAsPrimary(email, walletAddress);
+        error? result = database:setWalletAsPrimary(email, address);
         
         if result is error {
-            log:printError(string `Failed to set wallet ${walletAddress} as primary for user ${email}`, result);
+            log:printError(string `Failed to set wallet ${address} as primary for user ${email}`, result);
             return error("Failed to set wallet as primary.");
         }
         return http:OK;
