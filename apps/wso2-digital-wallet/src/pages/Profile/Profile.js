@@ -194,7 +194,7 @@ function Profile() {
           </div>
         )}
       </Modal>
-      <div>
+      <div className="profile-header">
         <h4>Profile</h4>
       </div>
       {/* <div className="d-flex justify-content-center mt-4">
