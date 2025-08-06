@@ -45,9 +45,10 @@ public isolated function isUserFirstWallet(string userEmail) returns boolean|sql
 public isolated function getUserWallet(string walletAddress) returns types:UserWallet|error? {
     types:UserWallet|sql:Error walletResponse = dbClient->queryRow(getUserWalletQuery(walletAddress));
     
-    if walletResponse is sql:NoRowsError {
-        return null;
-    } else if walletResponse is sql:Error {
+    if walletResponse is sql:Error {
+        if walletResponse is sql:NoRowsError {
+            return null;
+        }
         log:printError("Error while getting user wallet", walletResponse, info = walletResponse.toString());
         return walletResponse;
     }
@@ -73,7 +74,7 @@ public isolated function getWalletAddressesByEmail(string userEmail) returns typ
 public isolated function insertUserWallet(types:UserWallet userWallet) returns sql:Error? {
     sql:ExecutionResult|sql:Error result = dbClient->execute(insertUserWalletQuery(userWallet));
     if result is error {
-        log:printError("Error while inserting user wallet", result, info = result.toString());
+        log:printError("Error while inserting user wallet", result);
         return result;
     }
 }
@@ -89,5 +90,4 @@ public isolated function setWalletAsPrimary(string userEmail, string walletAddre
         log:printError(string `Error while setting wallet ${walletAddress} as primary for user ${userEmail}`, result);
         return result;
     }
-    return ();
 }

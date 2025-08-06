@@ -91,13 +91,13 @@ service http:InterceptableService / on new http:Listener(9091) {
         
         types:UserWallet|error? walletDetails = database:getUserWallet(walletAddress);
         
-        if walletDetails is () {
-            log:printInfo(string `Wallet ${walletAddress} not found`);
-            return http:NOT_FOUND;
-        } else if walletDetails is error {
+        if walletDetails is error {
             return error("Failed to get wallet details.");
+        } else if walletDetails is () {
+            log:printWarn(string `Wallet ${walletAddress} not found`);
+            return http:NOT_FOUND;
         } else if walletDetails.userEmail != email {
-            log:printInfo(string `Wallet ${walletAddress} does not belong to user ${email}.`);
+            log:printWarn(string `Wallet ${walletAddress} does not belong to user ${email}.`);
             return http:FORBIDDEN;
         }
         
