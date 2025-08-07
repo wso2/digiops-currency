@@ -76,7 +76,7 @@ service http:InterceptableService / on new http:Listener(9091) {
             return error("Failed to fetch user wallets.");
         }
 
-        return error("Failed to fetch user wallets.");
+        return walletList;
     }
 
     # Set wallet as primary.
