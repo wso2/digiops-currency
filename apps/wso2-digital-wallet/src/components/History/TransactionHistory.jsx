@@ -8,6 +8,7 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Spin, Button, Input, Pagination } from 'antd';
 import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
+import { COLORS } from '../../constants/colors';
 
 import { useTransactionHistory } from '../../hooks/useTransactionHistory';
 import TransactionItem from '../shared/TransactionItem';
@@ -19,7 +20,6 @@ function TransactionHistory({ walletAddress }) {
   const [filter, setFilter] = useState('all');
   const [page, setPage] = useState(1);
   const searchInputRef = useRef(null);
-  const orangeColor = "#ff7300";
 
   const queryClient = useQueryClient();
   const allData = queryClient.getQueryData(['transactions', walletAddress]);
@@ -144,7 +144,7 @@ function TransactionHistory({ walletAddress }) {
         {loading && transactions.length === 0 ? (
           <div className="mt-5 text-center">
             <Spin
-              indicator={<LoadingOutlined style={{ color: orangeColor }} />}
+              indicator={<LoadingOutlined style={{ color: COLORS.ORANGE_PRIMARY }} />}
               style={{ margin: "10px " }}
             />
             <div className="mt-2">Loading transaction history...</div>
