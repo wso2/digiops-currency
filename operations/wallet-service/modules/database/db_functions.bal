@@ -42,7 +42,7 @@ public isolated function isUserFirstWallet(string userEmail) returns boolean|sql
 public isolated function getUserWallet(string walletAddress) returns types:UserWallet|error? {
     types:UserWallet|sql:Error walletResponse = dbClient->queryRow(getUserWalletQuery(walletAddress));
     if walletResponse is sql:NoRowsError {
-        return null;
+        return ();
     }
     return walletResponse;
 }
