@@ -20,6 +20,7 @@ service http:InterceptableService / on new http:Listener(9091) {
     public function createInterceptors() returns JwtInterceptor => new JwtInterceptor();
 
     # Add user wallet.
+    # TODO: Refactor to POST /wallets with walletAddress in request body
     #
     # + ctx - Request context
     # + walletAddress - Wallet address
@@ -61,6 +62,7 @@ service http:InterceptableService / on new http:Listener(9091) {
     }
 
     # Get user wallets.
+    # TODO: Refactor to GET /wallets
     #
     # + ctx - Request context
     # + return - List of wallet addresses and default flag
@@ -75,5 +77,37 @@ service http:InterceptableService / on new http:Listener(9091) {
         }
 
         return walletList;
+    }
+
+    # Set wallet as primary.
+    #
+    # + ctx - Request context
+    # + address - Wallet address to set as primary
+    # + return - http:OK if wallet set as primary successfully, http:NotFound if wallet not found, http:Forbidden if wallet doesn't belong to user
+    resource function post wallets/[string address]/set\-primary(http:RequestContext ctx)
+        returns http:Ok|http:NotFound|http:Forbidden|error {
+
+        string email = check ctx.getWithType(EMAIL);
+        
+        types:UserWallet|error? walletDetails = database:getUserWallet(address);
+        
+        if walletDetails is error {
+            log:printError(string `Error getting wallet details for ${address}`, walletDetails);
+            return error("Failed to get wallet details.");
+        } else if walletDetails is () {
+            log:printWarn(string `Wallet ${address} not found`);
+            return http:NOT_FOUND;
+        } else if walletDetails.userEmail != email {
+            log:printError(string `Wallet ${address} does not belong to user ${email}.`);
+            return http:FORBIDDEN;
+        }
+        
+        error? result = database:setWalletAsPrimary(email, address);
+        
+        if result is error {
+            log:printError(string `Failed to set wallet ${address} as primary for user ${email}`, result);
+            return error("Failed to set wallet as primary.");
+        }
+        return http:OK;
     }
 }

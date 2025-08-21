@@ -28,6 +28,5 @@ public isolated function allocateInitialCoins(string walletAddress) returns bool
         return error(errorMessage);
     }
     
-    log:printInfo(string `Successfully allocated coins to wallet ${walletAddress}`);
     return true;
 }

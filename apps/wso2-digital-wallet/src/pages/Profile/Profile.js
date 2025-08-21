@@ -38,15 +38,17 @@ import {
   ERROR_WHEN_LOGGING_OUT,
   LOGOUT,
   SUCCESS,
+  ERROR,
+  OK,
   WALLET_ADDRESS_COPIED,
   WALLET_PRIVATE_KEY,
 } from '../../constants/strings';
-import { showToast } from '../../helpers/alerts';
+import { showToast, showAlertBox } from '../../helpers/alerts';
 import {
   getLocalDataAsync,
   saveLocalDataAsync,
 } from '../../helpers/storage';
-import { getUserWalletAddresses } from '../../services/wallet.service';
+import { getUserWalletAddresses, setWalletAsPrimary } from '../../services/wallet.service';
 import { Modal } from 'antd';
 
 function Profile() {
@@ -59,6 +61,7 @@ function Profile() {
   const [isLoadingWallets, setIsLoadingWallets] = useState(true);
   const [selectedWallet, setSelectedWallet] = useState(null);
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const [isSettingPrimary, setIsSettingPrimary] = useState(false);
 
   const fetchWalletDetails = async () => {
     try {
@@ -101,14 +104,14 @@ function Profile() {
 
   const generateAvatar = (seed) => {
     const options = {
-      size: 80 // Adjust the size of the identicon image
+      size: 80
     };
     const hash = SHA256(seed).toString();
     const data = new Identicon(hash.slice(0, 15), options).toString();
     return "data:image/png;base64," + data;
   };
 
-  const avatar1Url = generateAvatar("avatar1");
+  const avatarUrl = generateAvatar(walletAddress || "default");
 
   const handleCopyAccount = async () => {
     showToast(SUCCESS, WALLET_ADDRESS_COPIED);
@@ -116,6 +119,26 @@ function Profile() {
     setTimeout(() => {
       setIsAccountCopied(false);
     }, 2000);
+  };
+
+  const handleSetAsPrimary = async () => {
+    if (!selectedWallet || selectedWallet.defaultWallet) return;
+    
+    setIsSettingPrimary(true);
+    try {
+      await setWalletAsPrimary(selectedWallet.walletAddress);
+      showToast(SUCCESS, "Successfully set as primary wallet");
+      
+      await fetchUserWallets();
+      
+      setIsWalletModalOpen(false);
+      setSelectedWallet(null);
+    } catch (error) {
+      console.error("Error setting wallet as primary:", error);
+      showAlertBox(ERROR, "Failed to set wallet as primary", OK);
+    } finally {
+      setIsSettingPrimary(false);
+    }
   };
 
   const handleLogout = async () => {
@@ -155,25 +178,27 @@ function Profile() {
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
               <Button
                 type="primary"
-                disabled={selectedWallet.defaultWallet}
+                disabled={selectedWallet.defaultWallet || isSettingPrimary}
+                loading={isSettingPrimary}
+                onClick={handleSetAsPrimary}
                 style={{
                   minWidth: '160px',
                   backgroundColor: selectedWallet.defaultWallet ? COLORS.GRAY_LIGHT : COLORS.ORANGE_PRIMARY,
-                  color: selectedWallet.defaultWallet ? COLORS.GRAY_MEDIUM : COLORS.WHITE,
+                  color: selectedWallet.defaultWallet ? COLORS.GRAY_DARK : COLORS.WHITE,
                   border: selectedWallet.defaultWallet ? `1px solid ${COLORS.GRAY_LIGHT}` : undefined
                 }}
               >
-                Set as Primary
+                {selectedWallet.defaultWallet ? "Primary Wallet" : "Set as Primary"}
               </Button>
             </div>
           </div>
         )}
       </Modal>
-      <div>
+      <div className="profile-header">
         <h4>Profile</h4>
       </div>
       {/* <div className="d-flex justify-content-center mt-4">
-        <Avatar size={80} src={avatar1Url} />
+        <Avatar size={80} src={avatarUrl} />
       </div> */}
       <div className="mt-4">
         <div className="profile-title">Public Wallet Address</div>
