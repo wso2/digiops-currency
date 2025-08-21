@@ -98,7 +98,7 @@ service http:InterceptableService / on new http:Listener(9091) {
             log:printWarn(string `Wallet ${address} not found`);
             return http:NOT_FOUND;
         } else if walletDetails.userEmail != email {
-            log:printWarn(string `Wallet ${address} does not belong to user ${email}.`);
+            log:printError(string `Wallet ${address} does not belong to user ${email}.`);
             return http:FORBIDDEN;
         }
         
