@@ -85,6 +85,7 @@ function Profile() {
       setUserWallets(wallets);
     } catch (error) {
       console.log(`${ERROR_READING_WALLET_DETAILS} - ${error}`);
+      showAlertBox(ERROR, ERROR_READING_WALLET_DETAILS, OK);
       setUserWallets([]);
     } finally {
       setIsLoadingWallets(false);
