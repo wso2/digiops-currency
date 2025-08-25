@@ -82,12 +82,7 @@ function Profile() {
     try {
       setIsLoadingWallets(true);
       const wallets = await getUserWalletAddresses();
-      const sortedWallets = wallets.sort((a, b) => {
-        if (a.defaultWallet && !b.defaultWallet) return -1;
-        if (!a.defaultWallet && b.defaultWallet) return 1;
-        return 0;
-      });
-      setUserWallets(sortedWallets);
+      setUserWallets(wallets);
     } catch (error) {
       console.log(`${ERROR_READING_WALLET_DETAILS} - ${error}`);
       setUserWallets([]);

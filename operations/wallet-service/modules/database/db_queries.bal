@@ -26,7 +26,10 @@ isolated function getWalletAddressesByEmailQuery(string userEmail) returns sql:P
     FROM
         user_wallet
     WHERE
-        user_email = ${userEmail}`;
+        user_email = ${userEmail}
+    ORDER by
+        default_wallet DESC,
+        created_on DESC`;
 
 isolated function insertUserWalletQuery(types:UserWallet userWallet) returns sql:ParameterizedQuery =>
     `INSERT INTO user_wallet (
