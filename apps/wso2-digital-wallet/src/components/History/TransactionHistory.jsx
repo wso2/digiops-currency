@@ -87,7 +87,7 @@ function TransactionHistory({ walletAddress }) {
     if (error) {
       return (
         <div className="mt-5 text-center">
-          <p className="text-danger">Error loading transactions: {error.message || error}</p>
+          <p className="text-danger">Error loading transactions.</p>
           <Button onClick={() => refetch()}>Retry</Button>
         </div>
       );

@@ -199,7 +199,7 @@ function SendAssets() {
       setWalletValidationErrorMsg("");
     } else {
       setIsShowErrorMsg(true);
-      setWalletValidationErrorMsg("Please Enter Valid Address");
+      setWalletValidationErrorMsg("Please Enter Valid Wallet Address");
     }
   }, [sendWalletAddress]);
 
@@ -215,7 +215,7 @@ function SendAssets() {
       <Input.Group compact>
         <Input
           prefix={<SearchOutlined />}
-          placeholder="Search, public address (0x)"
+          placeholder="Search public wallet address (0x)"
           value={sendWalletAddress}
           onChange={handleWalletAddressInputChange}
           size="large"
