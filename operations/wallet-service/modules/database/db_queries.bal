@@ -38,7 +38,7 @@ isolated function getDefaultWalletByEmailQuery(string userEmail) returns sql:Par
         user_wallet
     WHERE
         user_email = ${userEmail}
-        AND default_wallet = true`;
+        AND default_wallet = 1`;
 
 isolated function insertUserWalletQuery(types:UserWallet userWallet) returns sql:ParameterizedQuery =>
     `INSERT INTO user_wallet (
