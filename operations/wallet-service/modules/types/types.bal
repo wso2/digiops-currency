@@ -31,3 +31,9 @@ public type WalletAddressInfo record {|
     @sql:Column {name: "created_on"}
     string createdOn;
 |};
+
+# Default wallet information.
+public type DefaultWallet record {|
+    # Wallet address
+    string walletAddress;
+|};

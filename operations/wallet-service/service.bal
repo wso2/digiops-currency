@@ -79,12 +79,13 @@ service http:InterceptableService / on new http:Listener(9091) {
         return walletList;
     }
 
-    # Get user default wallet address from email.
+    # Get user default wallet.
     #
-    # + ctx - Request context
     # + email - User email
-    # + return - Default wallet address or null if no default wallet found
-    resource function get wallet(http:RequestContext ctx, string email) returns string?|error {
+    # + return - Default wallet information or http:NotFound if no default wallet found
+    resource function get wallets/'default(string email) 
+        returns types:DefaultWallet|http:NotFound|error {
+        
         string|error? defaultWalletAddress = database:getDefaultWalletByEmail(email);
         
         if defaultWalletAddress is error {
@@ -92,7 +93,12 @@ service http:InterceptableService / on new http:Listener(9091) {
             return error("Failed to fetch user default wallet.");
         }
         
-        return defaultWalletAddress;
+        if defaultWalletAddress is () {
+            log:printWarn(string `No default wallet found for user ${email}`);
+            return http:NOT_FOUND;
+        }
+        
+        return {walletAddress: defaultWalletAddress};
     }
 
     # Set wallet as primary.

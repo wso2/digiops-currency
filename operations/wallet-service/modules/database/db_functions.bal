@@ -49,8 +49,8 @@ public isolated function getUserWallet(string walletAddress) returns types:UserW
 
 # Get all wallet addresses with default flag for a user.
 #
-# + userEmail - The email address of the user whose wallets are listed.
-# + return - An array of WalletAddressInfo records, or a sql:Error if the query fails.
+# + userEmail - The email address of the user whose wallets are listed
+# + return - An array of WalletAddressInfo records, or a sql:Error if the query fails
 public isolated function getWalletAddressesByEmail(string userEmail) returns types:WalletAddressInfo[]|sql:Error {
     
     stream<types:WalletAddressInfo, sql:Error?> walletListStream = dbClient->query(getWalletAddressesByEmailQuery(userEmail));
@@ -61,8 +61,8 @@ public isolated function getWalletAddressesByEmail(string userEmail) returns typ
 
 # Get the default wallet address for a user.
 #
-# + userEmail - The email address of the user.
-# + return - Wallet address string if user has wallets, null if user has no wallets, else error.
+# + userEmail - The email address of the user
+# + return - Wallet address string if user has wallets, null if user has no wallets, else error
 public isolated function getDefaultWalletByEmail(string userEmail) returns string|error? {
     string|sql:Error walletAddress = dbClient->queryRow(getDefaultWalletByEmailQuery(userEmail));
     if walletAddress is sql:NoRowsError {
