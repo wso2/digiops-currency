@@ -83,7 +83,7 @@ service http:InterceptableService / on new http:Listener(9091) {
     #
     # + email - User email
     # + return - Default wallet information or http:NotFound if no default wallet found
-    resource function get wallets/'default(string email) 
+    resource function get wallets/primary(string email) 
         returns types:DefaultWallet|http:NotFound|error {
         
         string|error? defaultWalletAddress = database:getDefaultWalletByEmail(email);
