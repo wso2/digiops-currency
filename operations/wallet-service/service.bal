@@ -79,6 +79,28 @@ service http:InterceptableService / on new http:Listener(9091) {
         return walletList;
     }
 
+    # Get user default wallet.
+    #
+    # + email - User email
+    # + return - Default wallet information or http:NotFound if no default wallet found
+    resource function get wallets/primary(string email) 
+        returns types:DefaultWallet|http:NotFound|http:InternalServerError {
+        
+        string|error? defaultWalletAddress = database:getDefaultWalletByEmail(email);
+        
+        if defaultWalletAddress is error {
+            log:printError(string `Failed to fetch default wallet for user ${email}`, defaultWalletAddress);
+            return http:INTERNAL_SERVER_ERROR;
+        }
+        
+        if defaultWalletAddress is () {
+            log:printWarn(string `No default wallet found for user ${email}`);
+            return http:NOT_FOUND;
+        }
+        
+        return {walletAddress: defaultWalletAddress};
+    }
+
     # Set wallet as primary.
     #
     # + ctx - Request context
@@ -98,7 +120,7 @@ service http:InterceptableService / on new http:Listener(9091) {
             log:printWarn(string `Wallet ${address} not found`);
             return http:NOT_FOUND;
         } else if walletDetails.userEmail != email {
-            log:printError(string `Wallet ${address} does not belong to user ${email}.`);
+            log:printWarn(string `Wallet ${address} does not belong to user ${email}.`);
             return http:FORBIDDEN;
         }
         
