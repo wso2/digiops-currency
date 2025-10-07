@@ -20,13 +20,14 @@ service http:InterceptableService / on new http:Listener(9091) {
     public function createInterceptors() returns JwtInterceptor => new JwtInterceptor();
 
     # Add user wallet.
-    # TODO: Refactor to POST /wallets with walletAddress in request body
     #
     # + ctx - Request context
-    # + walletAddress - Wallet address
+    # + payload - Request payload with walletAddress
     # + return - http:OK if user wallet added successfully, http:Conflict if user wallet already exists
-    resource function post user\-wallet(http:RequestContext ctx, string walletAddress)
+    resource function post wallets(http:RequestContext ctx, types:CreateWalletRequest payload)
         returns http:Ok|http:Conflict|error {
+
+        string walletAddress = payload.walletAddress;
 
         if check database:isUserWalletExists(walletAddress) {
             log:printInfo(string `Wallet ${walletAddress} already exists`);
@@ -62,11 +63,10 @@ service http:InterceptableService / on new http:Listener(9091) {
     }
 
     # Get user wallets.
-    # TODO: Refactor to GET /wallets
     #
     # + ctx - Request context
     # + return - List of wallet addresses and default flag
-    resource function get user\-wallets(http:RequestContext ctx) returns types:WalletAddressInfo[]|error {
+    resource function get wallets(http:RequestContext ctx) returns types:WalletAddressInfo[]|error {
 
         string email = check ctx.getWithType(EMAIL);
         types:WalletAddressInfo[]|error walletList = database:getWalletAddressesByEmail(email);
