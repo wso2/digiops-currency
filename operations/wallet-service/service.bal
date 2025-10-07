@@ -23,20 +23,40 @@ service http:InterceptableService / on new http:Listener(9091) {
     #
     # + ctx - Request context
     # + payload - Request payload with walletAddress
-    # + return - http:Created if user wallet added successfully, http:Conflict if user wallet already exists
+    # + return - http:Created, http:Conflict, or http:InternalServerError
     resource function post wallets(http:RequestContext ctx, types:CreateWalletPayload payload)
-        returns http:Created|http:Conflict|error {
+        returns http:Created|http:Conflict|http:InternalServerError {
 
         string walletAddress = payload.walletAddress;
 
-        if check database:isUserWalletExists(walletAddress) {
+        boolean|error walletExists = database:isUserWalletExists(walletAddress);
+        if walletExists is error {
+            log:printError(string `Error checking if wallet exists: ${walletAddress}`, walletExists);
+            return <http:InternalServerError>{
+                body: {
+                    "message": "Failed to validate wallet"
+                }
+            };
+        }
+        
+        if walletExists {
             log:printInfo(string `Wallet ${walletAddress} already exists`);
             return http:CONFLICT;
         }
 
+        string|error userEmail = ctx.getWithType(EMAIL);
+        if userEmail is error {
+            log:printError("Failed to get user email from context", userEmail);
+            return <http:InternalServerError>{
+                body: {
+                    "message": "Failed to get user context"
+                }
+            };
+        }
+
         transaction {
             types:UserWallet userWallet = {
-                userEmail: check ctx.getWithType(EMAIL),
+                userEmail,
                 walletAddress
             };
             boolean isFirstWallet = check database:isUserFirstWallet(userWallet.userEmail);
@@ -56,7 +76,11 @@ service http:InterceptableService / on new http:Listener(9091) {
             check commit;
         } on fail error e {
             log:printError(string `Wallet creation failed for wallet ${walletAddress}`, e);
-            return e;
+            return <http:InternalServerError>{
+                body: {
+                    "message": "Failed to create wallet"
+                }
+            };
         }
 
         return http:CREATED;
@@ -65,15 +89,28 @@ service http:InterceptableService / on new http:Listener(9091) {
     # Get user wallets.
     #
     # + ctx - Request context
-    # + return - List of wallet addresses and default flag
-    resource function get wallets(http:RequestContext ctx) returns types:WalletAddressInfo[]|error {
+    # + return - List of wallet addresses and default flag, or http:InternalServerError
+    resource function get wallets(http:RequestContext ctx) returns types:WalletAddressInfo[]|http:InternalServerError {
 
-        string email = check ctx.getWithType(EMAIL);
+        string|error email = ctx.getWithType(EMAIL);
+        if email is error {
+            log:printError("Failed to get user email from context", email);
+            return <http:InternalServerError>{
+                body: {
+                    "message": "Failed to get user context"
+                }
+            };
+        }
+        
         types:WalletAddressInfo[]|error walletList = database:getWalletAddressesByEmail(email);
         
         if walletList is error {
             log:printError(string `Failed to fetch wallet addresses for user ${email}`, walletList);
-            return error("Failed to fetch user wallets.");
+            return <http:InternalServerError>{
+                body: {
+                    "message": "Failed to fetch user wallets"
+                }
+            };
         }
 
         return walletList;
@@ -83,17 +120,29 @@ service http:InterceptableService / on new http:Listener(9091) {
     #
     # + ctx - Request context
     # + address - Wallet address to set as primary
-    # + return - http:OK if wallet set as primary successfully, http:NotFound if wallet not found, http:Forbidden if wallet doesn't belong to user
+    # + return - http:OK, http:NotFound, http:Forbidden, or http:InternalServerError
     resource function post wallets/[string address]/set\-primary(http:RequestContext ctx)
-        returns http:Ok|http:NotFound|http:Forbidden|error {
+        returns http:Ok|http:NotFound|http:Forbidden|http:InternalServerError {
 
-        string email = check ctx.getWithType(EMAIL);
+        string|error email = ctx.getWithType(EMAIL);
+        if email is error {
+            log:printError("Failed to get user email from context", email);
+            return <http:InternalServerError>{
+                body: {
+                    "message": "Failed to get user context"
+                }
+            };
+        }
         
         types:UserWallet|error? walletDetails = database:getUserWallet(address);
         
         if walletDetails is error {
             log:printError(string `Error getting wallet details for ${address}`, walletDetails);
-            return error("Failed to get wallet details.");
+            return <http:InternalServerError>{
+                body: {
+                    "message": "Failed to get wallet details"
+                }
+            };
         } else if walletDetails is () {
             log:printWarn(string `Wallet ${address} not found`);
             return http:NOT_FOUND;
@@ -106,7 +155,11 @@ service http:InterceptableService / on new http:Listener(9091) {
         
         if result is error {
             log:printError(string `Failed to set wallet ${address} as primary for user ${email}`, result);
-            return error("Failed to set wallet as primary.");
+            return <http:InternalServerError>{
+                body: {
+                    "message": "Failed to set wallet as primary"
+                }
+            };
         }
         return http:OK;
     }
