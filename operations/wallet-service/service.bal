@@ -29,21 +29,6 @@ service http:InterceptableService / on new http:Listener(9091) {
 
         string walletAddress = payload.walletAddress;
 
-        boolean|error walletExists = database:isUserWalletExists(walletAddress);
-        if walletExists is error {
-            log:printError(string `Error checking if wallet exists: ${walletAddress}`, walletExists);
-            return <http:InternalServerError>{
-                body: {
-                    "message": "Failed to validate wallet"
-                }
-            };
-        }
-        
-        if walletExists {
-            log:printInfo(string `Wallet ${walletAddress} already exists`);
-            return http:CONFLICT;
-        }
-
         string|error userEmail = ctx.getWithType(EMAIL);
         if userEmail is error {
             log:printError("Failed to get user email from context", userEmail);
@@ -52,6 +37,21 @@ service http:InterceptableService / on new http:Listener(9091) {
                     "message": "Failed to get user context"
                 }
             };
+        }
+
+        boolean|error walletExists = database:isUserWalletExists(walletAddress);
+        if walletExists is error {
+            log:printError(string `Error checking if wallet exists: ${walletAddress}`, walletExists);
+            return <http:InternalServerError>{
+                body: {
+                    "message": "Error while creating the wallet"
+                }
+            };
+        }
+        
+        if walletExists {
+            log:printInfo(string `Wallet ${walletAddress} already exists`);
+            return http:CONFLICT;
         }
 
         transaction {
@@ -78,7 +78,7 @@ service http:InterceptableService / on new http:Listener(9091) {
             log:printError(string `Wallet creation failed for wallet ${walletAddress}`, e);
             return <http:InternalServerError>{
                 body: {
-                    "message": "Failed to create wallet"
+                    "message": "Error while creating the wallet"
                 }
             };
         }
@@ -108,7 +108,7 @@ service http:InterceptableService / on new http:Listener(9091) {
             log:printError(string `Failed to fetch wallet addresses for user ${email}`, walletList);
             return <http:InternalServerError>{
                 body: {
-                    "message": "Failed to fetch user wallets"
+                    "message": "Error while fetching wallets"
                 }
             };
         }
@@ -135,12 +135,11 @@ service http:InterceptableService / on new http:Listener(9091) {
         }
         
         types:UserWallet|error? walletDetails = database:getUserWallet(address);
-        
         if walletDetails is error {
             log:printError(string `Error getting wallet details for ${address}`, walletDetails);
             return <http:InternalServerError>{
                 body: {
-                    "message": "Failed to get wallet details"
+                    "message": "Error while setting wallet as primary"
                 }
             };
         } else if walletDetails is () {
@@ -152,12 +151,11 @@ service http:InterceptableService / on new http:Listener(9091) {
         }
         
         error? result = database:setWalletAsPrimary(email, address);
-        
         if result is error {
             log:printError(string `Failed to set wallet ${address} as primary for user ${email}`, result);
             return <http:InternalServerError>{
                 body: {
-                    "message": "Failed to set wallet as primary"
+                    "message": "Error while setting wallet as primary"
                 }
             };
         }

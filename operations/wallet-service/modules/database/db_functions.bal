@@ -12,27 +12,32 @@ import ballerina/sql;
 #
 # + walletAddress - Wallet address
 # + return - True if wallet exists, false if not exists, error if error occurred
-public isolated function isUserWalletExists(string walletAddress) returns boolean|sql:Error {
+public isolated function isUserWalletExists(string walletAddress) returns boolean|error {
     types:UserWallet|sql:Error walletResponse = dbClient->queryRow(getUserWalletQuery(walletAddress));
-    if walletResponse is sql:Error && walletResponse !is sql:NoRowsError {
+    
+    if walletResponse is sql:NoRowsError {
+        return false;
+    }
+    if walletResponse is sql:Error {
         return walletResponse;
     }
-    return walletResponse is types:UserWallet;
+    return true;
 }
 
 # Check if this is the user's first wallet.
 #
 # + userEmail - User email
 # + return - True if this is the first wallet, false if user already has wallets, error if error occurred
-public isolated function isUserFirstWallet(string userEmail) returns boolean|sql:Error {
-    record {int wallet_count;}|sql:Error result = dbClient->queryRow(getUserWalletCountQuery(userEmail));
+public isolated function isUserFirstWallet(string userEmail) returns boolean|error {
+    record {|int wallet_count;|}|sql:Error result = dbClient->queryRow(getUserWalletCountQuery(userEmail));
+    
     if result is sql:NoRowsError {
         return true;
-    } else if result is sql:Error {
-        return result;
-    } else {
-        return result.wallet_count == 0;
     }
+    if result is sql:Error {
+        return result;
+    }
+    return result.wallet_count == 0;
 }
 
 # Get wallet details by wallet address.
@@ -50,10 +55,9 @@ public isolated function getUserWallet(string walletAddress) returns types:UserW
 # Get all wallet addresses with default flag for a user.
 #
 # + userEmail - The email address of the user whose wallets are listed.
-# + return - An array of WalletAddressInfo records, or a sql:Error if the query fails.
-public isolated function getWalletAddressesByEmail(string userEmail) returns types:WalletAddressInfo[]|sql:Error {
-    
-    stream<types:WalletAddressInfo, sql:Error?> walletListStream = dbClient->query(getWalletAddressesByEmailQuery(userEmail));
+# + return - An array of WalletAddressInfo records, or error if the query fails.
+public isolated function getWalletAddressesByEmail(string userEmail) returns types:WalletAddressInfo[]|error {
+    stream<types:WalletAddressInfo, error?> walletListStream = dbClient->query(getWalletAddressesByEmailQuery(userEmail));
     
     return from types:WalletAddressInfo wallet in walletListStream
         select wallet;
@@ -63,11 +67,8 @@ public isolated function getWalletAddressesByEmail(string userEmail) returns typ
 #
 # + userWallet - User wallet information
 # + return - Error if error occurred
-public isolated function insertUserWallet(types:UserWallet userWallet) returns sql:Error? {
-    sql:ExecutionResult|sql:Error result = dbClient->execute(insertUserWalletQuery(userWallet));
-    if result is error {
-        return result;
-    }
+public isolated function insertUserWallet(types:UserWallet userWallet) returns error? {
+    _ = check dbClient->execute(insertUserWalletQuery(userWallet));
 }
 
 # Set a wallet as primary for a user.
@@ -75,9 +76,6 @@ public isolated function insertUserWallet(types:UserWallet userWallet) returns s
 # + userEmail - The email address of the user
 # + walletAddress - The wallet address to set as primary
 # + return - Error if error occurred, otherwise nothing
-public isolated function setWalletAsPrimary(string userEmail, string walletAddress) returns sql:Error? {
-    sql:ExecutionResult|sql:Error result = dbClient->execute(setWalletAsPrimaryQuery(userEmail, walletAddress));
-    if result is sql:Error {
-        return result;
-    }
+public isolated function setWalletAsPrimary(string userEmail, string walletAddress) returns error? {
+    _ = check dbClient->execute(setWalletAsPrimaryQuery(userEmail, walletAddress));
 }
