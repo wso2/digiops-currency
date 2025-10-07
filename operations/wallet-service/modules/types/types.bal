@@ -33,7 +33,7 @@ public type WalletAddressInfo record {|
 |};
 
 # Request payload for creating a wallet.
-public type CreateWalletRequest record {|
+public type CreateWalletPayload record {|
     # Wallet address
     string walletAddress;
 |};

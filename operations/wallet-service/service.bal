@@ -24,7 +24,7 @@ service http:InterceptableService / on new http:Listener(9091) {
     # + ctx - Request context
     # + payload - Request payload with walletAddress
     # + return - http:OK if user wallet added successfully, http:Conflict if user wallet already exists
-    resource function post wallets(http:RequestContext ctx, types:CreateWalletRequest payload)
+    resource function post wallets(http:RequestContext ctx, types:CreateWalletPayload payload)
         returns http:Ok|http:Conflict|error {
 
         string walletAddress = payload.walletAddress;
