@@ -32,21 +32,13 @@ service http:InterceptableService / on new http:Listener(9091) {
         string|error userEmail = ctx.getWithType(EMAIL);
         if userEmail is error {
             log:printError("Failed to get user email from context", userEmail);
-            return <http:InternalServerError>{
-                body: {
-                    "message": "Failed to get user context"
-                }
-            };
+            return <http:InternalServerError>{body: {"message": ERR_MSG_CREATE_WALLET}};
         }
 
         boolean|error walletExists = database:isUserWalletExists(walletAddress);
         if walletExists is error {
             log:printError(string `Error checking if wallet exists: ${walletAddress}`, walletExists);
-            return <http:InternalServerError>{
-                body: {
-                    "message": "Error while creating the wallet"
-                }
-            };
+            return <http:InternalServerError>{body: {"message": ERR_MSG_CREATE_WALLET}};
         }
         
         if walletExists {
@@ -76,11 +68,7 @@ service http:InterceptableService / on new http:Listener(9091) {
             check commit;
         } on fail error e {
             log:printError(string `Wallet creation failed for wallet ${walletAddress}`, e);
-            return <http:InternalServerError>{
-                body: {
-                    "message": "Error while creating the wallet"
-                }
-            };
+            return <http:InternalServerError>{body: {"message": ERR_MSG_CREATE_WALLET}};
         }
 
         return http:CREATED;
@@ -95,22 +83,14 @@ service http:InterceptableService / on new http:Listener(9091) {
         string|error email = ctx.getWithType(EMAIL);
         if email is error {
             log:printError("Failed to get user email from context", email);
-            return <http:InternalServerError>{
-                body: {
-                    "message": "Failed to get user context"
-                }
-            };
+            return <http:InternalServerError>{body: {"message": ERR_MSG_FETCH_WALLETS}};
         }
         
         types:WalletAddressInfo[]|error walletList = database:getWalletAddressesByEmail(email);
         
         if walletList is error {
             log:printError(string `Failed to fetch wallet addresses for user ${email}`, walletList);
-            return <http:InternalServerError>{
-                body: {
-                    "message": "Error while fetching wallets"
-                }
-            };
+            return <http:InternalServerError>{body: {"message": ERR_MSG_FETCH_WALLETS}};
         }
 
         return walletList;
@@ -127,21 +107,13 @@ service http:InterceptableService / on new http:Listener(9091) {
         string|error email = ctx.getWithType(EMAIL);
         if email is error {
             log:printError("Failed to get user email from context", email);
-            return <http:InternalServerError>{
-                body: {
-                    "message": "Failed to get user context"
-                }
-            };
+            return <http:InternalServerError>{body: {"message": ERR_MSG_SET_PRIMARY}};
         }
         
         types:UserWallet|error? walletDetails = database:getUserWallet(address);
         if walletDetails is error {
             log:printError(string `Error getting wallet details for ${address}`, walletDetails);
-            return <http:InternalServerError>{
-                body: {
-                    "message": "Error while setting wallet as primary"
-                }
-            };
+            return <http:InternalServerError>{body: {"message": ERR_MSG_SET_PRIMARY}};
         } else if walletDetails is () {
             log:printWarn(string `Wallet ${address} not found`);
             return http:NOT_FOUND;
@@ -153,11 +125,7 @@ service http:InterceptableService / on new http:Listener(9091) {
         error? result = database:setWalletAsPrimary(email, address);
         if result is error {
             log:printError(string `Failed to set wallet ${address} as primary for user ${email}`, result);
-            return <http:InternalServerError>{
-                body: {
-                    "message": "Error while setting wallet as primary"
-                }
-            };
+            return <http:InternalServerError>{body: {"message": ERR_MSG_SET_PRIMARY}};
         }
         return http:OK;
     }
