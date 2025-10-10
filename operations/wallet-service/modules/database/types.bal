@@ -4,6 +4,7 @@
 // Dissemination of any information or reproduction of any material contained
 // herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
 // You may not alter or remove any copyright or other notice from copies of this content.
+import ballerina/sql;
 
 # MySQL database configurations.
 type Database record {|
@@ -17,4 +18,11 @@ type Database record {|
     string database;
     # Database port
     int port = 3306;
+|};
+
+# [Database] Wallet count query result.
+type WalletCountResult record {|
+    # Number of wallets
+    @sql:Column {name: "wallet_count"}
+    int walletCount;
 |};
