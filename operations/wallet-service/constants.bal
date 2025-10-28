@@ -6,6 +6,6 @@
 // You may not alter or remove any copyright or other notice from copies of this content.
 
 // Error messages for API responses
-public const  ERR_MSG_CREATE_WALLET = "Error while creating the wallet";
+public const ERR_MSG_CREATE_WALLET = "Error while creating the wallet";
 public const ERR_MSG_FETCH_WALLETS = "Error while fetching wallets";
 public const ERR_MSG_SET_PRIMARY = "Error while setting wallet as primary";
