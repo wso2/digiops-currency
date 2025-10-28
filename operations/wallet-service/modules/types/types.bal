@@ -31,3 +31,9 @@ public type WalletAddressInfo record {|
     @sql:Column {name: "created_on"}
     string createdOn;
 |};
+
+# Request payload for creating a wallet.
+public type CreateWalletPayload record {|
+    # Wallet address
+    string walletAddress;
+|};

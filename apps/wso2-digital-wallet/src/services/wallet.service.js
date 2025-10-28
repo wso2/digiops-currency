@@ -10,12 +10,14 @@ import { getTokenAsync } from "../helpers/auth";
 export const updateUserWalletAddress = async (walletAddress) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/user-wallet?walletAddress=${walletAddress}`,
+      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/wallets`,
       {
         method: "POST",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${await getTokenAsync()}`,
         },
+        body: JSON.stringify({ walletAddress }),
       }
     );
     if (!response.ok) {
@@ -34,7 +36,7 @@ export const updateUserWalletAddress = async (walletAddress) => {
 export const getUserWalletAddresses = async () => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/user-wallets`,
+      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/wallets`,
       {
         method: "GET",
         headers: {
