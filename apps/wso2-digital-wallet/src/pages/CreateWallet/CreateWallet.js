@@ -7,6 +7,7 @@
 
 import { Avatar, Button } from "antd";
 import { useEffect, useState } from "react";
+import { PlusOutlined, UndoOutlined } from "@ant-design/icons";
 import "./CreateWallet.css";
 import Wso2MainImg from "../../assets/images/wso2_main.png";
 import { ethers } from "ethers";
@@ -100,13 +101,28 @@ function CreateWallet() {
                 size="large"
                 onClick={handleCreateNewWallet}
                 loading={walletCreateLoading}
+                icon={<PlusOutlined />}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
               >
                 {CREATE_A_NEW_WALLET}
               </Button>
               <span
                 onClick={handleRestoreWallet}
                 className="wallet-create-restore-wallet mt-4"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  cursor: 'pointer'
+                }}
               >
+                <UndoOutlined />
                 {RESTORE_EXISTING_WALLET}
               </span>
             </div>

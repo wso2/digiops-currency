@@ -12,6 +12,7 @@
   bottom: 85px;
   left: 25px;
   right: 25px;
+  z-index: 10;
 }
 
 .default-button {
@@ -39,10 +40,10 @@
   margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 85px - 25px - 380px);
+  max-height: calc(100vh - 85px - 25px - 380px - 80px);
   overflow-y: auto;
   padding-right: 5px;
-  padding-bottom: 10px;
+  padding-bottom: 100px;
 }
 
 .wallet-list-item {

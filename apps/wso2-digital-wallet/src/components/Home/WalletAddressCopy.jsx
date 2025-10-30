@@ -6,7 +6,7 @@
 // You may not alter or remove any copyright or other notice from copies of this content.
 
 import React, { useState, useEffect } from "react";
-import { CopyOutlined, CheckOutlined } from "@ant-design/icons";
+import { CopyOutlined, CheckOutlined, EyeOutlined } from "@ant-design/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Input, Button } from "antd";
 import { showToast } from "../../helpers/alerts";
@@ -37,12 +37,23 @@ function WalletAddressCopy(props) {
           <span className="wallet-copy-topic mb-2">{topic}</span>
         </div>
         {!showPrivateKey ? (
-          <Button
-            className="w-100 primary-button"
-            onClick={() => setShowPrivateKey(true)}
-          >
-            {buttonText}
-          </Button>
+          <div className="d-flex justify-content-center">
+            <Button
+              className="secondary-button"
+              onClick={() => setShowPrivateKey(true)}
+              icon={<EyeOutlined />}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                minWidth: '160px',
+                padding: '0 20px'
+              }}
+            >
+              {buttonText}
+            </Button>
+          </div>
         ) : (
           <Input
             id="inputField"
