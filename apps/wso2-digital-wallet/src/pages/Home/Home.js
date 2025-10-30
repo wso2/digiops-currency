@@ -21,7 +21,7 @@ import {
 import { NumericFormat } from 'react-number-format';
 import { useNavigate } from 'react-router-dom';
 
-import { LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined, SendOutlined } from '@ant-design/icons';
 
 import RecentActivities from '../../components/Home/RecentActivities';
 import { COLORS } from '../../constants/colors';
@@ -33,7 +33,7 @@ import {
   ERROR,
   ERROR_RETRIEVE_WALLET_ADDRESS,
   ERROR_BRIDGE_NOT_READY,
-  SEND_TOKENS,
+  SEND_COINS,
   SUCCESS,
   TOTAL_BALANCE,
   WALLET_ADDRESS_COPIED,
@@ -152,7 +152,19 @@ function Home() {
           </Tooltip>
         </CopyToClipboard> */}
         <div className="send-button pt-3">
-          <Button className="primary-button container" onClick={handleSend}>{SEND_TOKENS}</Button>
+          <Button 
+            className="primary-button container" 
+            onClick={handleSend}
+            icon={<SendOutlined />}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
+            }}
+          >
+            {SEND_COINS}
+          </Button>
         </div>
         {/* <div className="d-flex justify-content-between mt-4">
           <div>

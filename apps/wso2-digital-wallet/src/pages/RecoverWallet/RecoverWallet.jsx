@@ -7,6 +7,7 @@
 
 import { Input, Button } from 'antd';
 import React, { useState } from 'react';
+import { ArrowRightOutlined, UndoOutlined } from '@ant-design/icons';
 import { Col, Row } from 'reactstrap';
 import { ethers } from 'ethers';
 import WalletAddressCopy from '../../components/Home/WalletAddressCopy'
@@ -118,7 +119,20 @@ export default function RecoverWallet() {
         <div className='mb-5'>
           {
             !walletRecovered ? (
-              <Button className={`mt-5 primary-button${!continueRecover ? ' disabled' : ''}`} block onClick={handleRecover} disabled={!continueRecover} loading={loading}>
+              <Button 
+                className={`mt-5 primary-button${!continueRecover ? ' disabled' : ''}`} 
+                block 
+                onClick={handleRecover} 
+                disabled={!continueRecover} 
+                loading={loading}
+                icon={<UndoOutlined />}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+              >
                 {RECOVER_WALLET}
               </Button>
             ) : (
@@ -135,7 +149,18 @@ export default function RecoverWallet() {
                     <WalletAddressCopy address={privateKey} topic={WALLET_PRIVATE_KEY} />
                   </div>
                 )}
-                <Button className="primary-button mt-5" block onClick={handleContinue}>
+                <Button 
+                  className="primary-button mt-5" 
+                  block 
+                  onClick={handleContinue}
+                  icon={<ArrowRightOutlined />}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px'
+                  }}
+                >
                   {CONTINUE}
                 </Button>
               </>

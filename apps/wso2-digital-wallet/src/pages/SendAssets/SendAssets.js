@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Input, Button, Avatar, message, Spin } from "antd";
-import { SearchOutlined, ScanOutlined } from "@ant-design/icons";
+import { SearchOutlined, ScanOutlined, ArrowRightOutlined, CloseOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "./SendAssets.css";
 import { isAddress } from "ethereum-address";
@@ -20,10 +20,12 @@ import {
   ERROR_RETRIEVE_WALLET_ADDRESS,
   ERROR_BRIDGE_NOT_READY
 } from "../../constants/strings";
+import { COLORS } from '../../constants/colors';
 import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
 import { STORAGE_KEYS, DEFAULT_WALLET_ADDRESS } from "../../constants/configs";
 import { getWalletBalanceByWalletAddress } from "../../services/blockchain.service";
 import { waitForBridge } from "../../helpers/bridge";
+import { scanQrCode } from "../../microapp-bridge";
 
 function SendAssets() {
   const navigate = useNavigate();
@@ -158,6 +160,19 @@ function SendAssets() {
     }
   };
 
+  const handleScanQrCode = () => {
+    scanQrCode(
+      (qrData) => {
+        setSendWalletAddress(qrData);
+        messageApi.success("QR Code scanned successfully!");
+      },
+      (error) => {
+        console.error("QR Code scan failed:", error);
+        messageApi.error("Failed to scan QR code. Please try again.");
+      }
+    );
+  };
+
   const fetchLocalTxDetails = async () => {
     try {
       const sendingAmount = await getLocalDataAsync(
@@ -212,15 +227,30 @@ function SendAssets() {
           Cancel
         </Button>
       </div>
-      <Input.Group compact>
+      <div style={{ display: 'flex', gap: '8px' }}>
         <Input
           prefix={<SearchOutlined />}
           placeholder="Search public wallet address (0x)"
           value={sendWalletAddress}
           onChange={handleWalletAddressInputChange}
           size="large"
+          style={{ flex: 1 }}
         />
-      </Input.Group>
+        <Button
+          type="primary"
+          icon={<ScanOutlined />}
+          onClick={handleScanQrCode}
+          size="large"
+          style={{
+            backgroundColor: COLORS.ORANGE_PRIMARY,
+            borderColor: COLORS.ORANGE_PRIMARY,
+            minWidth: '50px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        />
+      </div>
       {isShowErrorMsg ? (
         <span className="red-text">{walletValidationErrorMsg}</span>
       ) : (
@@ -277,7 +307,18 @@ function SendAssets() {
           </Row>
           <Row className="send-button-section">
             <Col md="6" sm="6">
-              <Button block className="default-button" onClick={handleCancel}>
+              <Button 
+                block 
+                className="default-button" 
+                onClick={handleCancel}
+                icon={<CloseOutlined />}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+              >
                 Cancel
               </Button>
             </Col>
@@ -287,6 +328,13 @@ function SendAssets() {
                 className="primary-button mt-2"
                 onClick={handleSendAssetsNext}
                 disabled={!isCanContinue}
+                icon={<ArrowRightOutlined />}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
               >
                 Next
               </Button>

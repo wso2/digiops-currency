@@ -13,7 +13,7 @@ export const NOT_CONNECTED = "Not Connected";
 
 // home page
 export const TOTAL_BALANCE = "Total Balance";
-export const SEND_TOKENS = "Send Tokens";
+export const SEND_COINS = "Send Coins";
 export const REQUEST = "Request";
 export const BUY = "Buy";
 export const RECENT_ACTIVITIES = "Recent Activities";
@@ -41,7 +41,7 @@ export const SHOW_WALLET_ADDRESS = "Show Wallet Address";
 // Recovery Phrase
 export const RECOVERY_PHRASE = "Recovery Phrase";
 export const RECOVERY_PHRASE_WARNING_TEXT = "Write down this 12-word Secret Recovery Phrase and save it in a place that you trust and only you can access.";
-export const WALLET_ADDRESS = "Wallet Address";
+export const WALLET_ADDRESS = "Public Wallet Address";
 export const WALLET_PRIVATE_KEY = "Private Wallet Key";
 export const CONTINUE = "Continue";
 export const COPY_TO_CLIPBOARD = "Copy to clipboard";

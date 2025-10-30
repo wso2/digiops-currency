@@ -86,6 +86,34 @@
   color: #050505 !important;
   border: 2px solid #050505 !important;
 }
+
+/* Secondary button style for non-primary actions */
+.secondary-button {
+  background: #f8f9fa !important;
+  color: #6c757d !important;
+  border: 1px solid #dee2e6 !important;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0em;
+  text-align: center;
+  height: 40px !important;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.secondary-button:hover {
+  background: #e9ecef !important;
+  color: #495057 !important;
+  border: 1px solid #adb5bd !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.secondary-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
 .layout-content {
   height: fit-content !important;
 }

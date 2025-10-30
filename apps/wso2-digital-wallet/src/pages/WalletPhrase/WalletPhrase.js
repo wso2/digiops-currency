@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Row, Col, Alert, Button, message, Modal } from "antd";
-import { LeftOutlined, ExclamationCircleFilled } from "@ant-design/icons";
+import { ExclamationCircleFilled, ArrowRightOutlined } from "@ant-design/icons";
 import "./WalletPhrase.css";
 import WalletAddressCopy from "../../components/Home/WalletAddressCopy";
 import PhraseCopy from "../../components/Home/PhraseCopy";
@@ -157,6 +157,13 @@ function WalletPhrase(props) {
             className="primary-button"
             size="large"
             onClick={handleContinue}
+            icon={<ArrowRightOutlined />}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
+            }}
           >
             {CONTINUE}
           </Button>
