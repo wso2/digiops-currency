@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Row, Col, Alert, Button, message, Modal } from "antd";
-import { LeftOutlined, ExclamationCircleFilled, ArrowRightOutlined } from "@ant-design/icons";
+import { ExclamationCircleFilled, ArrowRightOutlined } from "@ant-design/icons";
 import "./WalletPhrase.css";
 import WalletAddressCopy from "../../components/Home/WalletAddressCopy";
 import PhraseCopy from "../../components/Home/PhraseCopy";
