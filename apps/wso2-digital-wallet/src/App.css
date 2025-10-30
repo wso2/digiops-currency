@@ -62,14 +62,24 @@
   border-radius: 9px;
 }
 .primary-button.disabled {
-  opacity: 0.5;
+  background: #e9ecef !important;
+  color: #6c757d !important;
+  border: 1px solid #ced4da !important;
+  opacity: 1;
   cursor: not-allowed;
-  color: var(--orange-primary);
 }
 .primary-button:hover {
   background: var(--orange-primary);
   color: #ffffff !important;
   border: 1px solid var(--orange-primary) !important;
+}
+.primary-button:disabled,
+.ant-btn.primary-button:disabled,
+.ant-btn[disabled].primary-button {
+  background: #e9ecef !important;
+  color: #6c757d !important;
+  border: 1px solid #ced4da !important;
+  box-shadow: none !important;
 }
 .default-button {
   border: 1px solid #050505 !important;
@@ -91,7 +101,7 @@
 .secondary-button {
   background: #f8f9fa !important;
   color: #6c757d !important;
-  border: 1px solid #dee2e6 !important;
+  border: 1px solid #adb5bd !important;
   font-size: 14px;
   font-weight: 500;
   line-height: 21px;
@@ -102,12 +112,10 @@
   transition: all 0.2s ease;
 }
 
-.secondary-button:hover {
-  background: #e9ecef !important;
-  color: #495057 !important;
-  border: 1px solid #adb5bd !important;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* Warning outline variant for sensitive actions */
+.secondary-button.sensitive-outline {
+  border-color: #dc3545 !important;
+  color: #dc3545 !important;
 }
 
 .secondary-button:active {
@@ -132,6 +140,11 @@
   bottom: 0;
   width: 100%;
   z-index: 1000;
+}
+.wallet-copy-topic {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 19px;
 }
 .ant-input-affix-wrapper {
   border: var(--orange-primary) 1px solid;
