@@ -40,7 +40,7 @@
   margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 85px - 25px - 380px - 80px);
+  max-height: calc(100vh - 85px - 25px - 380px);
   overflow-y: auto;
   padding-right: 5px;
   padding-bottom: 100px;
