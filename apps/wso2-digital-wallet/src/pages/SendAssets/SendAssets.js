@@ -6,7 +6,7 @@
 // You may not alter or remove any copyright or other notice from copies of this content.
 
 import React, { useEffect, useState } from "react";
-import { Input, Button, Avatar, message, Spin, Tooltip } from "antd";
+import { Input, Button, Avatar, message, Spin } from "antd";
 import { SearchOutlined, ScanOutlined, ArrowRightOutlined, CloseOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "./SendAssets.css";
