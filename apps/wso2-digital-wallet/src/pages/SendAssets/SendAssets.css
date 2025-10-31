@@ -42,6 +42,16 @@
     font-size: 18px;
     font-weight: 500;
   }
+  .wallet-search-input.ant-input-affix-wrapper {
+    height: 50px !important;
+    border-radius: 9px !important;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px !important;
+  }
+  .wallet-search-input.ant-input-affix-wrapper .ant-input {
+    height: 100% !important;
+  }
   .send-coin-input-card {
     border: 1px black solid;
     padding: 5px;

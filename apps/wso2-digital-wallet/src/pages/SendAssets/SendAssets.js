@@ -229,6 +229,7 @@ function SendAssets() {
       </div>
       <div style={{ display: 'flex', gap: '8px' }}>
         <Input
+          className="wallet-search-input"
           prefix={<SearchOutlined />}
           placeholder="Search public wallet address (0x)"
           value={sendWalletAddress}
@@ -238,12 +239,11 @@ function SendAssets() {
         />
         <Button
           type="primary"
+          className="primary-button"
           icon={<ScanOutlined />}
           onClick={handleScanQrCode}
           size="large"
           style={{
-            backgroundColor: COLORS.ORANGE_PRIMARY,
-            borderColor: COLORS.ORANGE_PRIMARY,
             minWidth: '50px',
             display: 'flex',
             alignItems: 'center',

@@ -44,6 +44,7 @@ import {
   OK,
   WALLET_ADDRESS_COPIED,
   WALLET_PRIVATE_KEY,
+  SHOW_WALLET_ADDRESS
 } from '../../constants/strings';
 import { showToast, showAlertBox } from '../../helpers/alerts';
 import {
@@ -205,7 +206,7 @@ function Profile() {
       >
         <div style={{ textAlign: 'center', padding: '20px' }}>
           <div style={{ marginBottom: '16px', fontSize: '14px', color: COLORS.GRAY_MEDIUM, fontWeight: '500' }}>
-            Share this QR code to receive payments
+            Share this QR code to receive coins
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
             <QRCodeSVG
@@ -214,28 +215,7 @@ function Profile() {
               level="M"
             />
           </div>
-          <div style={{ 
-            fontSize: '11px', 
-            color: COLORS.GRAY_MEDIUM, 
-            wordBreak: 'break-all',
-            padding: '8px',
-            backgroundColor: '#f5f5f5',
-            borderRadius: '4px'
-          }}>
-            {walletAddress}
-          </div>
-        </div>
-      </Modal>
-
-      <div className="profile-header">
-        <h4>Profile</h4>
-      </div>
-      {/* <div className="d-flex justify-content-center mt-4">
-        <Avatar size={80} src={avatarUrl} />
-      </div> */}
-      <div className="mt-4">
-        <div className="profile-title">Public Wallet Address</div>
-        <div className="d-flex justify-content-center mt-1">
+        <div className="d-flex justify-content-center">
           <CopyToClipboard text={walletAddress} onCopy={handleCopyAccount}>
             <Tooltip title={isAccountCopied ? "Copied" : "Copy to Clipboard"}>
               <Tag className="total-balance-wallet-address mt-2 d-flex">
@@ -253,18 +233,27 @@ function Profile() {
             </Tooltip>
           </CopyToClipboard>
         </div>
+        </div>
+      </Modal>
+
+      <div className="profile-header">
+        <h4>Profile</h4>
+      </div>
+      {/* <div className="d-flex justify-content-center mt-4">
+        <Avatar size={80} src={avatarUrl} />
+      </div> */}
+      <div className="mt-4">
+        <div className="profile-title">Public Wallet Address</div>
         <div className="d-flex justify-content-center mt-2">
           <Button
             type="primary"
+            className="primary-button"
             icon={<QrcodeOutlined />}
             onClick={() => setIsQrModalOpen(true)}
             style={{
-              backgroundColor: COLORS.ORANGE_PRIMARY,
-              borderColor: COLORS.ORANGE_PRIMARY,
               borderRadius: '6px',
-              fontSize: '14px',
-              fontWeight: '500',
-              height: '36px',
+              fontSize: '15px',
+              fontWeight: '700',
               padding: '0 24px',
               display: 'flex',
               alignItems: 'center',
@@ -273,7 +262,7 @@ function Profile() {
               minWidth: '180px'
             }}
           >
-            Show My QR Code
+            {SHOW_WALLET_ADDRESS}
           </Button>
         </div>
       </div>

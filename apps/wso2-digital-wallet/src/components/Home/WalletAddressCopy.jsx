@@ -11,6 +11,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Input, Button } from "antd";
 import { showToast } from "../../helpers/alerts";
 import { COPIED, SUCCESS } from "../../constants/strings";
+import { WALLET_PRIVATE_KEY } from "../../constants/strings";
 
 function WalletAddressCopy(props) {
   const { address, topic, buttonText = "Show Private Key" } = props;
@@ -39,7 +40,7 @@ function WalletAddressCopy(props) {
         {!showPrivateKey ? (
           <div className="d-flex justify-content-center">
             <Button
-              className="secondary-button"
+              className={`secondary-button ${topic === WALLET_PRIVATE_KEY ? 'sensitive-outline' : ''}`}
               onClick={() => setShowPrivateKey(true)}
               icon={<EyeOutlined />}
               style={{
