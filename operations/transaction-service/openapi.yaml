@@ -120,6 +120,32 @@ paths:
         '500':
           description: Server Error.
 
+  /api/v1/blockchain/confirm-transaction/{txHash}:
+    get:
+      operationId: BlockchainController_confirmTransaction
+      summary: Confirm transaction was successful
+      description: Returns whether the transaction was found and succeeded.
+      parameters:
+        - name: txHash
+          required: true
+          in: path
+          description: Transaction hash
+          schema:
+            type: string
+      tags:
+        - Transactional
+      responses:
+        '200':
+          description: Transaction status (success, failed, or pending).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionStatusResponseDto'
+        '400':
+          description: Bad request.
+        '500':
+          description: Server Error.
+
 tags:
   - name: wso2
     description: ''
@@ -234,6 +260,56 @@ components:
             cumulativeGasUsed:
               type: string
               description: The total amount of gas used when the transaction was included in a block.
+      required:
+        - message
+        - httpCode
+        - payload
+
+    TransactionStatusDto:
+      type: object
+      properties:
+        txHash:
+          type: string
+          description: The transaction hash (0x-prefixed).
+        found:
+          type: boolean
+          description: Whether the transaction was found and mined.
+        success:
+          type: boolean
+          description: Whether the transaction executed successfully (receipt.status === 1).
+        status:
+          type: string
+          description: Human-readable status (SUCCESS, FAILED, or PENDING).
+          enum:
+            - SUCCESS
+            - FAILED
+            - PENDING
+        blockNumber:
+          type: number
+          nullable: true
+          description: Block number the transaction was mined in, or null if pending.
+        confirmations:
+          type: number
+          description: Number of blocks mined after this transaction (0 if pending).
+      required:
+        - txHash
+        - found
+        - success
+        - status
+        - blockNumber
+        - confirmations
+
+    TransactionStatusResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A message indicating the result of the API request.
+        httpCode:
+          type: number
+          description: HTTP status code of the response.
+        payload:
+          $ref: '#/components/schemas/TransactionStatusDto'
       required:
         - message
         - httpCode

@@ -89,6 +89,36 @@ export class BlockchainService {
     };
   };
 
+  getTransactionStatusByTxHash = async (txHash: string) => {
+    const provider = await this.getWeb3Provider();
+    const receipt = await provider.getTransactionReceipt(txHash);
+
+    if (!receipt) {
+      return {
+        txHash,
+        found: false,
+        success: false,
+        status: 'PENDING',
+        blockNumber: null,
+        confirmations: 0,
+      };
+    }
+
+    const latestBlock = await provider.getBlockNumber();
+    const blockNumber = receipt.blockNumber ?? 0;
+    const confirmations = Math.max(0, latestBlock - blockNumber + 1);
+    const success = receipt.status === 1;
+
+    return {
+      txHash,
+      found: true,
+      success,
+      status: success ? 'SUCCESS' : 'FAILED',
+      blockNumber,
+      confirmations,
+    };
+  };
+
   transferTokens = async (clientId: string, recipientWalletAddress: string, amount: number) => {
     const walletConfig = this.walletConfigService.getWalletConfig(clientId);
     if (!walletConfig) {

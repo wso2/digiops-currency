@@ -21,6 +21,7 @@ import { TransferTokenDto } from './dto/transfer-token.dto';
 import { MasterWalletBalanceResponseDto } from './dto/master-wallet-balance-response.dto';
 import { WalletBalanceByAddressResponseDto } from './dto/wallet-balance-response.dto';
 import { TokenTransferResponseDto } from './dto/token-transfer-response.dto';
+import { TransactionStatusResponseDto } from './dto/transaction-status-response.dto';
 import {
   ApiBody,
   ApiOperation,
@@ -200,6 +201,54 @@ export class BlockchainController {
       const result = await this.blockchainService.getTransactionDetailsByTxHash(
         txHash,
       );
+      return response
+        .status(HttpStatus.OK)
+        .json(
+          this.httpResponseService.send(
+            this.httpResponseService.SUCCESS,
+            HttpStatus.OK,
+            result,
+          ),
+        );
+    } catch (error) {
+      return response
+        .status(HttpStatus.BAD_REQUEST)
+        .json(
+          this.httpResponseService.send(
+            error.message || this.httpResponseService.ERROR,
+            HttpStatus.BAD_REQUEST,
+            null,
+          ),
+        );
+    }
+  }
+
+  @Get('confirm-transaction/:txHash')
+  @ApiOperation({
+    summary: 'Confirm transaction was successful',
+    description:
+      'Returns whether the transaction was found and succeeded.',
+  })
+  @ApiParam({
+    name: 'txHash',
+    description: 'Transaction hash (0x-prefixed)',
+    required: true,
+    type: 'string',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Transaction status (success, failed, or pending).',
+    type: TransactionStatusResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Bad request.' })
+  @ApiResponse({ status: 500, description: 'Server Error.' })
+  async confirmTransaction(
+    @Param('txHash') txHash: string,
+    @Res() response,
+  ) {
+    try {
+      const result =
+        await this.blockchainService.getTransactionStatusByTxHash(txHash);
       return response
         .status(HttpStatus.OK)
         .json(
