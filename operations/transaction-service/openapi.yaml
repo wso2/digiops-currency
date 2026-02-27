@@ -98,7 +98,7 @@ paths:
   /api/v1/blockchain/get-transaction-details/{txHash}:
     get:
       operationId: BlockchainController_getTransactionDetailsByTxHash
-      summary: Get the full transaction details of the given tx hash
+      summary: Get the full transaction details and status of the given tx hash
       parameters:
         - name: txHash
           required: true
@@ -110,39 +110,13 @@ paths:
         - Transactional
       responses:
         '200':
-          description: Successfully retrieved balance.
+          description: Successfully retrieved transaction details.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WalletBalanceByAddressResponseDto'
+                $ref: '#/components/schemas/TransactionDetailsResponseDto'
         '400':
-          description: Bad request or wallet address not found.
-        '500':
-          description: Server Error.
-
-  /api/v1/blockchain/confirm-transaction/{txHash}:
-    get:
-      operationId: BlockchainController_confirmTransaction
-      summary: Confirm transaction was successful
-      description: Returns whether the transaction was found and succeeded.
-      parameters:
-        - name: txHash
-          required: true
-          in: path
-          description: Transaction hash
-          schema:
-            type: string
-      tags:
-        - Transactional
-      responses:
-        '200':
-          description: Transaction status (success, failed, or pending).
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionStatusResponseDto'
-        '400':
-          description: Bad request.
+          description: Bad request or transaction not found.
         '500':
           description: Server Error.
 
@@ -265,7 +239,7 @@ components:
         - httpCode
         - payload
 
-    TransactionStatusDto:
+    TransactionDetailsDto:
       type: object
       properties:
         txHash:
@@ -273,33 +247,46 @@ components:
           description: The transaction hash (0x-prefixed).
         found:
           type: boolean
-          description: Whether the transaction was found and mined.
+          description: Whether the transaction was found on-chain.
         success:
           type: boolean
           description: Whether the transaction executed successfully (receipt.status === 1).
         status:
           type: string
-          description: Human-readable status (SUCCESS, FAILED, or PENDING).
+          description: Human-readable status of the transaction.
           enum:
             - SUCCESS
             - FAILED
             - PENDING
+            - NOT_FOUND
         blockNumber:
-          type: number
+          type: integer
           nullable: true
-          description: Block number the transaction was mined in, or null if pending.
-        confirmations:
-          type: number
-          description: Number of blocks mined after this transaction (0 if pending).
+          description: Block number the transaction was mined in, or null if not yet mined.
+        timestamp:
+          type: string
+          format: date-time
+          nullable: true
+          description: ISO-8601 timestamp of the block containing the transaction, or null if unknown.
+        txDetails:
+          type: object
+          nullable: true
+          description: Raw transaction details returned by the provider, or null if not found.
+        decodedData:
+          type: object
+          nullable: true
+          description: Decoded version of the input data, providing more human-readable information about the call, or null if not found.
       required:
         - txHash
         - found
         - success
         - status
         - blockNumber
-        - confirmations
+        - timestamp
+        - txDetails
+        - decodedData
 
-    TransactionStatusResponseDto:
+    TransactionDetailsResponseDto:
       type: object
       properties:
         message:
@@ -309,8 +296,9 @@ components:
           type: number
           description: HTTP status code of the response.
         payload:
-          $ref: '#/components/schemas/TransactionStatusDto'
+          $ref: '#/components/schemas/TransactionDetailsDto'
       required:
         - message
         - httpCode
         - payload
+

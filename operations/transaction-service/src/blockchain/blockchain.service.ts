@@ -78,36 +78,48 @@ export class BlockchainService {
     const provider = await this.getWeb3Provider();
     const txDetails = await provider.getTransaction(txHash);
 
+    if (!txDetails) {
+      return {
+        txHash,
+        found: false,
+        success: false,
+        status: 'NOT_FOUND',
+        blockNumber: null,
+        timestamp: null,
+        txDetails: null,
+        decodedData: null,
+      };
+    }
+
     const contractInterface = new ethers.Interface(blockchainConfigs.contractAbi);
     const decodedData = contractInterface.parseTransaction({
       data: txDetails.data,
     });
 
-    return {
-      txDetails: txDetails,
-      decodedData: decodedData,
-    };
-  };
-
-  getTransactionStatusByTxHash = async (txHash: string) => {
-    const provider = await this.getWeb3Provider();
     const receipt = await provider.getTransactionReceipt(txHash);
 
-    if (!receipt) {
+    // Pending: transaction known but not yet mined / no receipt.
+    if (!receipt || receipt.blockNumber == null) {
       return {
         txHash,
-        found: false,
+        found: true,
         success: false,
         status: 'PENDING',
         blockNumber: null,
-        confirmations: 0,
+        timestamp: null,
+        txDetails,
+        decodedData,
       };
     }
 
-    const latestBlock = await provider.getBlockNumber();
-    const blockNumber = receipt.blockNumber ?? 0;
-    const confirmations = Math.max(0, latestBlock - blockNumber + 1);
+    const blockNumber = receipt.blockNumber;
     const success = receipt.status === 1;
+
+    const block = await provider.getBlock(blockNumber);
+    const timestamp =
+      block && typeof block.timestamp === 'number'
+        ? new Date(block.timestamp * 1000).toISOString()
+        : null;
 
     return {
       txHash,
@@ -115,7 +127,9 @@ export class BlockchainService {
       success,
       status: success ? 'SUCCESS' : 'FAILED',
       blockNumber,
-      confirmations,
+      timestamp,
+      txDetails,
+      decodedData,
     };
   };
 

@@ -21,6 +21,7 @@ import { TransferTokenDto } from './dto/transfer-token.dto';
 import { MasterWalletBalanceResponseDto } from './dto/master-wallet-balance-response.dto';
 import { WalletBalanceByAddressResponseDto } from './dto/wallet-balance-response.dto';
 import { TokenTransferResponseDto } from './dto/token-transfer-response.dto';
+import { TransactionDetailsResponseDto } from './dto/transaction-details-response.dto';
 import { 
   ApiBody,
   ApiOperation,
@@ -85,8 +86,8 @@ export class BlockchainController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Successfully retrieved balance.',
-    type: WalletBalanceByAddressResponseDto,
+    description: 'Successfully retrieved transaction details.',
+    type: TransactionDetailsResponseDto,
   })
   @ApiResponse({
     status: 400,
