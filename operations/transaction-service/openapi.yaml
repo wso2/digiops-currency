@@ -98,7 +98,7 @@ paths:
   /api/v1/blockchain/get-transaction-details/{txHash}:
     get:
       operationId: BlockchainController_getTransactionDetailsByTxHash
-      summary: Get the full transaction details of the given tx hash
+      summary: Get the full transaction details and status of the given tx hash
       parameters:
         - name: txHash
           required: true
@@ -110,13 +110,13 @@ paths:
         - Transactional
       responses:
         '200':
-          description: Successfully retrieved balance.
+          description: Successfully retrieved transaction details.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WalletBalanceByAddressResponseDto'
+                $ref: '#/components/schemas/TransactionDetailsResponseDto'
         '400':
-          description: Bad request or wallet address not found.
+          description: Bad request or transaction not found.
         '500':
           description: Server Error.
 
@@ -238,3 +238,67 @@ components:
         - message
         - httpCode
         - payload
+
+    TransactionDetailsDto:
+      type: object
+      properties:
+        txHash:
+          type: string
+          description: The transaction hash (0x-prefixed).
+        found:
+          type: boolean
+          description: Whether the transaction was found on-chain.
+        success:
+          type: boolean
+          description: Whether the transaction executed successfully (receipt.status === 1).
+        status:
+          type: string
+          description: Human-readable status of the transaction.
+          enum:
+            - SUCCESS
+            - FAILED
+            - PENDING
+            - NOT_FOUND
+        timestamp:
+          type: string
+          format: date-time
+          nullable: true
+          description: ISO-8601 timestamp of the block containing the transaction, or null if unknown.
+        amountFormatted:
+          type: string
+          nullable: true
+          description: Formatted transferred token amount using the token decimals (human-readable), or null if not applicable/unavailable.
+        txDetails:
+          type: object
+          nullable: true
+          description: Raw transaction details returned by the provider, or null if not found.
+        decodedData:
+          type: object
+          nullable: true
+          description: Decoded version of the input data, providing more human-readable information about the call, or null if not found.
+      required:
+        - txHash
+        - found
+        - success
+        - status
+        - timestamp
+        - amountFormatted
+        - txDetails
+        - decodedData
+
+    TransactionDetailsResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A message indicating the result of the API request.
+        httpCode:
+          type: number
+          description: HTTP status code of the response.
+        payload:
+          $ref: '#/components/schemas/TransactionDetailsDto'
+      required:
+        - message
+        - httpCode
+        - payload
+

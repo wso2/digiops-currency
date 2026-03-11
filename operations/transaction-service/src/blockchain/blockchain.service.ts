@@ -78,14 +78,73 @@ export class BlockchainService {
     const provider = await this.getWeb3Provider();
     const txDetails = await provider.getTransaction(txHash);
 
+    if (!txDetails) {
+      return {
+        txHash,
+        found: false,
+        success: false,
+        status: 'NOT_FOUND',
+        timestamp: null,
+        decodedData: null,
+        amountFormatted: null,
+        txDetails: null,
+      };
+    }
+
     const contractInterface = new ethers.Interface(blockchainConfigs.contractAbi);
     const decodedData = contractInterface.parseTransaction({
       data: txDetails.data,
     });
 
+    let amountFormatted: string | null = null;
+    try {
+      if (decodedData?.args?.length >= 2) {
+        const raw = decodedData.args[1];
+        const amountBigInt = BigInt(raw.toString());
+        const contract = new ethers.Contract(
+          blockchainConfigs.contractAddress,
+          blockchainConfigs.contractAbi,
+          provider,
+        );
+        const decimals = Number(await contract.decimals());
+        amountFormatted = ethers.formatUnits(amountBigInt, decimals).toString();
+      }
+    } catch (e) {
+      this.logger.warn(`Failed to derive amount for tx ${txHash}: ${e}`);
+    }
+
+    const receipt = await provider.getTransactionReceipt(txHash);
+
+    // Pending: transaction known but not yet mined / no receipt.
+    if (!receipt || receipt.blockNumber == null) {
+      return {
+        txHash,
+        found: true,
+        success: false,
+        status: 'PENDING',
+        timestamp: null,
+        decodedData,
+        amountFormatted,
+        txDetails,
+      };
+    }
+
+    const success = receipt.status === 1;
+
+    const block = await provider.getBlock(receipt.blockNumber);
+    const timestamp =
+      block && typeof block.timestamp === 'number'
+        ? new Date(block.timestamp * 1000).toISOString()
+        : null;
     return {
-      txDetails: txDetails,
-      decodedData: decodedData,
+      txHash,
+      found: true,
+      success,
+      status: success ? 'SUCCESS' : 'FAILED',
+      timestamp,
+      decodedData,
+      amountFormatted,
+      txDetails,
     };
   };
 

@@ -21,11 +21,12 @@ import { TransferTokenDto } from './dto/transfer-token.dto';
 import { MasterWalletBalanceResponseDto } from './dto/master-wallet-balance-response.dto';
 import { WalletBalanceByAddressResponseDto } from './dto/wallet-balance-response.dto';
 import { TokenTransferResponseDto } from './dto/token-transfer-response.dto';
-import {
+import { TransactionDetailsResponseDto } from './dto/transaction-details-response.dto';
+import { 
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiResponse,
+  ApiResponse, 
   ApiTags,
 } from '@nestjs/swagger';
 
@@ -184,12 +185,12 @@ export class BlockchainController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Successfully retrieved balance.',
-    type: WalletBalanceByAddressResponseDto,
+    description: 'Successfully retrieved transaction details.',
+    type: TransactionDetailsResponseDto,
   })
   @ApiResponse({
     status: 400,
-    description: 'Bad request or wallet address not found.',
+    description: 'Bad request or transaction not found.',
   })
   @ApiResponse({ status: 500, description: 'Server Error.' })
   async getTransactionDetailsByTxHash(
