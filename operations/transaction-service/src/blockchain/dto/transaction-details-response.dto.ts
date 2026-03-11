@@ -1,4 +1,3 @@
-
 // Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
 //
 // This software is the property of WSO2 LLC. and its suppliers, if any.
@@ -31,16 +30,17 @@ class TransactionDetailsDto {
   status: string;
 
   @ApiProperty({
-    description: 'Block number the transaction was mined in, or null if not yet mined.',
-    nullable: true,
-  })
-  blockNumber: number | null;
-
-  @ApiProperty({
     description: 'ISO-8601 timestamp of the block containing the transaction, or null if unknown.',
     nullable: true,
   })
   timestamp: string | null;
+
+  @ApiProperty({
+    description:
+      'Formatted transferred token amount using the token decimals (human-readable), or null if not applicable/unavailable.',
+    nullable: true,
+  })
+  amountFormatted: string | null;
 
   @ApiProperty({
     description: 'Raw transaction details returned by the provider, or null if not found.',

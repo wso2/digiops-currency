@@ -259,15 +259,15 @@ components:
             - FAILED
             - PENDING
             - NOT_FOUND
-        blockNumber:
-          type: integer
-          nullable: true
-          description: Block number the transaction was mined in, or null if not yet mined.
         timestamp:
           type: string
           format: date-time
           nullable: true
           description: ISO-8601 timestamp of the block containing the transaction, or null if unknown.
+        amountFormatted:
+          type: string
+          nullable: true
+          description: Formatted transferred token amount using the token decimals (human-readable), or null if not applicable/unavailable.
         txDetails:
           type: object
           nullable: true
@@ -281,8 +281,8 @@ components:
         - found
         - success
         - status
-        - blockNumber
         - timestamp
+        - amountFormatted
         - txDetails
         - decodedData
 
