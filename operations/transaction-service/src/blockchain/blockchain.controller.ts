@@ -86,8 +86,8 @@ export class BlockchainController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Successfully retrieved transaction details.',
-    type: TransactionDetailsResponseDto,
+    description: 'Successfully retrieved balance.',
+    type: WalletBalanceByAddressResponseDto,
   })
   @ApiResponse({
     status: 400,
@@ -185,12 +185,12 @@ export class BlockchainController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Successfully retrieved balance.',
-    type: WalletBalanceByAddressResponseDto,
+    description: 'Successfully retrieved transaction details.',
+    type: TransactionDetailsResponseDto,
   })
   @ApiResponse({
     status: 400,
-    description: 'Bad request or wallet address not found.',
+    description: 'Bad request or transaction not found.',
   })
   @ApiResponse({ status: 500, description: 'Server Error.' })
   async getTransactionDetailsByTxHash(
