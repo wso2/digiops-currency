@@ -84,10 +84,10 @@ export class BlockchainService {
         found: false,
         success: false,
         status: 'NOT_FOUND',
-        blockNumber: null,
         timestamp: null,
-        txDetails: null,
         decodedData: null,
+        amountFormatted: null,
+        txDetails: null,
       };
     }
 
@@ -95,6 +95,23 @@ export class BlockchainService {
     const decodedData = contractInterface.parseTransaction({
       data: txDetails.data,
     });
+
+    let amountFormatted: string | null = null;
+    try {
+      if (decodedData?.args?.length >= 2) {
+        const raw = decodedData.args[1];
+        const amountBigInt = BigInt(raw.toString());
+        const contract = new ethers.Contract(
+          blockchainConfigs.contractAddress,
+          blockchainConfigs.contractAbi,
+          provider,
+        );
+        const decimals = Number(await contract.decimals());
+        amountFormatted = ethers.formatUnits(amountBigInt, decimals).toString();
+      }
+    } catch (e) {
+      this.logger.warn(`Failed to derive amount for tx ${txHash}: ${e}`);
+    }
 
     const receipt = await provider.getTransactionReceipt(txHash);
 
@@ -105,31 +122,29 @@ export class BlockchainService {
         found: true,
         success: false,
         status: 'PENDING',
-        blockNumber: null,
         timestamp: null,
-        txDetails,
         decodedData,
+        amountFormatted,
+        txDetails,
       };
     }
 
-    const blockNumber = receipt.blockNumber;
     const success = receipt.status === 1;
 
-    const block = await provider.getBlock(blockNumber);
+    const block = await provider.getBlock(receipt.blockNumber);
     const timestamp =
       block && typeof block.timestamp === 'number'
         ? new Date(block.timestamp * 1000).toISOString()
         : null;
-
     return {
       txHash,
       found: true,
       success,
       status: success ? 'SUCCESS' : 'FAILED',
-      blockNumber,
       timestamp,
-      txDetails,
       decodedData,
+      amountFormatted,
+      txDetails,
     };
   };
 
