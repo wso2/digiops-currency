@@ -19,16 +19,28 @@ const jsonSafeSerialize = (value: any): any => {
     return null;
   }
 
-  return JSON.parse(
-    JSON.stringify(value, (_key, currentValue) =>
-      typeof currentValue === 'bigint' ? currentValue.toString() : currentValue,
-    ),
-  );
+  try {
+    return JSON.parse(
+      JSON.stringify(value, (_key, currentValue) =>
+        typeof currentValue === 'bigint' ? currentValue.toString() : currentValue,
+      ),
+    );
+  } catch {
+    return value;
+  }
 };
 
 @Injectable()
 export class BigIntSerializationInterceptor implements NestInterceptor {
-  intercept(_context: ExecutionContext, next: CallHandler): Observable<any> {
-    return next.handle().pipe(map((data) => jsonSafeSerialize(data)));
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const response = context.switchToHttp().getResponse();
+    return next.handle().pipe(
+      map((data) => {
+        if (data === response || response?.headersSent) {
+          return data;
+        }
+        return jsonSafeSerialize(data);
+      }),
+    );
   }
 }
