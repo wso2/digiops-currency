@@ -7,21 +7,20 @@
 
 import { Injectable } from '@nestjs/common';
 
-const normalizeBigInt = (value: any): any => {
-  if (typeof value === 'bigint') {
-    return value.toString();
+const jsonSafeSerialize = (value: any): any => {
+  if (value === undefined) {
+    return null;
   }
-  if (Array.isArray(value)) {
-    return value.map((item) => normalizeBigInt(item));
+
+  try {
+    return JSON.parse(
+      JSON.stringify(value, (_key, currentValue) =>
+        typeof currentValue === 'bigint' ? currentValue.toString() : currentValue,
+      ),
+    );
+  } catch {
+    return value;
   }
-  if (value && typeof value === 'object') {
-    const normalized: any = {};
-    for (const [key, val] of Object.entries(value)) {
-      normalized[key] = normalizeBigInt(val);
-    }
-    return normalized;
-  }
-  return value;
 };
 
 @Injectable()
@@ -29,7 +28,10 @@ export class HttpResponseService {
   SUCCESS = 'success';
   ERROR = 'error';
   send(message: string, httpCode: number, payload: any) {
-    const safePayload = payload ? normalizeBigInt(payload) : null;
-    return { message: message, httpCode: httpCode, payload: safePayload };
+    return {
+      message: message,
+      httpCode: httpCode,
+      payload: payload == null ? null : jsonSafeSerialize(payload),
+    };
   }
 }
