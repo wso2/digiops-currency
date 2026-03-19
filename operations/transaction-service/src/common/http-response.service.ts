@@ -7,11 +7,31 @@
 
 import { Injectable } from '@nestjs/common';
 
+const jsonSafeSerialize = (value: any): any => {
+  if (value === undefined) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(
+      JSON.stringify(value, (_key, currentValue) =>
+        typeof currentValue === 'bigint' ? currentValue.toString() : currentValue,
+      ),
+    );
+  } catch {
+    return value;
+  }
+};
+
 @Injectable()
 export class HttpResponseService {
   SUCCESS = 'success';
   ERROR = 'error';
   send(message: string, httpCode: number, payload: any) {
-    return { message: message, httpCode: httpCode, payload: payload ?? null };
+    return {
+      message: message,
+      httpCode: httpCode,
+      payload: payload == null ? null : jsonSafeSerialize(payload),
+    };
   }
 }
