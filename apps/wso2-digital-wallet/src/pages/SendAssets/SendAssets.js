@@ -121,9 +121,7 @@ function SendAssets() {
   useEffect(() => {
     const initializeParkingPaymentLaunch = async () => {
       const launchData = getParkingPaymentLaunchData();
-      if (!launchData) {
-        return;
-      }
+      if (!launchData) return;
 
       try {
         await saveLocalDataAsync(
