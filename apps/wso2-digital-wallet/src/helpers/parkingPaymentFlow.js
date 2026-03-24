@@ -17,9 +17,7 @@ const CANONICAL_POSITIVE_DECIMAL_PATTERN = /^(?:0|[1-9]\d*)(?:\.\d+)?$/;
 const parseHashQuery = () => {
   const hash = window.location?.hash || "";
   const queryIndex = hash.indexOf("?");
-  if (queryIndex === -1) {
-    return {};
-  }
+  if (queryIndex === -1) return {}
   const params = new URLSearchParams(hash.slice(queryIndex + 1));
   return Object.fromEntries(params.entries());
 };
