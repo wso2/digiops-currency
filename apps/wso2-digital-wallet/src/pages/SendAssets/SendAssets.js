@@ -145,8 +145,7 @@ function SendAssets() {
     };
 
     initializeParkingPaymentLaunch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (walletAddress !== DEFAULT_WALLET_ADDRESS && walletAddress) {
