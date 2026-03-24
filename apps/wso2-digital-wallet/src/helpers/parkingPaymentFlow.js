@@ -37,12 +37,8 @@ const getWindowLaunchData = () => {
 
   for (const candidateRef of candidates) {
     const candidate = candidateRef?.owner?.[candidateRef?.key];
-    if (!candidate || typeof candidate !== "object") {
-      continue;
-    }
-    if (candidate[LAUNCH_DATA_CONSUMED_FLAG]) {
-      continue;
-    }
+    if (!candidate || typeof candidate !== "object") continue;
+    if (candidate[LAUNCH_DATA_CONSUMED_FLAG]) continue;
 
     const payload = { ...candidate };
     candidate[LAUNCH_DATA_CONSUMED_FLAG] = true;
