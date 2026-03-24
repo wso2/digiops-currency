@@ -25,6 +25,7 @@ import { STORAGE_KEYS, DEFAULT_WALLET_ADDRESS } from "../../constants/configs";
 import { getWalletBalanceByWalletAddress } from "../../services/blockchain.service";
 import { waitForBridge } from "../../helpers/bridge";
 import { scanQrCode } from "../../microapp-bridge";
+import { getParkingPaymentLaunchData } from "../../helpers/parkingPaymentFlow";
 
 function SendAssets() {
   const navigate = useNavigate();
@@ -112,9 +113,39 @@ function SendAssets() {
     const initializeWallet = async () => {
       await fetchWalletAddress();
     };
-    
+
     initializeWallet();
     // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    const initializeParkingPaymentLaunch = async () => {
+      const launchData = getParkingPaymentLaunchData();
+      if (!launchData) {
+        return;
+      }
+
+      try {
+        await saveLocalDataAsync(
+          STORAGE_KEYS.SENDER_WALLET_ADDRESS,
+          launchData.walletAddress
+        );
+        await saveLocalDataAsync(STORAGE_KEYS.SENDING_AMOUNT, launchData.amount);
+        navigate("/confirm-assets-send", {
+          replace: true,
+          state: {
+            isParkingPaymentFlow: true,
+            returnAppId: launchData.returnAppId,
+            returnRoute: launchData.returnRoute
+          }
+        });
+      } catch (error) {
+        console.log(`${ERROR_SAVING_TX_DETAILS}: ${error}`);
+      }
+    };
+
+    initializeParkingPaymentLaunch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
