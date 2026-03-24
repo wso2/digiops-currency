@@ -28,8 +28,7 @@ import { STORAGE_KEYS } from "../../constants/configs";
 import { showToast, showAlertBox } from "../../helpers/alerts";
 import { waitForBridge } from "../../helpers/bridge";
 import {
-  completeParkingPayment,
-  getParkingPaymentLaunchData
+  completeParkingPayment
 } from "../../helpers/parkingPaymentFlow";
 import { requestOpenMicroApp } from "../../microapp-bridge";
 
@@ -71,12 +70,11 @@ function ConfirmSendAssets() {
           returnRoute: location?.state?.returnRoute
         }
       : null;
-    const launchData = getParkingPaymentLaunchData();
 
-    if (stateData || launchData) {
+    if (stateData) {
       setParkingFlowData({
-        returnAppId: stateData?.returnAppId || launchData?.returnAppId || "",
-        returnRoute: stateData?.returnRoute || launchData?.returnRoute || ""
+        returnAppId: stateData?.returnAppId || "",
+        returnRoute: stateData?.returnRoute || ""
       });
     }
   }, [location]);
