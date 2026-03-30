@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from "react";
 import { Avatar, Button } from "antd";
 import Wso2MainImg from "../../assets/images/wso2_main.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./ConfirmSendAssets.css";
 import { getLocalDataAsync, saveLocalDataAsync } from "../../helpers/storage";
 import { transferToken } from "../../services/blockchain.service";
@@ -27,14 +27,20 @@ import {
 import { STORAGE_KEYS } from "../../constants/configs";
 import { showToast, showAlertBox } from "../../helpers/alerts";
 import { waitForBridge } from "../../helpers/bridge";
+import {
+  completeParkingPayment
+} from "../../helpers/parkingPaymentFlow";
+import { requestOpenMicroApp } from "../../microapp-bridge";
 
 function ConfirmSendAssets() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [fromAddress, setFromAddress] = useState("");
   const [sendAmount, setSendAmount] = useState("");
   const [senderAddress, setSenderAddress] = useState("");
   const [isTransferLoading, setIsTransferLoading] = useState(false);
+  const [parkingFlowData, setParkingFlowData] = useState(null);
 
   const fetchLocalTxDetails = async () => {
     try {
@@ -58,11 +64,38 @@ function ConfirmSendAssets() {
   };
 
   useEffect(() => {
+    const stateData = location?.state?.isParkingPaymentFlow
+      ? {
+          returnAppId: location?.state?.returnAppId,
+          returnRoute: location?.state?.returnRoute
+        }
+      : null;
+
+    if (stateData) {
+      setParkingFlowData({
+        returnAppId: stateData?.returnAppId || "",
+        returnRoute: stateData?.returnRoute || ""
+      });
+    }
+  }, [location]);
+
+  useEffect(() => {
     fetchLocalTxDetails();
   }, []);
 
   const handleReject = async () => {
     await resetInputFields();
+    if (parkingFlowData) {
+      await completeParkingPayment({
+        status: "FAILED",
+        error: "User cancelled payment",
+        saveLocalDataAsync,
+        requestOpenMicroApp,
+        returnAppId: parkingFlowData.returnAppId,
+        returnRoute: parkingFlowData.returnRoute
+      });
+      return;
+    }
     navigate("/send");
   };
 
@@ -88,6 +121,20 @@ function ConfirmSendAssets() {
       const receipt = await transferToken(senderAddress, sendAmount);
       if (receipt) {
         await resetInputFields();
+
+        if (parkingFlowData) {
+          await completeParkingPayment({
+            status: "SUCCESS",
+            txHash: receipt?.transactionHash || "",
+            saveLocalDataAsync,
+            requestOpenMicroApp,
+            returnAppId: parkingFlowData.returnAppId,
+            returnRoute: parkingFlowData.returnRoute
+          });
+          setIsTransferLoading(false);
+          return;
+        }
+
         showToast(SUCCESS, SUCCESS_TOKEN_TRANSFER);
         setTimeout(() => {
           navigate("/");
@@ -96,6 +143,22 @@ function ConfirmSendAssets() {
       setIsTransferLoading(false);
     } catch (error) {
       console.log("error while transferring token", error);
+
+      if (parkingFlowData) {
+        try {
+          await completeParkingPayment({
+            status: "FAILED",
+            error: ERROR_TRANSFERRING_TOKEN,
+            saveLocalDataAsync,
+            requestOpenMicroApp,
+            returnAppId: parkingFlowData.returnAppId,
+            returnRoute: parkingFlowData.returnRoute
+          });
+        } catch (parkingError) {
+          console.log("error while reporting parking payment failure", parkingError);
+        }
+      }
+
       showAlertBox(ERROR, ERROR_TRANSFERRING_TOKEN, OK);
       setIsTransferLoading(false);
     }
@@ -152,13 +215,15 @@ function ConfirmSendAssets() {
 
         {/* Action Buttons */}
         <div className="button-group">
-          <Button
-            className="default-button"
-            onClick={handleReject}
-            block
-          >
-            Cancel
-          </Button>
+          {parkingFlowData ? null : (
+            <Button
+              className="default-button"
+              onClick={handleReject}
+              block
+            >
+              Cancel
+            </Button>
+          )}
           <Button
             className="primary-button"
             loading={isTransferLoading}

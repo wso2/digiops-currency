@@ -12,7 +12,7 @@ const TOPIC = {
   GET_LOCAL_DATA: "get_local_data",
   ALERT: "alert",
   CONFIRM_ALERT: "confirm_alert",
-  TOTP: "totp",
+  TOTP: "totp"
 };
 
 // Get Token
@@ -151,4 +151,24 @@ export const totpQrMigrationData = (callback, failedToRespondCallback) => {
   } else {
     console.error("Native bridge is not available");
   }
+};
+
+// Open another microapp through SuperApp bridge
+export const requestOpenMicroApp = (targetAppId, launchData = {}) => {
+  if (window.nativebridge?.requestOpenMicroApp) {
+    window.nativebridge.requestOpenMicroApp(targetAppId, launchData);
+    return;
+  }
+
+  if (window.ReactNativeWebView) {
+    window.ReactNativeWebView.postMessage(
+      JSON.stringify({
+        topic: "open_micro_app",
+        data: { targetAppId, launchData }
+      })
+    );
+    return;
+  }
+
+  console.error("Native bridge is not available");
 };
