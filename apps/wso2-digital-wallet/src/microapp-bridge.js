@@ -10,6 +10,7 @@ const TOPIC = {
   QR_REQUEST: "qr_request",
   SAVE_LOCAL_DATA: "save_local_data",
   GET_LOCAL_DATA: "get_local_data",
+  GET_LAUNCH_DATA: "get_launch_data",
   ALERT: "alert",
   CONFIRM_ALERT: "confirm_alert",
   TOTP: "totp"
@@ -153,6 +154,52 @@ export const totpQrMigrationData = (callback, failedToRespondCallback) => {
   }
 };
 
+/**
+ * Retrieve launch data passed when this microapp was opened (OpenSuperApp).
+ * Host keeps JSON in navigation state; WebView must request it — it is not on window by default.
+ */
+export const requestGetLaunchData = (callback, failedToRespondCallback) => {
+  if (
+    window.nativebridge &&
+    typeof window.nativebridge.requestGetLaunchData === "function"
+  ) {
+    window.nativebridge.resolveGetLaunchData = (data) => {
+      try {
+        callback(data);
+      } catch (e) {
+        if (typeof failedToRespondCallback === "function") {
+          failedToRespondCallback(String(e));
+        }
+      }
+    };
+    window.nativebridge.requestGetLaunchData();
+    return;
+  }
+
+  if (window.ReactNativeWebView) {
+    window.nativebridge = window.nativebridge || {};
+    window.nativebridge.resolveGetLaunchData = (data) => {
+      try {
+        callback(data);
+      } catch (e) {
+        if (typeof failedToRespondCallback === "function") {
+          failedToRespondCallback(String(e));
+        }
+      }
+    };
+    window.ReactNativeWebView.postMessage(
+      JSON.stringify({ topic: TOPIC.GET_LAUNCH_DATA })
+    );
+    return;
+  }
+
+  if (typeof failedToRespondCallback === "function") {
+    failedToRespondCallback("Native bridge is not available");
+  } else {
+    console.error("Native bridge is not available");
+  }
+};
+
 // Open another microapp through SuperApp bridge
 export const requestOpenMicroApp = (targetAppId, launchData = {}) => {
   if (window.nativebridge?.requestOpenMicroApp) {
@@ -164,7 +211,7 @@ export const requestOpenMicroApp = (targetAppId, launchData = {}) => {
     window.ReactNativeWebView.postMessage(
       JSON.stringify({
         topic: "open_micro_app",
-        data: { targetAppId, launchData }
+        data: { appId: targetAppId, data: launchData ?? {} }
       })
     );
     return;

@@ -25,7 +25,10 @@ import { STORAGE_KEYS, DEFAULT_WALLET_ADDRESS } from "../../constants/configs";
 import { getWalletBalanceByWalletAddress } from "../../services/blockchain.service";
 import { waitForBridge } from "../../helpers/bridge";
 import { scanQrCode } from "../../microapp-bridge";
-import { getParkingPaymentLaunchData } from "../../helpers/parkingPaymentFlow";
+import {
+  getParkingPaymentLaunchData,
+  hydrateParkingLaunchDataFromBridge,
+} from "../../helpers/parkingPaymentFlow";
 
 function SendAssets() {
   const navigate = useNavigate();
@@ -120,8 +123,11 @@ function SendAssets() {
 
   useEffect(() => {
     const initializeParkingPaymentLaunch = async () => {
+      await hydrateParkingLaunchDataFromBridge();
       const launchData = getParkingPaymentLaunchData();
-      if (!launchData) return;
+      if (!launchData) {
+        return;
+      }
 
       try {
         await saveLocalDataAsync(
