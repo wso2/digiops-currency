@@ -12,11 +12,16 @@ import FooterBar from "./components/Footer/Footer";
 import Pages from "./pages/Pages";
 // import "./dark-theme.css";
 // import "./light-theme.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  hydrateParkingLaunchDataFromBridge,
+  peekParkingPaymentLaunchData,
+} from "./helpers/parkingPaymentFlow";
 
 function LayoutView() {
   const { Content } = Layout;
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [isShowNavBar, setIsShowNavBar] = useState(false);
   const [isShowFooter, setIsShowFooter] = useState(false);
@@ -47,6 +52,27 @@ function LayoutView() {
       setIsShowFooter(true);
     }
   }, [location]);
+
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      await hydrateParkingLaunchDataFromBridge();
+      if (cancelled) {
+        return;
+      }
+      const peek = peekParkingPaymentLaunchData();
+      if (!peek) {
+        return;
+      }
+      navigate("/send", { replace: true });
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [location.pathname, navigate]);
 
   return (
     <div className="main-background">

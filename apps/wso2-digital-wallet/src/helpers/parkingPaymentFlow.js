@@ -6,6 +6,7 @@
 // You may not alter or remove any copyright or other notice from copies of this content.
 
 import { isAddress } from "ethereum-address";
+import { requestGetLaunchData } from "../microapp-bridge";
 
 const PEOPLE_WALLET_PAYMENT_STATUS_KEY = "people_parking_payment_status";
 const PEOPLE_WALLET_PAYMENT_TX_HASH_KEY = "people_parking_payment_tx_hash";
@@ -14,10 +15,79 @@ const DEFAULT_RETURN_APP_ID = "com.wso2.superapp.microapp.people";
 const LAUNCH_DATA_CONSUMED_FLAG = "__parkingLaunchDataConsumed";
 const CANONICAL_POSITIVE_DECIMAL_PATTERN = /^(?:0|[1-9]\d*)(?:\.\d+)?$/;
 
+const HYDRATE_ATTEMPT_TIMEOUT_MS = 2800;
+const HYDRATE_RETRY_DELAY_MS = 500;
+const HYDRATE_MAX_ATTEMPTS = 3;
+
+let hydrateInFlight = null;
+
+const hasPayloadInMicroappLaunchWindow = () =>
+  Object.keys(window.__MICROAPP_LAUNCH_DATA__ || {}).length > 0;
+
+const mergeLaunchPayloadIntoWindow = (raw) => {
+  const merged = unwrapLaunchPayload(raw);
+  if (!isObjectRecord(merged)) return;
+  window.__MICROAPP_LAUNCH_DATA__ = {
+    ...(window.__MICROAPP_LAUNCH_DATA__ || {}),
+    ...merged,
+  };
+};
+
+const singleHydrateAttempt = () =>
+  new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+
+    try {
+      requestGetLaunchData(
+        (data) => {
+          mergeLaunchPayloadIntoWindow(data);
+          finish();
+        },
+        () => finish(),
+      );
+    } catch {
+      finish();
+    }
+
+    setTimeout(finish, HYDRATE_ATTEMPT_TIMEOUT_MS);
+  });
+
+/**
+ * Fetch launch data from the native bridge into window.__MICROAPP_LAUNCH_DATA__.
+ */
+export const hydrateParkingLaunchDataFromBridge = async () => {
+  if (typeof window === "undefined") return;
+  if (hasPayloadInMicroappLaunchWindow()) return;
+  if (hydrateInFlight) return hydrateInFlight;
+
+  hydrateInFlight = (async () => {
+    try {
+      for (let attempt = 0; attempt < HYDRATE_MAX_ATTEMPTS; attempt++) {
+        await singleHydrateAttempt();
+        if (hasPayloadInMicroappLaunchWindow()) return;
+        if (attempt < HYDRATE_MAX_ATTEMPTS - 1) {
+          await new Promise((r) => setTimeout(r, HYDRATE_RETRY_DELAY_MS));
+        }
+      }
+    } finally {
+      hydrateInFlight = null;
+    }
+  })();
+
+  return hydrateInFlight;
+};
+
 const parseHashQuery = () => {
   const hash = window.location?.hash || "";
   const queryIndex = hash.indexOf("?");
-  if (queryIndex === -1) return {}
+  if (queryIndex === -1) {
+    return {};
+  }
   const params = new URLSearchParams(hash.slice(queryIndex + 1));
   return Object.fromEntries(params.entries());
 };
@@ -25,6 +95,64 @@ const parseHashQuery = () => {
 const parseSearchQuery = () => {
   const params = new URLSearchParams(window.location?.search || "");
   return Object.fromEntries(params.entries());
+};
+
+const safeParseJson = (value) => {
+  if (typeof value !== "string") {
+    return value;
+  }
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+};
+
+const isObjectRecord = (value) =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+const unwrapLaunchPayload = (value) => {
+  const parsed = safeParseJson(value);
+  if (!isObjectRecord(parsed)) {
+    return null;
+  }
+
+  const directPayload = parsed.launchData;
+  if (isObjectRecord(directPayload)) {
+    return directPayload;
+  }
+
+  const nestedData = parsed.data;
+  if (isObjectRecord(nestedData)) {
+    if (isObjectRecord(nestedData.launchData)) {
+      return nestedData.launchData;
+    }
+    return nestedData;
+  }
+
+  return parsed;
+};
+
+const peekWindowLaunchData = () => {
+  const candidates = [
+    { owner: window?.nativebridge, key: "launchData" },
+    { owner: window, key: "__MICROAPP_LAUNCH_DATA__" },
+    { owner: window, key: "microappLaunchData" },
+    { owner: window, key: "launchData" }
+  ];
+
+  for (const candidateRef of candidates) {
+    const candidate = unwrapLaunchPayload(candidateRef?.owner?.[candidateRef?.key]);
+    if (!candidate) {
+      continue;
+    }
+    if (candidate[LAUNCH_DATA_CONSUMED_FLAG]) {
+      continue;
+    }
+    return { ...candidate };
+  }
+
+  return {};
 };
 
 const getWindowLaunchData = () => {
@@ -36,9 +164,13 @@ const getWindowLaunchData = () => {
   ];
 
   for (const candidateRef of candidates) {
-    const candidate = candidateRef?.owner?.[candidateRef?.key];
-    if (!candidate || typeof candidate !== "object") continue;
-    if (candidate[LAUNCH_DATA_CONSUMED_FLAG]) continue;
+    const candidate = unwrapLaunchPayload(candidateRef?.owner?.[candidateRef?.key]);
+    if (!candidate) {
+      continue;
+    }
+    if (candidate[LAUNCH_DATA_CONSUMED_FLAG]) {
+      continue;
+    }
 
     const payload = { ...candidate };
     candidate[LAUNCH_DATA_CONSUMED_FLAG] = true;
@@ -65,13 +197,7 @@ const normalizeLaunchData = (launchData = {}) => {
   };
 };
 
-export const getParkingPaymentLaunchData = () => {
-  const launchData = {
-    ...parseSearchQuery(),
-    ...parseHashQuery(),
-    ...getWindowLaunchData()
-  };
-
+const validateParkingLaunchMerged = (launchData) => {
   const normalized = normalizeLaunchData(launchData);
   const amountString = String(normalized.coin_amount).trim();
   const validAmountFormat = CANONICAL_POSITIVE_DECIMAL_PATTERN.test(amountString);
@@ -81,8 +207,13 @@ export const getParkingPaymentLaunchData = () => {
   const validWallet =
     typeof normalized.wallet_address === "string" &&
     isAddress(normalized.wallet_address);
+  const appId = String(
+    normalized.source_app_id || normalized.return_app_id || "",
+  ).trim();
+  // Treat source app id as optional, but if present it must match People app.
+  const validSource = appId.length === 0 || appId === DEFAULT_RETURN_APP_ID;
 
-  if (!validAmount || !validWallet) {
+  if (!validAmount || !validWallet || !validSource) {
     return null;
   }
 
@@ -94,7 +225,25 @@ export const getParkingPaymentLaunchData = () => {
   };
 };
 
-export const isParkingPaymentFlow = () => Boolean(getParkingPaymentLaunchData());
+export const peekParkingPaymentLaunchData = () => {
+  const launchData = {
+    ...parseSearchQuery(),
+    ...parseHashQuery(),
+    ...peekWindowLaunchData()
+  };
+  return validateParkingLaunchMerged(launchData);
+};
+
+export const getParkingPaymentLaunchData = () => {
+  const launchData = {
+    ...parseSearchQuery(),
+    ...parseHashQuery(),
+    ...getWindowLaunchData()
+  };
+  return validateParkingLaunchMerged(launchData);
+};
+
+export const isParkingPaymentFlow = () => Boolean(peekParkingPaymentLaunchData());
 
 export const completeParkingPayment = async ({
   status,
