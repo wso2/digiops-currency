@@ -15,9 +15,18 @@ import ballerina/log;
     label: "Wallet Service",
     id: "currency/wallet-service"
 }
+
+configurable boolean isMaintenanceMode = false;
 service http:InterceptableService / on new http:Listener(9091) {
 
     public function createInterceptors() returns JwtInterceptor => new JwtInterceptor();
+
+    # Get global app config.
+    #
+    # + return - App config
+    resource function get configs() returns AppConfig {
+        return { isMaintenanceMode };
+    }
 
     # Add user wallet.
     #

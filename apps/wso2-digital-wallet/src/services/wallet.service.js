@@ -81,3 +81,21 @@ export const setWalletAsPrimary = async (walletAddress) => {
     throw error;
   }
 };
+
+export const fetchAppConfigs = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/configs`,
+      {
+        method: "GET",
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch app configs: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error while fetching app configs: ", error);
+    throw error;
+  }
+};
