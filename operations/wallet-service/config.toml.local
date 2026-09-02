@@ -1,3 +1,6 @@
+# Maintenance Mode Flag
+isMaintenanceMode = false
+
 [wallet_service.database.walletDatabase]
 host = ""
 user = ""
