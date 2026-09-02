@@ -9,6 +9,7 @@ import "./App.css";
 import { HashRouter as Router } from "react-router-dom";
 import LayoutView from "./LayoutView";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MaintenanceBanner } from "./components/MaintenanceBanner/MaintenanceBanner";
 
 function App() {
   const queryClient = new QueryClient();
@@ -16,6 +17,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Router>
         <div className="App">
+          <MaintenanceBanner />
           <LayoutView />
         </div>
       </Router>

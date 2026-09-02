@@ -19,6 +19,11 @@ service class JwtInterceptor {
         if req.method == http:OPTIONS {
             return ctx.next();
         }
+
+        if req.method == http:GET && path.length() == 1 && path[0] == "configs" {
+            return ctx.next();
+        }
+        
         string|error jwtAssertion = req.getHeader(X_JWT_ASSERTION);
 
         if jwtAssertion is error {

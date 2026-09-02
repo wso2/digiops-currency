@@ -12,3 +12,9 @@ public type JwtPayload record {
     # Subject
     string? sub = ();
 };
+
+# Application Configuration
+public type AppConfig record {| 
+    # Whether maintenance mode is enabled
+    boolean isMaintenanceMode = false;
+|};

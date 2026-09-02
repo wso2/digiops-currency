@@ -39,6 +39,7 @@ export const getUserWalletAddresses = async () => {
       `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/wallets`,
       {
         method: "GET",
+        cache: "no-store",
         headers: {
           Authorization: `Bearer ${await getTokenAsync()}`,
         },
@@ -78,6 +79,25 @@ export const setWalletAsPrimary = async (walletAddress) => {
     }
   } catch (error) {
     console.error("Error while setting wallet as primary: ", error);
+    throw error;
+  }
+};
+
+export const fetchAppConfigs = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/configs`,
+      {
+        method: "GET",
+        cache: "no-store",
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch app configs: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error while fetching app configs: ", error);
     throw error;
   }
 };
