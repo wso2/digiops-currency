@@ -45,11 +45,16 @@ export const MaintenanceBanner = () => {
 
   return (
     <div className="maintenance-overlay">
-      <div className="maintenance-card">
+      <div 
+        className="maintenance-card" 
+        role="dialog" 
+        aria-modal="true" 
+        aria-labelledby="maintenance-title"
+      >
         <div className="maintenance-icon-wrapper">
           <AlertTriangle color="#ff7300" size={36} />
         </div>
-        <h2 className="maintenance-title">
+        <h2 id="maintenance-title" className="maintenance-title">
           Under Maintenance
         </h2>
         <p className="maintenance-text">
