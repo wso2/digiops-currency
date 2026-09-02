@@ -12,32 +12,21 @@
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle } from "react-feather";
 import { fetchAppConfigs } from "../../services/wallet.service";
 import { requestNavigateToMyApps } from "../../microapp-bridge";
 import "./MaintenanceBanner.css";
 
 export const MaintenanceBanner = () => {
-  const [isMaintenanceMode, setIsMaintenanceMode] = useState(false);
+  const { data } = useQuery({
+    queryKey: ["app-configs"],
+    queryFn: fetchAppConfigs,
+    refetchInterval: 30000,
+  });
 
-  useEffect(() => {
-    const fetchConfigs = async () => {
-      try {
-        const data = await fetchAppConfigs();
-        if (data) {
-          setIsMaintenanceMode(!!data.isMaintenanceMode);
-        }
-      } catch (err) {
-        console.error("Failed to fetch app configs:", err);
-      }
-    };
-
-    fetchConfigs();
-    const interval = setInterval(fetchConfigs, 30000); // Poll every 30 seconds
-
-    return () => clearInterval(interval);
-  }, []);
+  const isMaintenanceMode = !!data?.isMaintenanceMode;
 
   if (!isMaintenanceMode) {
     return null;

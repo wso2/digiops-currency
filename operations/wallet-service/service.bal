@@ -11,12 +11,13 @@ import wallet_service.types;
 import ballerina/http;
 import ballerina/log;
 
+configurable boolean isMaintenanceMode = false;
+
 @display {
     label: "Wallet Service",
     id: "currency/wallet-service"
 }
 
-configurable boolean isMaintenanceMode = false;
 service http:InterceptableService / on new http:Listener(9091) {
 
     public function createInterceptors() returns JwtInterceptor => new JwtInterceptor();
