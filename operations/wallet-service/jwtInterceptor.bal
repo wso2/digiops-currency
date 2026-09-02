@@ -20,7 +20,7 @@ service class JwtInterceptor {
             return ctx.next();
         }
 
-        if path.length() > 0 && path[0] == "configs" {
+        if req.method == http:GET && path.length() == 1 && path[0] == "configs" {
             return ctx.next();
         }
         

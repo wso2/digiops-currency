@@ -61,6 +61,7 @@ export const MaintenanceBanner = () => {
           The app is currently undergoing maintenance and is temporarily unavailable. We apologize for any inconvenience caused. Please check back later.
         </p>
         <button
+          type="button"
           onClick={() => requestNavigateToMyApps()}
           className="maintenance-button"
         >

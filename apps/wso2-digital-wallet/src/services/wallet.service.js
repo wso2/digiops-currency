@@ -39,6 +39,7 @@ export const getUserWalletAddresses = async () => {
       `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/wallets`,
       {
         method: "GET",
+        cache: "no-store",
         headers: {
           Authorization: `Bearer ${await getTokenAsync()}`,
         },
@@ -88,6 +89,7 @@ export const fetchAppConfigs = async () => {
       `${process.env.REACT_APP_WALLET_SERVICE_BASE_URL}/configs`,
       {
         method: "GET",
+        cache: "no-store",
       }
     );
     if (!response.ok) {
